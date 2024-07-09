@@ -2,7 +2,8 @@ CXX = c++
 CFLAGS = -Wall -Wextra -Werror -std=c++98 -g3
 NAME = IRC
 SRC = main.cpp \
-	socket.cpp
+	socket.cpp \
+	epoll.cpp \
 
 SRCS = $(addprefix srcs/, $(SRC))
 OBJDIR = objs

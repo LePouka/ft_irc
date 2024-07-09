@@ -24,3 +24,27 @@ void socket_creation(int *server_socket)
         set_nonblocking(*server_socket);
 }
 
+void socket_binding(sockaddr_in *server_addr, int *server_socket)
+{
+    server_addr->sin_family = AF_INET;
+    server_addr->sin_addr.s_addr = INADDR_ANY;
+    server_addr->sin_port = htons(PORT);
+
+    if (bind(*server_socket, (struct sockaddr*)server_addr, sizeof(*server_addr)) == -1)
+    {
+        close(*server_socket);
+        std::string error_msg = "bind failed: " + std::string(strerror(errno));
+        throw std::runtime_error(error_msg);
+    }
+}
+
+void start_listening(int *server_socket)
+{
+    const int BACKLOG = 10; // Maximum length of the queue of pending connections
+
+    if (listen(*server_socket, BACKLOG) == -1) {
+        close(*server_socket);
+        std::string error_msg = "listen failed: " + std::string(strerror(errno));
+        throw std::runtime_error(error_msg);
+    }
+}
