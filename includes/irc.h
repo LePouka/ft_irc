@@ -24,4 +24,4 @@ void start_listening(int *server_socket);
 //EPOLL.CPP
 void instance_creation(int *epoll_fd, int *server_socket);
 void socket_to_instance(int *server_socket, int *epoll_fd, epoll_event *ev);
-void event_loop(int *server_socket, int *epoll_fd, epoll_event **events, epoll_event *ev);
+void event_loop(int *server_socket, int *epoll_fd, epoll_event *events, epoll_event *ev);

@@ -119,7 +119,7 @@ int main() {
         std::cout << "IRC server started on port " << PORT << "\n";
 
         // Event loop
-        
+        event_loop(&server_socket, &epoll_fd, events, &ev);
 
         close(server_socket);
         close(epoll_fd);

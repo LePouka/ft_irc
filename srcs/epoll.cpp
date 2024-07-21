@@ -20,13 +20,13 @@ void socket_to_instance(int *server_socket, int *epoll_fd, epoll_event *ev)
     }  
 }
 
-void event_loop(int *server_socket, int *epoll_fd, epoll_event **events, epoll_event *ev)
+void event_loop(int *server_socket, int *epoll_fd, epoll_event *events, epoll_event *ev)
 {
     std::map<int, std::string> client_nicks;
     std::map<int, std::string> client_users;
     while (true) 
     {
-        int nfds = epoll_wait(*epoll_fd, *events, MAX_EVENTS, -1);
+        int nfds = epoll_wait(*epoll_fd, events, MAX_EVENTS, -1);
         if (nfds == -1) 
         {
             close(*server_socket);
@@ -36,7 +36,7 @@ void event_loop(int *server_socket, int *epoll_fd, epoll_event **events, epoll_e
 
         for (int n = 0; n < nfds; ++n) 
         {
-            if (events[n]->data.fd == *server_socket)
+            if (events[n].data.fd == *server_socket)
             {
                 // Handle new connections
                 struct sockaddr_in client_addr;
@@ -63,7 +63,7 @@ void event_loop(int *server_socket, int *epoll_fd, epoll_event **events, epoll_e
             {
                 // Handle data from a connected client
                 char buffer[1024];
-                int client_socket = events[n]->data.fd;
+                int client_socket = events[n].data.fd;
                 int bytes_read = read(client_socket, buffer, sizeof(buffer));
                 if (bytes_read == -1)
                 {
