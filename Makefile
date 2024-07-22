@@ -4,6 +4,8 @@ NAME = IRC
 SRC = main.cpp \
 	socket.cpp \
 	epoll.cpp \
+	message_handling.cpp \
+	
 
 SRCS = $(addprefix srcs/, $(SRC))
 OBJDIR = objs
