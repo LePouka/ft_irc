@@ -1,6 +1,6 @@
 CXX = c++
 CFLAGS = -Wall -Wextra -Werror -std=c++98 -g3
-NAME = IRC
+NAME = ircserv
 SRC = main.cpp \
 	socket.cpp \
 	epoll.cpp \
