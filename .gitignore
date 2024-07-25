@@ -1,5 +1,5 @@
 ircserv
-.o
-.a
-.d
+*.o
+*.a
+*.d
 .build
