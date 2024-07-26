@@ -1,6 +1,8 @@
 #include "../includes/Client.hpp"
 
-Client::Client(int socket) : socket(socket), authenticated(false) {}
+Client::Client(int socket) : socket(socket) {}
+
+Client::Client() : socket(-1) {} 
 
 int Client::getSocket() const {
     return socket;
@@ -20,8 +22,4 @@ std::string Client::getNick() const {
 
 std::string Client::getUser() const {
     return user;
-}
-
-void Client::setAuthenticated(bool auth) {
-    this->authenticated = auth;
 }
