@@ -1,22 +1,21 @@
-#include <iostream>
-#include <cstdlib>
-#include <stdexcept>
 #include "../includes/Server.hpp"
 
-// Définir le port du serveur et le mot de passe ici
-const int PORT = 6667;
-const std::string PASSWORD = "yourpassword"; // Remplacez par le mot de passe souhaité
-
-int main() {
+int main(int argc, char* argv[]) {
     try {
-        // Création et démarrage du serveur
-        Server server(PORT, PASSWORD);
-        std::cout << "IRC server started on port " << PORT << "\n";
-        
-        // Exécution du serveur
+        if (argc < 2) {
+            std::cerr << "Usage: " << argv[0] << " <port>\n";
+            return EXIT_FAILURE;
+        }
+        int port = std::atoi(argv[1]);
+        if (port <= 0 || port > 65535) {
+            std::cerr << "Invalid port number. Must be between 1 and 65535.\n";
+            return EXIT_FAILURE;
+        }
+        Server server(port);
+        std::cout << "IRC server started on port " << port << "\n";
+    
         server.run();
     } catch (const std::exception& e) {
-        // Gestion des exceptions et affichage des messages d'erreur
         std::cerr << "Error: " << e.what() << '\n';
         return EXIT_FAILURE;
     }
