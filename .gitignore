@@ -1,0 +1,6 @@
+ircserv
+*.o
+*.a
+*.d
+*.log
+.build
