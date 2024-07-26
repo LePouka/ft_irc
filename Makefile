@@ -2,9 +2,9 @@ CXX = c++
 CFLAGS = -Wall -Wextra -Werror -std=c++98 -g3
 NAME = ircserv
 SRC = main.cpp \
-	Server.cpp \
-	Client.cpp
-	
+	  Server.cpp \
+	  Client.cpp
+
 SRCS = $(addprefix srcs/, $(SRC))
 OBJDIR = objs
 OBJS = $(addprefix $(OBJDIR)/, $(SRC:.cpp=.o))
