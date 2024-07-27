@@ -13,6 +13,8 @@
 #include <sstream>
 #include <stdexcept>
 
+#define SERVER_NAME "ircserv"
+
 class Server {
 public:
     Server(int port);
@@ -34,6 +36,7 @@ private:
     void addSocketToEpoll(int sock);
     void eventLoop();
     void handleClientMessage(int client_socket, const std::string& message);
-    void sendWelcomeMessage(int client_socket);
     void sendErrorMessage(int client_socket, const std::string& command);
+    void handleNickCommand(int client_socket, const std::string& nick);
+    void handleUserCommand(int client_socket, const std::string& user);
 };
