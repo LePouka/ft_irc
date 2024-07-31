@@ -15,20 +15,20 @@
 
 class Client {
 public:
-    Client(int socket);
-    Client();
+	Client(int socket);
+	Client();
 
-    int getSocket() const;
-    void setNick(const std::string& nick);
-    void setUser(const std::string& user);
-    std::string getNick() const;
-    std::string getUser() const;
+	int getSocket() const;
+	void setNick(const std::string& nick);
+	void setUser(const std::string& user);
+	std::string getNick() const;
+	std::string getUser() const;
 
-    bool isRegistered() const; // Ajoutez cette fonction
+	bool isRegistered() const; // Ajoutez cette fonction
 
 private:
-    int socket;
-    std::string nick;
-    std::string user;
-    bool registered; // Ajoutez cette variable
+	int socket;
+	std::string nick;
+	std::string user;
+	bool registered; // Ajoutez cette variable
 };

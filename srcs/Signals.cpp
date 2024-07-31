@@ -20,3 +20,4 @@ void	signals_handler( int signal ) {
 
 	( void )signal;
 	g_signals = false;
+}
