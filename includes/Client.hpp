@@ -11,4 +11,24 @@
 #include <string>
 #include <map>
 
-#define max_events 10
+#define MAX_EVENTS 10
+
+class Client {
+public:
+    Client(int socket);
+    Client();
+
+    int getSocket() const;
+    void setNick(const std::string& nick);
+    void setUser(const std::string& user);
+    std::string getNick() const;
+    std::string getUser() const;
+
+    bool isRegistered() const; // Ajoutez cette fonction
+
+private:
+    int socket;
+    std::string nick;
+    std::string user;
+    bool registered; // Ajoutez cette variable
+};

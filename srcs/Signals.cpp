@@ -1,4 +1,4 @@
-#include "signals.hpp"
+#include "../includes/Signals.hpp"
 
 bool	g_signals;
 
