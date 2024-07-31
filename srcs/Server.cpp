@@ -86,7 +86,6 @@ void Server::eventLoop() {
         if (nfds == -1) {
             throw std::runtime_error("epoll_wait failed");
         }
-
         for (int i = 0; i < nfds; ++i) {
             int fd = events[i].data.fd;
 
@@ -96,7 +95,7 @@ void Server::eventLoop() {
                 int client_socket = accept(server_socket, (struct sockaddr*)&client_addr, &client_len);
 
                 if (client_socket == -1) {
-                    std::cerr << "accept failed\n";
+                    std::cerr << "accept failed: " << strerror(errno) << "\n";
                     continue;
                 }
 
@@ -106,13 +105,11 @@ void Server::eventLoop() {
                 ev.data.fd = client_socket;
                 if (epoll_ctl(epoll_fd, EPOLL_CTL_ADD, client_socket, &ev) == -1) {
                     close(client_socket);
-                    std::cerr << "epoll_ctl: client_socket failed\n";
+                    std::cerr << "epoll_ctl: client_socket failed: " << strerror(errno) << "\n";
                     continue;
                 }
 
                 clients[client_socket] = Client(client_socket);
-
-                // Pas d'envoi de message de bienvenue ici
                 std::cout << "New client connected.\n";
             } else {
                 int client_socket = fd;
@@ -132,9 +129,12 @@ void Server::eventLoop() {
                         handleClientMessage(client_socket, message);
                     }
                 }
-
                 if (bytes_read == -1) {
-                    std::cerr << "read failed\n";
+                    if (errno == EAGAIN || errno == EWOULDBLOCK) {
+                        continue;
+                    } else {
+                        std::cerr << "read failed: " << strerror(errno) << "\n";
+                    }
                 } else if (bytes_read == 0) {
                     std::cout << "Client disconnected.\n";
                     close(client_socket);
@@ -153,18 +153,10 @@ void Server::handleClientMessage(int client_socket, const std::string& message) 
     std::string arg = (pos != std::string::npos) ? message.substr(pos + 1) : "";
 
     if (command == "CAP") {
-        // Handle CAP command
     } else if (command == "WHOIS") {
-        // Handle WHOIS command
     } else if (command == "MODE") {
-        // Handle MODE command
     } else if (command == "NICK") {
-        if (arg.empty()) {
-            std::string error_message = ERR_NONICKNAMEGIVEN("server");
-            send(client_socket, error_message.c_str(), error_message.length(), 0);
-        } else {
-            handleNickCommand(client_socket, arg);
-        }
+        handleNickCommand(client_socket, arg);
     } else if (command == "USER") {
         handleUserCommand(client_socket, arg);
     } else if (command == "PING") {
@@ -174,67 +166,6 @@ void Server::handleClientMessage(int client_socket, const std::string& message) 
     } else {
         sendErrorMessage(client_socket, command);
     }
-}
-
-void Server::handleNickCommand(int client_socket, const std::string& new_nick) {
-    if (new_nick.empty()) {
-        // Erreur : aucun pseudo donné
-        std::string error_message = ERR_NONICKNAMEGIVEN("server");
-        send(client_socket, error_message.c_str(), error_message.length(), 0);
-        return;
-    }
-
-    // Vérifier si le pseudo est déjà pris
-    std::map<int, Client>::const_iterator it;
-    for (it = clients.begin(); it != clients.end(); ++it) {
-        if (it->second.getNick() == new_nick) {
-            // Erreur : pseudo déjà utilisé
-            std::ostringstream error_message;
-            error_message << ERR_NICKNAMEINUSE("server", new_nick);
-            send(client_socket, error_message.str().c_str(), error_message.str().length(), 0);
-            return;
-        }
-    }
-
-    // Obtenir le vieux pseudo
-    std::string old_nick = clients[client_socket].getNick();
-
-    // Mettre à jour le pseudo du client
-    clients[client_socket].setNick(new_nick);
-
-    // Préparer le message de notification pour les autres clients
-    std::ostringstream notification_message;
-    notification_message << ":" << old_nick << " NICK " << new_nick << "\r\n";
-    std::string notification = notification_message.str();
-
-    // Envoyer la notification aux autres clients
-    for (it = clients.begin(); it != clients.end(); ++it) {
-        if (it->first != client_socket) {
-            send(it->first, notification.c_str(), notification.length(), 0);
-        }
-    }
-
-    // Envoyer la confirmation au client dont le pseudo a changé
-    std::ostringstream response;
-    response << ":server 001 " << clients[client_socket].getNick() << " :You're now known as " << new_nick << "\r\n";
-    std::string response_str = response.str();
-
-    if (send(client_socket, response_str.c_str(), response_str.length(), 0) == -1) {
-        std::cerr << "Error sending nickname change confirmation to client " << client_socket << std::endl;
-    }
-}
-
-void Server::handleUserCommand(int client_socket, const std::string& user) {
-    if (user.empty()) {
-        std::string error_message = ERR_NEEDMOREPARAMS("server", "USER");
-        send(client_socket, error_message.c_str(), error_message.length(), 0);
-        return;
-    }
-
-    clients[client_socket].setUser(user);
-    std::ostringstream response;
-    response << ":server 001 " << clients[client_socket].getNick() << " :User set to " << user << "\r\n";
-    send(client_socket, response.str().c_str(), response.str().length(), 0);
 }
 
 void Server::sendErrorMessage(int client_socket, const std::string& command) {
