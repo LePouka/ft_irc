@@ -27,3 +27,15 @@ private:
     std::string nick;
     std::string user;
 };
+
+class ClientArray {
+    private:
+        std::map<int, Client> clients;
+    public:
+        ClientArray();
+        ~ClientArray();
+        void add_client(int client_socket);
+        void remove_client(int client_socket);
+        Client &get_client(int client_socket);
+
+};

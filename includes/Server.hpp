@@ -12,6 +12,7 @@
 #include <arpa/inet.h>
 #include <sstream>
 #include <stdexcept>
+#include "Channel.hpp"
 
 class Server {
 public:

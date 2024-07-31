@@ -12,8 +12,9 @@ int main(int argc, char* argv[]) {
             return EXIT_FAILURE;
         }
         Server server(port);
+        Channel channel = Channel();
+        Client clients = 
         std::cout << "IRC server started on port " << port << "\n";
-    
         server.run();
     } catch (const std::exception& e) {
         std::cerr << "Error: " << e.what() << '\n';
