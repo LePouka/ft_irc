@@ -1,4 +1,5 @@
 #include "../includes/Server.hpp"
+#include "../includes/Util.hpp"
 
 Server::Server(int port)
 {
@@ -79,106 +80,96 @@ void Server::addSocketToEpoll(int sock) {
     }
 }
 
-void Server::eventLoop()
-{
+void Server::eventLoop() {
     while (true) {
         int nfds = epoll_wait(epoll_fd, events, MAX_EVENTS, -1);
         if (nfds == -1) {
-            close(server_socket);
-            close(epoll_fd);
             throw std::runtime_error("epoll_wait failed");
         }
-        for (int n = 0; n < nfds; ++n) {
-            if (events[n].data.fd == server_socket) {
+        for (int i = 0; i < nfds; ++i) {
+            int fd = events[i].data.fd;
+
+            if (fd == server_socket) {
                 sockaddr_in client_addr;
                 socklen_t client_len = sizeof(client_addr);
                 int client_socket = accept(server_socket, (struct sockaddr*)&client_addr, &client_len);
+
                 if (client_socket == -1) {
-                    std::cerr << "accept failed\n";
+                    std::cerr << "accept failed: " << strerror(errno) << "\n";
                     continue;
                 }
+
                 setNonBlocking(client_socket);
 
                 ev.events = EPOLLIN | EPOLLET;
                 ev.data.fd = client_socket;
                 if (epoll_ctl(epoll_fd, EPOLL_CTL_ADD, client_socket, &ev) == -1) {
                     close(client_socket);
-                    std::cerr << "epoll_ctl: client_socket failed\n";
+                    std::cerr << "epoll_ctl: client_socket failed: " << strerror(errno) << "\n";
                     continue;
                 }
-                clients.insert(std::make_pair(client_socket, Client(client_socket)));
-                std::stringstream ss;
-                ss << ":localhost 001 " << client_socket << " :Welcome to the IRC server\r\n";
-                std::string welcome_message = ss.str();
-                send(client_socket, welcome_message.c_str(), welcome_message.length(), 0);
+
+                clients[client_socket] = Client(client_socket);
                 std::cout << "New client connected.\n";
             } else {
+                int client_socket = fd;
                 char buffer[1024];
-                int client_socket = events[n].data.fd;
-                int bytes_read = read(client_socket, buffer, sizeof(buffer));
+                ssize_t bytes_read;
+                std::string message_buffer;
+
+                while ((bytes_read = read(client_socket, buffer, sizeof(buffer) - 1)) > 0) {
+                    buffer[bytes_read] = '\0';
+                    message_buffer += buffer;
+
+                    size_t pos;
+                    while ((pos = message_buffer.find("\r\n")) != std::string::npos) {
+                        std::string message = message_buffer.substr(0, pos);
+                        message_buffer.erase(0, pos + 2);
+
+                        handleClientMessage(client_socket, message);
+                    }
+                }
                 if (bytes_read == -1) {
-                    std::cerr << "read failed\n";
-                    close(client_socket);
-                    clients.erase(client_socket);
-                    continue;
+                    if (errno == EAGAIN || errno == EWOULDBLOCK) {
+                        continue;
+                    } else {
+                        std::cerr << "read failed: " << strerror(errno) << "\n";
+                    }
                 } else if (bytes_read == 0) {
                     std::cout << "Client disconnected.\n";
                     close(client_socket);
                     clients.erase(client_socket);
-                } else {
-                    buffer[bytes_read] = '\0';
-                    // handleClientMessage(client_socket, std::string(buffer));
                 }
             }
         }
     }
 }
 
-
 void Server::handleClientMessage(int client_socket, const std::string& message) {
-    Client& client = clients[client_socket];
     std::cout << "Received from client " << client_socket << ": " << message << std::endl;
 
     size_t pos = message.find(' ');
     std::string command = (pos != std::string::npos) ? message.substr(0, pos) : message;
-    std::string params = (pos != std::string::npos) ? message.substr(pos + 1) : "";
+    std::string arg = (pos != std::string::npos) ? message.substr(pos + 1) : "";
 
-    if (command == "NICK") {
-        params.erase(params.find_last_not_of(" \n\r") + 1);
-        client.setNick(params);
-        sendWelcomeMessage(client_socket);
+    if (command == "CAP") {
+    } else if (command == "WHOIS") {
+    } else if (command == "MODE") {
+    } else if (command == "NICK") {
+        handleNickCommand(client_socket, arg);
     } else if (command == "USER") {
-        size_t user_end = params.find(' ');
-        if (user_end != std::string::npos) {
-            std::string user = params.substr(0, user_end);
-            params.erase(0, user_end + 1);
-            std::string realname = params;
-            realname.erase(realname.find_last_not_of(" \n\r") + 1);
-            client.setUser(user + " " + realname);
-            sendWelcomeMessage(client_socket);
-        } else {
-            sendErrorMessage(client_socket, command);
-        }
+        handleUserCommand(client_socket, arg);
     } else if (command == "PING") {
-        std::string pong_response = "PONG " + params + "\r\n";
-        send(client_socket, pong_response.c_str(), pong_response.length(), 0);
+        std::ostringstream response;
+        response << PONG_MSG("server", clients[client_socket].getNick());
+        send(client_socket, response.str().c_str(), response.str().length(), 0);
     } else {
         sendErrorMessage(client_socket, command);
     }
 }
 
 void Server::sendErrorMessage(int client_socket, const std::string& command) {
-    // Code d'erreur 421 : Unknown command
-    std::string error_message = ":server 421 " + clients[client_socket].getNick() + " " + command + " :Unknown command\r\n";
-    send(client_socket, error_message.c_str(), error_message.length(), 0);
-}
-
-void Server::sendWelcomeMessage(int client_socket) {
-    Client& client = clients[client_socket];
-    if (!client.getNick().empty() && !client.getUser().empty()) {
-        std::string welcome_message = ":server 001 " + client.getNick() + " :Welcome to the IRC server\n";
-        std::string mode_message = ":server 221 " + client.getNick() + " +i\n";
-        send(client_socket, welcome_message.c_str(), welcome_message.length(), 0);
-        send(client_socket, mode_message.c_str(), mode_message.length(), 0);
-    }
+    std::ostringstream error_message;
+    error_message << ERR_UNKNOWNCOMMAND("server", command);
+    send(client_socket, error_message.str().c_str(), error_message.str().length(), 0);
 }
