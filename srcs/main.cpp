@@ -13,7 +13,7 @@ int main(int argc, char* argv[]) {
         }
         Server server(port);
         Channel channel = Channel();
-        Client clients = 
+        Client clients = Client();
         std::cout << "IRC server started on port " << port << "\n";
         server.run();
     } catch (const std::exception& e) {

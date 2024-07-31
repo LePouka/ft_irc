@@ -14,8 +14,12 @@
 
 class Client {
 public:
+    //CONST/DEST
     Client(int socket);
     Client();
+    ~Client();
+
+    //GETTER/SETTER
     int getSocket() const;
     void setNick(const std::string& nick);
     void setUser(const std::string& user);
@@ -32,10 +36,14 @@ class ClientArray {
     private:
         std::map<int, Client> clients;
     public:
+        //CONST/DEST
         ClientArray();
         ~ClientArray();
-        void add_client(int client_socket);
-        void remove_client(int client_socket);
-        Client &get_client(int client_socket);
 
+        //GETTER/SETTER
+        Client &getClient(int clientSocket);
+        void addClient(int clientSocket, Client client);
+        
+        //METHODS
+        void removeClient(int clientSocket);
 };

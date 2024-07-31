@@ -4,6 +4,7 @@
 #include <set>
 #include <map>
 #include "Client.hpp"
+#include "Message.hpp"
 
 class Channel {
     private:
@@ -59,4 +60,5 @@ class ChannelArray {
         void deleteChan(std::string const &channel);
         bool isChan(std::string const &channel);
         bool isOperator(int clientSocket, std::string const &channel);
+        void writeMsgChannel(int clientSocket, std::string const &channel, std::string const &msg);
 };

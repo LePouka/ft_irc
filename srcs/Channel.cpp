@@ -1,6 +1,6 @@
 #include "../includes/Channel.hpp"
 
-//CHANNEL
+//                          CHANNEL
 
 
 //CONST/DEST
@@ -70,7 +70,9 @@ bool Channel::hasUser(int clientSocket)
     return users.find(clientSocket) != users.end();
 }
 
-//CHANNELARRAY
+
+
+//                          CHANNELARRAY
 
 //CONST/DEST
 
@@ -111,7 +113,7 @@ void ChannelArray::setChannelTopic(std::string const &channel, std::string const
 
 void ChannelArray::createChannel(std::string const &channel, int const &clientSocket)
 {
-    if (channels.find(channel) == channels.end())
+    if (!isChan)
     {
         Channel newChannel;
 
@@ -138,6 +140,11 @@ void ChannelArray::join(int clientSocket, std::string const &channel)
 
 void ChannelArray::leave(int clientSocket, std::string const &channel)
 {
+    if (!isChan(channel)) {
+        // Handle the case where the channel does not exist
+        return;
+    }
+
     if (clientChannels[clientSocket].find(channel) != clientChannels[clientSocket].end())
     {
         if (getOperators(channel).find(clientSocket) != getOperators(channel).end())
@@ -153,7 +160,6 @@ void ChannelArray::leave(int clientSocket, std::string const &channel)
 
 void ChannelArray::leaveAll(int clientSocket)
 {
-
     for (std::set<std::string>::iterator it = getChannelsClient(clientSocket).begin(); it != getChannelsClient(clientSocket).end(); ++it)
     {
         if (getOperators(*it).find(clientSocket) != getOperators(*it).end())
@@ -169,6 +175,11 @@ void ChannelArray::leaveAll(int clientSocket)
 
 void ChannelArray::deleteChan(std::string const &channel)
 {
+    if (!isChan(channel)) {
+        // Handle the case where the channel does not exist
+        return;
+    }
+
     channels[channel].~Channel();
     channels.erase(channel);
 }
@@ -180,5 +191,26 @@ bool ChannelArray::isChan(std::string const &channel)
 
 bool ChannelArray::isOperator(int clientSocket, std::string const &channel)
 {
+    if (!isChan(channel)) {
+        // Handle the case where the channel does not exist
+        return;
+    }
+
     return getChannel(channel).getOperators().find(clientSocket) != getChannel(channel).getOperators().end();
+}
+
+void ChannelArray::writeMsgChannel(int clientSocket, std::string const &channel, std::string const &msg)
+{
+    if (!isChan(channel)) {
+        // Handle the case where the channel does not exist
+        return;
+    }
+
+    std::set<int> users = getChannel(channel).getUsers();
+    for (std::set<int>::iterator it = users.begin(); it != users.end(); ++it) {
+        if (*it != clientSocket) { // Check if the current user is not the sender
+            // Assuming you have a function to send a message to a client by their socket
+            sendMessage(*it, "PRIVMSG " + channel + " :" + msg);
+        }
+    }
 }
