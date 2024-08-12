@@ -1,32 +1,39 @@
 #include "../includes/Client.hpp"
 
-Client::Client(int socket) : socket(socket), registered(false) {}
+Client::Client(int socket) : socket(socket), registered(false), welcomeSent(false) {}
 
-Client::Client() : socket(-1), registered(false) {}
+Client::Client() : socket(-1), registered(false), welcomeSent(false) {}
 
 int Client::getSocket() const {
-	return socket;
+    return socket;
 }
 
 void Client::setNick(const std::string& nick) {
-	this->nick = nick;
-	registered = !this->nick.empty() && !this->user.empty();
+    this->nick = nick;
+    registered = !this->nick.empty() && !this->user.empty();
 }
 
 void Client::setUser(const std::string& user) {
-	this->user = user;
-	registered = !this->nick.empty() && !this->user.empty();
+    this->user = user;
+    registered = !this->nick.empty() && !this->user.empty();
 }
 
 std::string Client::getNick() const {
-	return nick;
+    return nick;
 }
 
 std::string Client::getUser() const {
-	return user;
+    return user;
 }
 
 bool Client::isRegistered() const {
-	return registered;
+    return registered;
 }
 
+bool Client::isWelcomeSent() const {
+    return welcomeSent;
+}
+
+void Client::setWelcomeSent(bool sent) {
+    welcomeSent = sent;
+}

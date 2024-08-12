@@ -65,30 +65,33 @@ void sendNickChangeConfirmation(int client_socket, const std::string& old_nick, 
 		std::cerr << "Error sending nickname change confirmation to client " << client_socket << std::endl;
 	}
 }
-
 void Server::handleNickCommand(int client_socket, const std::string& new_nick) {
-	if (new_nick.empty()) {
-		std::string error_message = ERR_NONICKNAMEGIVEN("server");
-		sendErrorMessage(client_socket, error_message);
-		return;
-	}
-	if (!isValidNick(new_nick)) {
-		std::ostringstream error_message;
-		error_message << ERR_ERRONEUSNICKNAME(SERVER_NAME, new_nick);
-		send(client_socket, error_message.str().c_str(), error_message.str().length(), 0);
-		return;
-	}
-	std::map<int, Client>::const_iterator it;
-	for (it = clients.begin(); it != clients.end(); ++it) {
-		if (it->second.getNick() == new_nick) {
-			std::ostringstream error_message;
-			error_message << ERR_NICKNAMEINUSE("server", new_nick);
-			send(client_socket, error_message.str().c_str(), error_message.str().length(), 0);
-			return;
-		}
-	}
-	std::string old_nick = clients[client_socket].getNick();
-	clients[client_socket].setNick(new_nick);
-	notifyClients(clients, client_socket, old_nick, new_nick);
-	sendNickChangeConfirmation(client_socket, old_nick, new_nick);
+    if (new_nick.empty()) {
+        std::string error_message = ERR_NONICKNAMEGIVEN("server");
+        sendErrorMessage(client_socket, error_message);
+        return;
+    }
+    if (!isValidNick(new_nick)) {
+        std::ostringstream error_message;
+        error_message << ERR_ERRONEUSNICKNAME(SERVER_NAME, new_nick);
+        send(client_socket, error_message.str().c_str(), error_message.str().length(), 0);
+        return;
+    }
+    if (isNickInUse(new_nick, clients)) {
+        std::ostringstream error_message;
+        error_message << ERR_NICKNAMEINUSE("server", new_nick);
+        send(client_socket, error_message.str().c_str(), error_message.str().length(), 0);
+        return;
+    }
+    std::string old_nick = clients[client_socket].getNick();
+    clients[client_socket].setNick(new_nick);
+    notifyClients(clients, client_socket, old_nick, new_nick);
+    sendNickChangeConfirmation(client_socket, old_nick, new_nick);
+    
+    if (clients[client_socket].isRegistered() && !clients[client_socket].isWelcomeSent()) {
+        std::string welcome_message = RPL_WELCOME(clients[client_socket].getUser(), clients[client_socket].getNick());
+        send(client_socket, welcome_message.c_str(), welcome_message.length(), 0);
+        clients[client_socket].setWelcomeSent(true);
+    }
 }
+
