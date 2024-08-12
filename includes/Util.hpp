@@ -12,3 +12,5 @@
 # define	ERR_NICKNAMEINUSE(source, nick)					COLON + source + SPACE + "433 " + "* " + nick + " :Nickname is already in use" + NEW_LINE
 # define	ERR_NOTREGISTERED(source)						COLON + source + SPACE + "451 " + ":You have not registered" + NEW_LINE
 # define	ERR_NEEDMOREPARAMS(source, command)				COLON + source + SPACE + "461 " + "* " + command + " :Not enough parameters" + NEW_LINE
+# define	RPL_WELCOME(username, nickname)					COLON + SERVER_NAME + " 001 " + nickname + " :Welcome to the " + SERVER_NAME + \
+                                                            " Network " + nickname + "!" + username + IP_ADDRESS + NEW_LINE                                        
