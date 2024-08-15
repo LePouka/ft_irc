@@ -1,53 +1,57 @@
 #pragma once
 
-/******************************************************************************/
+/* ************************************************************************** */
 /*   INCLUDES                                                                 */
-/******************************************************************************/
+/* ************************************************************************** */
 # include <iostream>
 # include <string>
+# include <map>
+# include <set>
+# include <vector>
 
-/******************************************************************************/
-/*   DEFINES                                                                  */
-/******************************************************************************/
-
-/******************************************************************************/
+/* ************************************************************************** */
 /*   STRUCTURS                                                                */
-/******************************************************************************/
+/* ************************************************************************** */
 struct Channel {
 
-	std::string		name;
-	std::string		topic;
-	bool			isInviteOnly;
-	bool			isTopicRestrictedToOperators;
-	unsigned int	userLimit;
+	std::string			name;
+	std::string			topic;
+	std::set< int >		cliendtsFd;
+	bool				isInviteOnly;
+	bool				isTopicRestrictedToOperators;
+	bool				isKeyNeeded;
+	unsigned int		userLimit;
 
 };
 
-/******************************************************************************/
+/* ************************************************************************** */
 /*   CLASSES                                                                  */
-/******************************************************************************/
-
+/* ************************************************************************** */
 class ChannelManager {
 
 private:
+	std::map< std::string, Channel >	_channels;
 
 protected:
 
 public:
 
 	// Constructors
-	Channel( void );
-	Channel( Channel const & src );
+	ChannelManager( void ) {}
+	ChannelManager( ChannelManager const & src );
 
 	// Destructor
-	virtual ~Channel( void );
+	virtual ~ChannelManager( void ) {}
 
 	// Operators
-	Channel&	operator=( Channel const & rhs );
+	ChannelManager&	operator=( ChannelManager const & rhs );
+
+	// Accessors
+	Channel&	getChannel( std::string const & channel );
 
 };
 
-/******************************************************************************/
-/*   REDIRECTION OPERATOR                                                     */
-/******************************************************************************/
-std::ostream&	operator<<( std::ostream& o, Channel const & rhs );
+/* ************************************************************************** */
+/*   redirection operator                                                     */
+/* ************************************************************************** */
+std::ostream&	operator<<( std::ostream& o, channelmanager const & rhs );
