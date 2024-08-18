@@ -1,23 +1,17 @@
 /* ************************************************************************** */
 /*   INCLUDES                                                                 */
 /* ************************************************************************** */
-#include "Channel.hpp"
-
-/* ************************************************************************** */
-/*   CONSTRUCTORS / DESTRUCTORS                                               */
-/* ************************************************************************** */
-Channel::Channel( void ) {}
-
-Channel::Channel( Channel const & src ) {}
-
-Channel::~Channel( void ) {}
+#include "ChannelManager.hpp"
 
 /* ************************************************************************** */
 /*   ASSIGNATION OPERATOR                                                     */
 /* ************************************************************************** */
-Channel&	Channel::operator=( Channel const & rhs ) {
+ChannelManager&	ChannelManager::operator=( ChannelManager const & rhs ) {
 
-	if ( this != &rhs ) {}
+	if ( this != &rhs ) {
+
+		_channels = rhs._channels;
+	}
 
 	return *this;
 }
@@ -25,6 +19,12 @@ Channel&	Channel::operator=( Channel const & rhs ) {
 /* ************************************************************************** */
 /*   ACCESSORS                                                                */
 /* ************************************************************************** */
+Channel&	ChannelManager::getChannel( std::string const & channel ) {}
+
+void		setChannelName( std::string const & channelName ) {}
+
+void		setChannelTopic( std::string const & channelName, \
+								std::string const & channelTopic ) {}
 
 /* ************************************************************************** */
 /*   FUNCTIONS                                                                */
@@ -33,9 +33,9 @@ Channel&	Channel::operator=( Channel const & rhs ) {
 /* ************************************************************************** */
 /*   REDIRECTION OPERATOR                                                     */
 /* ************************************************************************** */
-std::ostream&	operator<<( std::ostream& o, Channel const & rhs ) {
+std::ostream&	operator<<( std::ostream& o, ChannelManager const & rhs ) {
 
-	o << "Channel";
+	o << "ChannelManager";
 
 	return o;
 }

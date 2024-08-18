@@ -38,7 +38,7 @@ public:
 
 	// Constructors
 	ChannelManager( void ) {}
-	ChannelManager( ChannelManager const & src );
+	ChannelManager( ChannelManager const & src ) : _channels( src._channels ) {}
 
 	// Destructor
 	virtual ~ChannelManager( void ) {}
@@ -48,6 +48,9 @@ public:
 
 	// Accessors
 	Channel&	getChannel( std::string const & channel );
+	void		setChannelName( std::string const & channelName );
+	void		setChannelTopic( std::string const & channelName, \
+									std::string const & channelTopic );
 
 };
 
