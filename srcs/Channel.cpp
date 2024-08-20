@@ -21,10 +21,10 @@ ChannelManager&	ChannelManager::operator=( ChannelManager const & rhs ) {
 /* ************************************************************************** */
 Channel&	ChannelManager::getChannel( std::string const & channel ) {}
 
-void		setChannelName( std::string const & channelName ) {}
+void	setChannelName( std::string const & channelName ) {}
 
-void		setChannelTopic( std::string const & channelName, \
-								std::string const & channelTopic ) {}
+void	setChannelTopic( std::string const & channelName, \
+							std::string const & channelTopic ) {}
 
 /* ************************************************************************** */
 /*   FUNCTIONS                                                                */
@@ -33,9 +33,11 @@ void		setChannelTopic( std::string const & channelName, \
 /* ************************************************************************** */
 /*   REDIRECTION OPERATOR                                                     */
 /* ************************************************************************** */
+/*
 std::ostream&	operator<<( std::ostream& o, ChannelManager const & rhs ) {
 
 	o << "ChannelManager";
 
 	return o;
 }
+*/
