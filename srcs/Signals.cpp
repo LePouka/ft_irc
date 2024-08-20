@@ -1,4 +1,4 @@
-#include "signals.hpp"
+#include "../includes/Signals.hpp"
 
 bool	g_signals;
 
@@ -20,3 +20,4 @@ void	signals_handler( int signal ) {
 
 	( void )signal;
 	g_signals = false;
+}

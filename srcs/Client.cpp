@@ -1,8 +1,8 @@
 #include "../includes/Client.hpp"
 
-Client::Client(int socket) : socket(socket), registered(false) {}
+Client::Client(int socket) : socket(socket), registered(false), welcomeSent(false) {}
 
-Client::Client() : socket(-1), registered(false) {}
+Client::Client() : socket(-1), registered(false), welcomeSent(false) {}
 
 int Client::getSocket() const {
     return socket;
@@ -30,3 +30,10 @@ bool Client::isRegistered() const {
     return registered;
 }
 
+bool Client::isWelcomeSent() const {
+    return welcomeSent;
+}
+
+void Client::setWelcomeSent(bool sent) {
+    welcomeSent = sent;
+}
