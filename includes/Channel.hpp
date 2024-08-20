@@ -15,12 +15,16 @@
 struct Channel {
 
 	std::string			name;
-	std::string			topic;
+	std::string			password;
 	std::set< int >		cliendtsFd;
+
+	/*
+	std::string			topic;
 	bool				isInviteOnly;
 	bool				isTopicRestrictedToOperators;
 	bool				isKeyNeeded;
 	unsigned int		userLimit;
+	*/
 
 };
 
@@ -57,4 +61,6 @@ public:
 /* ************************************************************************** */
 /*   redirection operator                                                     */
 /* ************************************************************************** */
+/*
 std::ostream&	operator<<( std::ostream& o, channelmanager const & rhs );
+*/
