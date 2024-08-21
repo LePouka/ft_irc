@@ -17,7 +17,7 @@
 
 class Server {
 public:
-	Server(int port);
+	Server(int port, const std::string& password = "");
 	~Server();
 	void run();
 
@@ -27,6 +27,10 @@ private:
 	std::map<int, Client> clients;
 	epoll_event ev;
 	epoll_event events[10];
+
+	bool serverPasswordRequired;
+    std::string serverPassword;
+	std::string server_config_password;
 
 	void setNonBlocking(int sock);
 	void createSocket();
@@ -39,4 +43,5 @@ private:
 	void sendErrorMessage(int client_socket, const std::string& command);
 	void handleNickCommand(int client_socket, const std::string& nick);
 	void handleUserCommand(int client_socket, const std::string& user);
+	void handlePassCommand(int client_socket, const std::string& password);
 };
