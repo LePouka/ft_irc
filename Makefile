@@ -5,7 +5,8 @@ SRC = main.cpp \
 	Server.cpp \
 	Client.cpp \
 	Channel.cpp \
-	Message.cpp
+	Message.cpp \
+	commands/channelCommands/Join.cpp \
 	
 SRCS = $(addprefix srcs/, $(SRC))
 OBJDIR = objs
@@ -17,6 +18,7 @@ $(NAME): $(OBJS)
 	$(CXX) $(CFLAGS) $(OBJS) -o $(NAME)
 
 $(OBJDIR)/%.o: srcs/%.cpp | $(OBJDIR)
+	@mkdir -p $(dir $@)
 	$(CXX) $(CFLAGS) -c $< -o $@
 
 $(OBJDIR):

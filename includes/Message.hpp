@@ -1,6 +1,6 @@
 #pragma once
 
+#include <cstdio>
 #include "Channel.hpp"
-#include "Server.hpp"
 
 void sendMessage( int clientSocket, std::string msg);

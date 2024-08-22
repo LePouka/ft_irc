@@ -38,7 +38,7 @@ class Channel {
 class ChannelArray {
     private:
         std::map<std::string, Channel> channels;
-        std::map<int, std::set<std::string>> clientChannels;
+        std::map<int, std::set<std::string> > clientChannels;
     public:
         //CONST/DEST
         ChannelArray();
@@ -62,3 +62,4 @@ class ChannelArray {
         bool isOperator(int clientSocket, std::string const &channel);
         void writeMsgChannel(int clientSocket, std::string const &channel, std::string const &msg);
 };
+

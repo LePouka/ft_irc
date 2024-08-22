@@ -6,7 +6,7 @@ void sendMessage( int clientSocket, std::string msg)
 
     size_t msgLength = strlen(msgC) + 1;
 
-    size_t bytesSent = send(clientSocket, msgC, msgLength, 0);
+    ssize_t bytesSent = send(clientSocket, msgC, msgLength, 0);
 
     if (bytesSent == -1) {
         perror("send failed");

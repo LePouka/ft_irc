@@ -113,14 +113,16 @@ void ChannelArray::setChannelTopic(std::string const &channel, std::string const
 
 void ChannelArray::createChannel(std::string const &channel, int const &clientSocket)
 {
-    if (!isChan)
+    std::cout << channel << " was created\n";
+    if (!isChan(channel))
     {
         Channel newChannel;
 
         newChannel.setName(channel);
         newChannel.setTopic("");
+        newChannel.addUser(clientSocket);
         newChannel.addOperators(clientSocket);
-        channels.emplace(channel, newChannel);
+        channels.insert(std::make_pair(channel, newChannel));
     }
 }
 
@@ -160,7 +162,9 @@ void ChannelArray::leave(int clientSocket, std::string const &channel)
 
 void ChannelArray::leaveAll(int clientSocket)
 {
-    for (std::set<std::string>::iterator it = getChannelsClient(clientSocket).begin(); it != getChannelsClient(clientSocket).end(); ++it)
+    std::set<std::string> clientChannelsSet = getChannelsClient(clientSocket);
+
+    for (std::set<std::string>::iterator it = clientChannelsSet.begin(); it != clientChannelsSet.end(); ++it)
     {
         if (getOperators(*it).find(clientSocket) != getOperators(*it).end())
             getChannel(*it).removeOperator(clientSocket);
@@ -193,7 +197,7 @@ bool ChannelArray::isOperator(int clientSocket, std::string const &channel)
 {
     if (!isChan(channel)) {
         // Handle the case where the channel does not exist
-        return;
+        return(false);
     }
 
     return getChannel(channel).getOperators().find(clientSocket) != getChannel(channel).getOperators().end();

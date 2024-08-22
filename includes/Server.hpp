@@ -13,20 +13,31 @@
 #include <sstream>
 #include <stdexcept>
 #include "Channel.hpp"
+#include "Commands.hpp"
 
 class Server {
 public:
+    
+    //CONST/DEST
     Server(int port);
     ~Server();
+    
+    //GETTER/SETTER
+    int getServerSocket();
+    ChannelArray& getChannelArray();
+    std::map<int, Client> getClientMap();
+    //METHODS
     void run();
 
 private:
     int server_socket;
     int epoll_fd;
     std::map<int, Client> clients;
+    ChannelArray channels;
     epoll_event ev;
     epoll_event events[10];
 
+    //PRIV METHODS
     void setNonBlocking(int sock);
     void createSocket();
     void bindSocket(int port);

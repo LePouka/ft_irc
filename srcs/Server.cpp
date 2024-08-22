@@ -8,16 +8,34 @@ Server::Server(int port)
     createEpollInstance();
 }
 
-Server::~Server() {
+Server::~Server()
+{
     close(server_socket);
     close(epoll_fd);
 }
 
-void Server::run() {
+int Server::getServerSocket()
+{
+    return (this->server_socket);
+}
+
+ChannelArray &Server::getChannelArray()
+{
+    return (this->channels);
+}
+
+std::map<int, Client> Server::getClientMap()
+{
+    return (this->clients);
+}
+
+void Server::run()
+{
     eventLoop();
 }
 
-void Server::setNonBlocking(int sock) {
+void Server::setNonBlocking(int sock)
+{
     int opts = fcntl(sock, F_GETFL);
     if (opts < 0) {
         throw std::runtime_error("fcntl(F_GETFL) failed");
@@ -28,7 +46,8 @@ void Server::setNonBlocking(int sock) {
     }
 }
 
-void Server::createSocket() {
+void Server::createSocket()
+{
     server_socket = socket(AF_INET, SOCK_STREAM, 0);
     if (server_socket == -1) {
         throw std::runtime_error("socket creation failed");
@@ -36,7 +55,8 @@ void Server::createSocket() {
     setNonBlocking(server_socket);
 }
 
-void Server::bindSocket(int port) {
+void Server::bindSocket(int port)
+{
     sockaddr_in server_addr;
     server_addr.sin_family = AF_INET;
     server_addr.sin_addr.s_addr = INADDR_ANY;
@@ -49,7 +69,8 @@ void Server::bindSocket(int port) {
     }
 }
 
-void Server::startListening() {
+void Server::startListening()
+{
     const int BACKLOG = 10;
 
     if (listen(server_socket, BACKLOG) == -1) {
@@ -69,7 +90,8 @@ void Server::createEpollInstance()
     addSocketToEpoll(server_socket);
 }
 
-void Server::addSocketToEpoll(int sock) {
+void Server::addSocketToEpoll(int sock)
+{
     ev.events = EPOLLIN;
     ev.data.fd = sock;
     if (epoll_ctl(epoll_fd, EPOLL_CTL_ADD, sock, &ev) == -1) {
@@ -89,11 +111,13 @@ void Server::eventLoop()
             throw std::runtime_error("epoll_wait failed");
         }
         for (int n = 0; n < nfds; ++n) {
-            if (events[n].data.fd == server_socket) {
+            if (events[n].data.fd == server_socket)
+            {
                 sockaddr_in client_addr;
                 socklen_t client_len = sizeof(client_addr);
                 int client_socket = accept(server_socket, (struct sockaddr*)&client_addr, &client_len);
-                if (client_socket == -1) {
+                if (client_socket == -1)
+                {
                     std::cerr << "accept failed\n";
                     continue;
                 }
@@ -101,7 +125,8 @@ void Server::eventLoop()
 
                 ev.events = EPOLLIN | EPOLLET;
                 ev.data.fd = client_socket;
-                if (epoll_ctl(epoll_fd, EPOLL_CTL_ADD, client_socket, &ev) == -1) {
+                if (epoll_ctl(epoll_fd, EPOLL_CTL_ADD, client_socket, &ev) == -1)
+                {
                     close(client_socket);
                     std::cerr << "epoll_ctl: client_socket failed\n";
                     continue;
@@ -127,7 +152,7 @@ void Server::eventLoop()
                     clients.erase(client_socket);
                 } else {
                     buffer[bytes_read] = '\0';
-                    // handleClientMessage(client_socket, std::string(buffer));
+                    handleClientMessage(client_socket, std::string(buffer));
                 }
             }
         }
@@ -135,7 +160,8 @@ void Server::eventLoop()
 }
 
 
-void Server::handleClientMessage(int client_socket, const std::string& message) {
+void Server::handleClientMessage(int client_socket, const std::string& message)
+{
     Client& client = clients[client_socket];
     std::cout << "Received from client " << client_socket << ": " << message << std::endl;
 
@@ -162,18 +188,27 @@ void Server::handleClientMessage(int client_socket, const std::string& message) 
     } else if (command == "PING") {
         std::string pong_response = "PONG " + params + "\r\n";
         send(client_socket, pong_response.c_str(), pong_response.length(), 0);
+    } else if (command == "PRIVMSG") {
+        std::cout << "ahahahahah\n";
+        // std::string pong_response = "PONG " + params + "\r\n";
+        // send(client_socket, pong_response.c_str(), pong_response.length(), 0);
+    } else if (command == "JOIN") {
+        std::cout << "OHOHOHOHHOHOH " << params << "\n";
+        join(client, params, *this);
     } else {
         sendErrorMessage(client_socket, command);
     }
 }
 
-void Server::sendErrorMessage(int client_socket, const std::string& command) {
+void Server::sendErrorMessage(int client_socket, const std::string& command)
+{
     // Code d'erreur 421 : Unknown command
     std::string error_message = ":server 421 " + clients[client_socket].getNick() + " " + command + " :Unknown command\r\n";
     send(client_socket, error_message.c_str(), error_message.length(), 0);
 }
 
-void Server::sendWelcomeMessage(int client_socket) {
+void Server::sendWelcomeMessage(int client_socket)
+{
     Client& client = clients[client_socket];
     if (!client.getNick().empty() && !client.getUser().empty()) {
         std::string welcome_message = ":server 001 " + client.getNick() + " :Welcome to the IRC server\n";
