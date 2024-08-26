@@ -86,7 +86,8 @@ ChannelArray::~ChannelArray()
 
 Channel& ChannelArray::getChannel(std::string const &channel)
 {
-    return channels.find(channel)->second;
+    return channels[channel];
+    // return channels.find(channel)->second;
 }
 
 std::set<int> ChannelArray::getOperators(std::string const &channel)

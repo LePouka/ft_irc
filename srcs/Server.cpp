@@ -190,9 +190,12 @@ void Server::handleClientMessage(int client_socket, const std::string& message)
         send(client_socket, pong_response.c_str(), pong_response.length(), 0);
     } else if (command == "PRIVMSG") {
         std::cout << "ahahahahah\n";
+        privmsg(client, params, *this);
         // std::string pong_response = "PONG " + params + "\r\n";
         // send(client_socket, pong_response.c_str(), pong_response.length(), 0);
     } else if (command == "JOIN") {
+        params.erase(params.find_last_not_of(" \n\r") + 1);
+        std::cout << params << "ahah\n";
         std::cout << "OHOHOHOHHOHOH " << params << "\n";
         join(client, params, *this);
     } else {
