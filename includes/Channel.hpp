@@ -34,6 +34,10 @@ struct Channel {
 class ChannelManager {
 
 private:
+
+	// Constructors
+	ChannelManager( void ) {}
+
 	std::map< std::string, Channel >	_channels;
 
 protected:
@@ -41,7 +45,6 @@ protected:
 public:
 
 	// Constructors
-	ChannelManager( void ) {}
 	ChannelManager( ChannelManager const & src ) : _channels( src._channels ) {}
 
 	// Destructor
@@ -53,8 +56,8 @@ public:
 	// Accessors
 	Channel&	getChannel( std::string const & channel );
 	void		setChannelName( std::string const & channelName );
-	void		setChannelTopic( std::string const & channelName, \
-									std::string const & channelTopic );
+
+	void		createChannel( std::string name );
 
 };
 
