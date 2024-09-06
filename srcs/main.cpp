@@ -2,8 +2,8 @@
 
 int main(int argc, char* argv[]) {
 	try {
-		if (argc < 2) {
-			std::cerr << "Usage: " << argv[0] << " <port>\n";
+		if (argc < 3) {
+			std::cerr << "Usage: " << argv[0] << " <port> <password>\n";
 			return EXIT_FAILURE;
 		}
 		int port = std::atoi(argv[1]);
@@ -11,7 +11,8 @@ int main(int argc, char* argv[]) {
 			std::cerr << "Invalid port number. Must be between 1 and 65535.\n";
 			return EXIT_FAILURE;
 		}
-		Server server(port);
+		std::string password = argv[2];
+		Server server(port, password);
 		std::cout << "IRC server started on port " << port << "\n";
 
 		server.run();

@@ -1,13 +1,15 @@
 #include "../includes/Server.hpp"
 #include "../includes/Util.hpp"
 
-Server::Server(int port)
-{
+Server::Server(int port, const std::string& password)
+	: serverPassword(password), server_config_password(password) {
+	serverPasswordRequired = !serverPassword.empty();
 	createSocket();
 	bindSocket(port);
 	startListening();
 	createEpollInstance();
 }
+
 
 Server::~Server() {
 	close(server_socket);
@@ -152,7 +154,9 @@ void Server::handleClientMessage(int client_socket, const std::string& message) 
 	std::string command = (pos != std::string::npos) ? message.substr(0, pos) : message;
 	std::string arg = (pos != std::string::npos) ? message.substr(pos + 1) : "";
 
-	if (command == "CAP") {
+	if (command == "PASS") {
+		handlePassCommand(client_socket, arg);
+	} else if (command == "CAP") {
 	} else if (command == "WHOIS") {
 	} else if (command == "MODE") {
 	} else if (command == "NICK") {

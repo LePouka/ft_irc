@@ -2,22 +2,22 @@
 #include "../includes/Util.hpp"
 
 bool have_channel_prefix(const std::string& nickname) {
-	if (!nickname.empty() && 
-		(nickname[0] == '#' || 
-		 nickname[0] == '&' || 
-		 nickname[0] == '~' || 
-		 nickname[0] == '@' || 
-		 nickname[0] == '%' || 
+	if (!nickname.empty() &&
+		(nickname[0] == '#' ||
+		 nickname[0] == '&' ||
+		 nickname[0] == '~' ||
+		 nickname[0] == '@' ||
+		 nickname[0] == '%' ||
 		 nickname[0] == ':'))
 	{
 		return true;
 	}
-	if (nickname.size() > 1 && 
+	if (nickname.size() > 1 &&
 		nickname[0] == '+' &&
-		(nickname[1] == 'q' || 
-		 nickname[1] == 'a' || 
-		 nickname[1] == 'o' || 
-		 nickname[1] == 'h' || 
+		(nickname[1] == 'q' ||
+		 nickname[1] == 'a' ||
+		 nickname[1] == 'o' ||
+		 nickname[1] == 'h' ||
 		 nickname[1] == 'v'))
 	{
 		return true;
@@ -28,7 +28,7 @@ bool have_channel_prefix(const std::string& nickname) {
 
 bool isValidNick(const std::string& nickname) {
 	std::string invalid_chars = " ,*?!@.$:";
-	return !have_channel_prefix(nickname) && 
+	return !have_channel_prefix(nickname) &&
 		   nickname.find_first_of(invalid_chars) == std::string::npos;
 }
 
@@ -66,32 +66,37 @@ void sendNickChangeConfirmation(int client_socket, const std::string& old_nick, 
 	}
 }
 void Server::handleNickCommand(int client_socket, const std::string& new_nick) {
-    if (new_nick.empty()) {
-        std::string error_message = ERR_NONICKNAMEGIVEN("server");
-        sendErrorMessage(client_socket, error_message);
-        return;
-    }
-    if (!isValidNick(new_nick)) {
-        std::ostringstream error_message;
-        error_message << ERR_ERRONEUSNICKNAME(SERVER_NAME, new_nick);
-        send(client_socket, error_message.str().c_str(), error_message.str().length(), 0);
-        return;
-    }
-    if (isNickInUse(new_nick, clients)) {
-        std::ostringstream error_message;
-        error_message << ERR_NICKNAMEINUSE("server", new_nick);
-        send(client_socket, error_message.str().c_str(), error_message.str().length(), 0);
-        return;
-    }
-    std::string old_nick = clients[client_socket].getNick();
-    clients[client_socket].setNick(new_nick);
-    notifyClients(clients, client_socket, old_nick, new_nick);
-    sendNickChangeConfirmation(client_socket, old_nick, new_nick);
-    
-    if (clients[client_socket].isRegistered() && !clients[client_socket].isWelcomeSent()) {
-        std::string welcome_message = RPL_WELCOME(clients[client_socket].getUser(), clients[client_socket].getNick());
-        send(client_socket, welcome_message.c_str(), welcome_message.length(), 0);
-        clients[client_socket].setWelcomeSent(true);
-    }
+	if (new_nick.empty()) {
+		std::string error_message = ERR_NONICKNAMEGIVEN("server");
+		sendErrorMessage(client_socket, error_message);
+		return;
+	}
+	if (serverPasswordRequired && clients[client_socket].getPassword() != serverPassword) {
+		std::string error_message = ERR_NOTREGISTERED("server");
+		send(client_socket, error_message.c_str(), error_message.length(), 0);
+		return;
+	}
+	if (!isValidNick(new_nick)) {
+		std::ostringstream error_message;
+		error_message << ERR_ERRONEUSNICKNAME(SERVER_NAME, new_nick);
+		send(client_socket, error_message.str().c_str(), error_message.str().length(), 0);
+		return;
+	}
+	if (isNickInUse(new_nick, clients)) {
+		std::ostringstream error_message;
+		error_message << ERR_NICKNAMEINUSE("server", new_nick);
+		send(client_socket, error_message.str().c_str(), error_message.str().length(), 0);
+		return;
+	}
+	std::string old_nick = clients[client_socket].getNick();
+	clients[client_socket].setNick(new_nick);
+	notifyClients(clients, client_socket, old_nick, new_nick);
+	sendNickChangeConfirmation(client_socket, old_nick, new_nick);
+
+	if (clients[client_socket].isRegistered() && !clients[client_socket].isWelcomeSent()) {
+		std::string welcome_message = RPL_WELCOME(clients[client_socket].getUser(), clients[client_socket].getNick());
+		send(client_socket, welcome_message.c_str(), welcome_message.length(), 0);
+		clients[client_socket].setWelcomeSent(true);
+	}
 }
 
