@@ -19,16 +19,33 @@ ChannelManager&	ChannelManager::operator=( ChannelManager const & rhs ) {
 /* ************************************************************************** */
 /*   ACCESSORS                                                                */
 /* ************************************************************************** */
-Channel&	ChannelManager::getChannel( std::string const & channel ) {}
+Channel&	ChannelManager::getChannel( std::string const & channel ) {
 
-void	setChannelName( std::string const & channelName ) {}
+	return _channels[ channel ];
+}
+
+void	setChannelName( std::string const & channelName ) {
+
+	_channels[ channelName ].name = channel.Name;
+}
 
 void	setChannelTopic( std::string const & channelName, \
-							std::string const & channelTopic ) {}
+							std::string const & channelTopic ) {
+
+	_channels[channelName].topic = channelTopic;
+}
 
 /* ************************************************************************** */
 /*   FUNCTIONS                                                                */
 /* ************************************************************************** */
+void	createChannel( std::string const & name, int const & clientFd ) {
+
+	Channel	channel;
+
+	channel.name = name;
+
+	_channels[ name ] = name;
+}
 
 /* ************************************************************************** */
 /*   REDIRECTION OPERATOR                                                     */

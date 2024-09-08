@@ -17,6 +17,7 @@ struct Channel {
 	std::string			name;
 	std::string			password;
 	std::set< int >		cliendtsFd;
+	std::set< int >		operators;
 
 	/*
 	std::string			topic;
