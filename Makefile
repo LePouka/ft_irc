@@ -7,6 +7,8 @@ SRC = main.cpp \
 	Channel.cpp \
 	Message.cpp \
 	commands/channelCommands/Join.cpp \
+	commands/Privmsg.cpp \
+	
 	
 SRCS = $(addprefix srcs/, $(SRC))
 OBJDIR = objs
