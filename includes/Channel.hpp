@@ -10,8 +10,8 @@ class Channel {
     private:
         std::string name;
         std::string topic;
-        std::set<int> users;
-        std::set<int> operators;
+        std::set<Client> users;
+        std::set<Client> operators;
     public:
 
         //CONST/DEST
@@ -22,23 +22,24 @@ class Channel {
         //GETTER/SETTER 
        std::string getName();
         std::string getTopic();
-        std::set<int> getUsers();
-        std::set<int> getOperators();
+        std::set<Client> getUsers();
+        std::set<Client> getOperators();
         void setName(std::string name);
         void setTopic(std::string topic);
-        void addUser(int clientSocket);
-        void addOperators(int clientSocket);
+        void addUser(Client client);
+        void addOperators(Client client);
 
         //METHODS
-        void removeUser(int clientSocket);
-        void removeOperator(int clientSocket);
-        bool hasUser(int client_socket);
+        void removeUser(Client client);
+        void removeOperator(Client client);
+        void broadcastMessage(const std::string& message, const Client& sender);
+        bool hasUser(Client client);
 };
 
 class ChannelArray {
     private:
         std::map<std::string, Channel> channels;
-        std::map<int, std::set<std::string> > clientChannels;
+        std::map<Client, std::set<std::string> > clientChannels;
     public:
         //CONST/DEST
         ChannelArray();
@@ -46,20 +47,20 @@ class ChannelArray {
 
         //GETTER/SETTER
         Channel& getChannel(std::string const &channel);
-        std::set<int> getOperators(std::string const &channel);
-        std::set<std::string> getChannelsClient(int clientSocket);
+        std::set<Client> getOperators(std::string const &channel);
+        std::set<std::string> getChannelsClient(Client client);
         void setChannelName(std::string const  &channel);
         void setChannelTopic(std::string const &channel, std::string const &topic);
         
         //METHODS
-        void createChannel(std::string const &channel, int const &clientSocket);
-        bool userInChannel(int clientSocket, std::string const &channel);
-        void join(int clientSocket, std::string const &channel);
-        void leave(int clientSocket, std::string const &channel);
-        void leaveAll(int clientSocket);
+        void createChannel(std::string const &channel, Client const &client);
+        bool userInChannel(Client client, std::string const &channel);
+        void join(Client client, std::string const &channel);
+        void leave(Client client, std::string const &channel);
+        void leaveAll(Client client);
         void deleteChan(std::string const &channel);
         bool isChan(std::string const &channel);
-        bool isOperator(int clientSocket, std::string const &channel);
-        void writeMsgChannel(int clientSocket, std::string const &channel, std::string const &msg);
+        bool isOperator(Client client, std::string const &channel);
+        void writeMsgChannel(Client client, std::string const &channel, std::string const &msg);
 };
 

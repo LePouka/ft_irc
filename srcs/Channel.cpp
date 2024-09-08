@@ -24,12 +24,12 @@ std::string Channel::getTopic()
     return (this->topic);
 }
 
-std::set<int> Channel::getUsers()
+std::set<Client> Channel::getUsers()
 {
     return (this->users);
 }
 
-std::set<int> Channel::getOperators()
+std::set<Client> Channel::getOperators()
 {
     return (this->operators);
 }
@@ -44,33 +44,44 @@ void Channel::setTopic(std::string topic)
     this->topic = topic;
 }
 
-void Channel::addUser(int clientSocket)
+void Channel::addUser(Client client)
 {
-    users.insert(clientSocket);
+    users.insert(client);
 }
 
-void Channel::addOperators(int clientSocket)
+void Channel::addOperators(Client client)
 {
-    operators.insert(clientSocket);
+    operators.insert(client);
 }
 
 //METHODS
-void Channel::removeUser(int clientSocket)
+void Channel::removeUser(Client client)
 {
-    users.erase(clientSocket);
+    users.erase(client);
 }
 
-void Channel::removeOperator(int clientSocket)
+void Channel::removeOperator(Client client)
 {
-    operators.erase(clientSocket);
+    operators.erase(client);
 }
 
-bool Channel::hasUser(int clientSocket)
+bool Channel::hasUser(Client client)
 {
-    return users.find(clientSocket) != users.end();
+    return users.find(client) != users.end();
 }
 
-
+void Channel::broadcastMessage(const std::string& message, const Client& sender) {
+    (void)message;
+    (void)sender;
+    // int senderSocket = sender.getSocket();
+    // for (std::set<Client>::iterator it = users.begin(); it != users.end(); ++it) {
+    //     if (*it != sender) {
+    //         // Assuming you have a way to get a Client object from a socket
+    //         Client recipient = getClientFromSocket(*it);
+    //         recipient.sendMessage(message);
+    //     }
+    // }
+}
 
 //                          CHANNELARRAY
 
@@ -90,14 +101,14 @@ Channel& ChannelArray::getChannel(std::string const &channel)
     // return channels.find(channel)->second;
 }
 
-std::set<int> ChannelArray::getOperators(std::string const &channel)
+std::set<Client> ChannelArray::getOperators(std::string const &channel)
 {
     return channels.find(channel)->second.getOperators();
 }
 
-std::set<std::string> ChannelArray::getChannelsClient(int client_socket)
+std::set<std::string> ChannelArray::getChannelsClient(Client client)
 {
-    return clientChannels.find(client_socket)->second;
+    return clientChannels.find(client)->second;
 }
 
 void ChannelArray::setChannelName(std::string const &channel)
@@ -112,7 +123,7 @@ void ChannelArray::setChannelTopic(std::string const &channel, std::string const
 
 //METHODS
 
-void ChannelArray::createChannel(std::string const &channel, int const &clientSocket)
+void ChannelArray::createChannel(std::string const &channel, Client const &client)
 {
     std::cout << channel << " was created\n";
     if (!isChan(channel))
@@ -121,39 +132,39 @@ void ChannelArray::createChannel(std::string const &channel, int const &clientSo
 
         newChannel.setName(channel);
         newChannel.setTopic("");
-        newChannel.addUser(clientSocket);
-        newChannel.addOperators(clientSocket);
+        newChannel.addUser(client);
+        newChannel.addOperators(client);
         channels.insert(std::make_pair(channel, newChannel));
     }
 }
 
-bool ChannelArray::userInChannel(int client_socket, std::string const &channel)
+bool ChannelArray::userInChannel(Client client, std::string const &channel)
 {
-    return clientChannels[client_socket].find(channel) != clientChannels[client_socket].end();
+    return clientChannels[client].find(channel) != clientChannels[client].end();
 }
 
-void ChannelArray::join(int clientSocket, std::string const &channel)
+void ChannelArray::join(Client client, std::string const &channel)
 {
-    if (clientChannels[clientSocket].find(channel) == clientChannels[clientSocket].end())
+    if (clientChannels[client].find(channel) == clientChannels[client].end())
     {
-        clientChannels[clientSocket].insert(channel);
-        channels[channel].addUser(clientSocket);
+        clientChannels[client].insert(channel);
+        channels[channel].addUser(client);
     }
 }
 
-void ChannelArray::leave(int clientSocket, std::string const &channel)
+void ChannelArray::leave(Client client, std::string const &channel)
 {
     if (!isChan(channel)) {
         // Handle the case where the channel does not exist
         return;
     }
 
-    if (clientChannels[clientSocket].find(channel) != clientChannels[clientSocket].end())
+    if (clientChannels[client].find(channel) != clientChannels[client].end())
     {
-        if (getOperators(channel).find(clientSocket) != getOperators(channel).end())
-            getChannel(channel).removeOperator(clientSocket);
-        clientChannels[clientSocket].erase(channel);
-        channels[channel].removeUser(clientSocket);
+        if (getOperators(channel).find(client) != getOperators(channel).end())
+            getChannel(channel).removeOperator(client);
+        clientChannels[client].erase(channel);
+        channels[channel].removeUser(client);
         if (getChannel(channel).getUsers().empty())
         {
             deleteChan(channel);
@@ -161,7 +172,7 @@ void ChannelArray::leave(int clientSocket, std::string const &channel)
     }
 }
 
-void ChannelArray::leaveAll(int clientSocket)
+void ChannelArray::leaveAll(Client clientSocket)
 {
     std::set<std::string> clientChannelsSet = getChannelsClient(clientSocket);
 
@@ -194,28 +205,30 @@ bool ChannelArray::isChan(std::string const &channel)
     return channels.find(channel) != channels.end();
 }
 
-bool ChannelArray::isOperator(int clientSocket, std::string const &channel)
+bool ChannelArray::isOperator(Client client, std::string const &channel)
 {
     if (!isChan(channel)) {
         // Handle the case where the channel does not exist
         return(false);
     }
 
-    return getChannel(channel).getOperators().find(clientSocket) != getChannel(channel).getOperators().end();
+    return getChannel(channel).getOperators().find(client) != getChannel(channel).getOperators().end();
 }
 
-void ChannelArray::writeMsgChannel(int clientSocket, std::string const &channel, std::string const &msg)
+void ChannelArray::writeMsgChannel(Client client, std::string const &channel, std::string const &msg)
 {
+    (void)client;
+    (void)msg;
     if (!isChan(channel)) {
         // Handle the case where the channel does not exist
         return;
     }
 
-    std::set<int> users = getChannel(channel).getUsers();
-    for (std::set<int>::iterator it = users.begin(); it != users.end(); ++it) {
-        if (*it != clientSocket) { // Check if the current user is not the sender
-            // Assuming you have a function to send a message to a client by their socket
-            sendMessage(*it, "PRIVMSG " + channel + " :" + msg);
-        }
-    }
+    // std::set<Client> users = getChannel(channel).getUsers();
+    // for (std::set<Client>::iterator it = users.begin(); it != users.end(); ++it) {
+    //     if (*it != client) { // Check if the current user is not the sender
+    //         // Assuming you have a function to send a message to a client by their socket
+    //         sendMessage(*it, "PRIVMSG " + channel + " :" + msg);
+    //     }
+    // }
 }

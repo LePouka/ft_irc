@@ -25,6 +25,10 @@ public:
     void setUser(const std::string& user);
     std::string getNick() const;
     std::string getUser() const;
+    bool operator<(const Client& other) const {
+        // Define your comparison logic here, for example:
+        return this->socket < other.socket; // Assuming 'id' is a member of Client
+    }
 
 private:
     int socket;
