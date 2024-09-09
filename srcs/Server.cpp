@@ -16,6 +16,11 @@ Server::~Server() {
 	close(epoll_fd);
 }
 
+ChannelArray &Server::getChannelArray()
+{
+    return (this->channels);
+}
+
 void Server::run() {
 	eventLoop();
 }

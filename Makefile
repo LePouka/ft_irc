@@ -8,8 +8,10 @@ SRC = main.cpp \
 	Message.cpp \
 	commands/channelCommands/Join.cpp \
 	commands/Privmsg.cpp \
-	
-	
+	commands/NICK.cpp \
+	commands/PASS.cpp \
+	commands/USER.cpp \
+
 SRCS = $(addprefix srcs/, $(SRC))
 OBJDIR = objs
 OBJS = $(addprefix $(OBJDIR)/, $(SRC:.cpp=.o))
@@ -17,24 +19,21 @@ OBJS = $(addprefix $(OBJDIR)/, $(SRC:.cpp=.o))
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	@ $(CC) $(FLAGS) $(OBJS) -o $(NAME)
-	@ printf "$(GREEN)>>> Executable ready.\n$(NULL)"
+	$(CXX) $(CFLAGS) $(OBJS) -o $(NAME)
 
 $(OBJDIR)/%.o: srcs/%.cpp | $(OBJDIR)
 	@mkdir -p $(dir $@)
 	$(CXX) $(CFLAGS) -c $< -o $@
 
 $(OBJDIR):
-	@ mkdir -p $(OBJDIR)
+	mkdir -p $(OBJDIR)
 
 clean:
-	@ $(RM) $(OBJDIR)
-	@ printf "$(RED)>>> Objects removed.\n$(NULL)"
+	rm -rf $(OBJDIR)
 
 fclean: clean
-	@ $(RM) $(NAME)
-	@ printf "$(RED)>>> Executable removed.\n$(NULL)"
+	rm -f $(NAME)
 
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: clean fclean all re

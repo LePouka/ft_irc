@@ -3,7 +3,6 @@
 #include <map>
 #include <string>
 #include <sys/epoll.h>
-#include "../includes/Client.hpp"
 #include <iostream>
 #include <unistd.h>
 #include <fcntl.h>
@@ -12,10 +11,11 @@
 #include <arpa/inet.h>
 #include <sstream>
 #include <stdexcept>
+#include "Commands.hpp"
+#include "Channel.hpp"
+#include "Client.hpp"
 
 #define SERVER_NAME "ircserv"
-#include "Channel.hpp"
-#include "Commands.hpp"
 
 class Server {
 public:

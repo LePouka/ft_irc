@@ -1,5 +1,5 @@
-#include "../includes/Server.hpp"
-#include "../includes/Util.hpp"
+#include "../../includes/Server.hpp"
+#include "../../includes/Util.hpp"
 
 void Server::handlePassCommand(int client_socket, const std::string& password) {
 	const std::string &client_nick = clients[client_socket].getNick();
