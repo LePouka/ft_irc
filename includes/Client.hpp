@@ -15,9 +15,13 @@
 
 class Client {
 public:
+    //CONST/DEST
 	Client(int socket);
 	Client();
 
+    ~Client();
+
+    //GETTER/SETTER
 	int getSocket() const;
 	void setNick(const std::string& nick);
 	void setUser(const std::string& user);
@@ -32,6 +36,10 @@ public:
 	bool hasPassword() const;
 
 	void setWelcomeSent(bool sent);
+    bool operator<(const Client& other) const {
+        // Define your comparison logic here, for example:
+        return this->socket < other.socket; // Assuming 'id' is a member of Client
+    }
 
 private:
 	int socket;
