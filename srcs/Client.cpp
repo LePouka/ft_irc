@@ -51,3 +51,7 @@ std::string Client::getPassword() const {
 bool Client::hasPassword() const {
 	return !password.empty();
 }
+
+bool Client::operator<(const Client& other) const {
+	return this->socket < other.socket;
+}

@@ -36,10 +36,7 @@ public:
 	bool hasPassword() const;
 
 	void setWelcomeSent(bool sent);
-    bool operator<(const Client& other) const {
-        // Define your comparison logic here, for example:
-        return this->socket < other.socket; // Assuming 'id' is a member of Client
-    }
+    bool operator<(const Client& other) const;
 
 private:
 	int socket;

@@ -154,12 +154,13 @@ void Server::eventLoop() {
 
 void Server::handleClientMessage(int client_socket, const std::string& message) {
 	std::cout << "Received from client " << client_socket << ": " << message << std::endl;
-
+	Client& client = clients[client_socket];
 	size_t pos = message.find(' ');
 	std::string command = (pos != std::string::npos) ? message.substr(0, pos) : message;
 	std::string arg = (pos != std::string::npos) ? message.substr(pos + 1) : "";
 
 	if (command == "PASS") {
+		std::cout << "ohoh\n";
 		handlePassCommand(client_socket, arg);
 	} else if (command == "CAP") {
 	} else if (command == "WHOIS") {
@@ -172,6 +173,9 @@ void Server::handleClientMessage(int client_socket, const std::string& message) 
 		std::ostringstream response;
 		response << PONG_MSG("server", clients[client_socket].getNick());
 		send(client_socket, response.str().c_str(), response.str().length(), 0);
+	} else if (command == "JOIN"){
+	arg.erase(arg.find_last_not_of(" \n\r") + 1);
+    join(client, arg, *this);
 	} else {
 		sendErrorMessage(client_socket, command);
 	}
