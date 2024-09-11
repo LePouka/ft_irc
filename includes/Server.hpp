@@ -27,9 +27,10 @@ public:
     //GETTER/SETTER
     int getServerSocket();
     ChannelArray& getChannelArray();
-    std::map<int, Client> getClientMap();
+    std::map<int, Client>& getClientMap();
     //METHODS
 	void run();
+
 
 private:
 	int server_socket;

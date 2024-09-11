@@ -172,16 +172,16 @@ void ChannelArray::leave(Client client, std::string const &channel)
     }
 }
 
-void ChannelArray::leaveAll(Client clientSocket)
+void ChannelArray::leaveAll(Client client)
 {
-    std::set<std::string> clientChannelsSet = getChannelsClient(clientSocket);
+    std::set<std::string> clientChannelsSet = getChannelsClient(client);
 
     for (std::set<std::string>::iterator it = clientChannelsSet.begin(); it != clientChannelsSet.end(); ++it)
     {
-        if (getOperators(*it).find(clientSocket) != getOperators(*it).end())
-            getChannel(*it).removeOperator(clientSocket);
-        clientChannels[clientSocket].erase(*it);
-        channels[*it].removeUser(clientSocket);
+        if (getOperators(*it).find(client) != getOperators(*it).end())
+            getChannel(*it).removeOperator(client);
+        clientChannels[client].erase(*it);
+        channels[*it].removeUser(client);
         if (getChannel(*it).getUsers().empty())
         {
             deleteChan(*it);
@@ -217,18 +217,19 @@ bool ChannelArray::isOperator(Client client, std::string const &channel)
 
 void ChannelArray::writeMsgChannel(Client client, std::string const &channel, std::string const &msg)
 {
-    (void)client;
-    (void)msg;
     if (!isChan(channel)) {
         // Handle the case where the channel does not exist
         return;
     }
 
-    // std::set<Client> users = getChannel(channel).getUsers();
-    // for (std::set<Client>::iterator it = users.begin(); it != users.end(); ++it) {
-    //     if (*it != client) { // Check if the current user is not the sender
-    //         // Assuming you have a function to send a message to a client by their socket
-    //         sendMessage(*it, "PRIVMSG " + channel + " :" + msg);
-    //     }
-    // }
+    // Get all users in the channel
+    std::set<Client> users = getChannel(channel).getUsers();
+    
+    // Broadcast message to all users except the sender
+    for (std::set<Client>::iterator it = users.begin(); it != users.end(); ++it) {
+        if (*it != client) {
+            // Include sender's nickname in the message
+            sendMessage((*it).getSocket(), ":" + client.getNick() + " PRIVMSG " + channel + " :" + msg);
+        }
+    }
 }

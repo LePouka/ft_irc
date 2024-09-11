@@ -8,45 +8,49 @@ void privmsg(Client client, std::string params, Server &server)
     std::string recipient;
     std::string message;
 
-    // // Extract recipient and message from params
-    // if (!(iss >> recipient)) {
-    //     // Handle error: no recipient specified
-    //     sendMessage(client.getSocket(), "Error: No recipient specified.");
-    //     return;
-    // }
+    // std::cout << "ahah\n";
+    if (!(iss >> recipient)) {
+        sendMessage(client.getSocket(), "Error: No recipient specified.");
+        return;
+    }
+    std::getline(iss, message);
+    if (message.empty()) {
+        std::cout << "empty msg\n";
+        sendMessage(client.getSocket(), "Error: No message specified.");
+        return;
+    }
+    message.erase(0, message.find_first_not_of(' '));
+    std::cout << "recipient :" << recipient << " message :" << message << "\n";
+    message.append("\r\n");
+    if (recipient[0] == '#' || recipient[0] == '&') {
+        std::cout << "msg to channel\n";
+        Channel *channel = NULL;
+        try {
+            channel = &server.getChannelArray().getChannel(recipient);
+        } catch (const std::exception &e) {
+            // Handle case where channel does not exist
+            sendMessage(client.getSocket(), "Error: Channel not found.");
+            return;
+        }
 
-    // std::getline(iss, message);
-    // if (message.empty()) {
-    //     // Handle error: no message specified
-    //     sendMessage(client.getSocket(), "Error: No message specified.");
-    //     return;
-    // }
-
-    // // Trim leading spaces from the message
-    // message.erase(0, message.find_first_not_of(' '));
-
-    // // Check if the recipient is a channel or a user
-    // if (recipient[0] == '#' || recipient[0] == '&') {
-    //     // Recipient is a channel
-    //     Channel *channel = &server.getChannelArray().getChannel(recipient);
-    //     if (!channel) {
-    //         // Handle error: channel not found
-    //         sendMessage(client.getSocket(), "Error: Channel not found.");
-    //         return;
-    //     }
-
-    //     // Send the message to all users in the channel
-    //     channel->broadcastMessage("Message from " + client.getUser() + ": " + message, client);
-    // } else {
-    //     // Recipient is a user
-    //     Client *recipientClient = server.findClientByName(recipient);
-    //     if (!recipientClient) {
-    //         // Handle error: recipient not found
-    //         sendMessage(client.getSocket() ,"Error: Recipient not found.");
-    //         return;
-    //     }
-
-    //     // Send the message to the recipient
-    //     recipientClient->sendMessage("Message from " + client.getNick() + ": " + message);
-    // }
+        if (channel == NULL) {
+            sendMessage(client.getSocket(), "Error: Channel not found.");
+            return;
+        }
+        
+        server.getChannelArray().writeMsgChannel(client, recipient, message);
+    } else {
+        std::cout << "msg to user\n";
+        std::map<int, Client> clientMap = server.getClientMap();
+        for (std::map<int, Client>::iterator it = clientMap.begin(); it != clientMap.end(); ++it)
+        {
+            if ((*it).second.getNick() == recipient)
+            {
+                sendMessage((*it).first, "Message from " + client.getNick() + ": " + message);
+                return;
+            }
+        }
+        sendMessage(client.getSocket(), "Error: User not found.");
+    }
+    
 }

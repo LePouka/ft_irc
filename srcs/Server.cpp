@@ -21,12 +21,18 @@ ChannelArray &Server::getChannelArray()
     return (this->channels);
 }
 
+
+std::map<int, Client>& Server::getClientMap() 
+{
+    return this->clients;
+}
+
 void Server::run() {
 	eventLoop();
 }
 
 void Server::setNonBlocking(int sock) {
-	int opts = fcntl(sock, F_GETFL);
+	int opts = fcntl(sock, F_GETFL, O_NONBLOCK);
 	if (opts < 0) {
 		throw std::runtime_error("fcntl(F_GETFL) failed");
 	}
@@ -174,8 +180,11 @@ void Server::handleClientMessage(int client_socket, const std::string& message) 
 		response << PONG_MSG("server", clients[client_socket].getNick());
 		send(client_socket, response.str().c_str(), response.str().length(), 0);
 	} else if (command == "JOIN"){
-	arg.erase(arg.find_last_not_of(" \n\r") + 1);
-    join(client, arg, *this);
+		arg.erase(arg.find_last_not_of(" \n\r") + 1);
+		join(client, arg, *this);
+	}else if (command == "PRIVMSG"){
+		arg.erase(arg.find_last_not_of(" \n\r") + 1);
+		privmsg(client, arg, *this);
 	} else {
 		sendErrorMessage(client_socket, command);
 	}

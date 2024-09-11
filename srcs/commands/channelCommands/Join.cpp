@@ -2,6 +2,7 @@
 
 void join(Client client, std::string channel, Server &server)
 {
+    std::cout << client.getNick() << "\n";
     if (server.getChannelArray().isChan(channel) == true)
     {
         std::cout << "ahah\n";

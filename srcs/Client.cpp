@@ -55,3 +55,11 @@ bool Client::hasPassword() const {
 bool Client::operator<(const Client& other) const {
 	return this->socket < other.socket;
 }
+
+bool Client::operator==(const Client &other) const {
+return this->getSocket() == other.getSocket();
+}
+
+bool Client::operator!=(const Client &other) const {
+	return !(*this == other);
+}

@@ -37,6 +37,8 @@ public:
 
 	void setWelcomeSent(bool sent);
     bool operator<(const Client& other) const;
+	bool operator==(const Client &other) const;
+    bool operator!=(const Client &other) const;
 
 private:
 	int socket;
