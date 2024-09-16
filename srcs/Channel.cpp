@@ -24,6 +24,23 @@ std::string Channel::getTopic()
     return (this->topic);
 }
 
+std::string Channel::getPassword(std::string user)
+{
+    if (this->getKeyNeeded() == false)
+    {
+        return (NULL);
+    }
+    std::set<Client> tmp = getOperators();
+    for(std::set<Client>::iterator it = tmp.begin(); it != tmp.end(); ++it)
+    {
+        if ((*it).getUser() == user)
+        {
+            return this->password;
+        }
+    }
+    return (NULL);
+}
+
 std::set<Client> Channel::getUsers()
 {
     return (this->users);
@@ -32,6 +49,21 @@ std::set<Client> Channel::getUsers()
 std::set<Client> Channel::getOperators()
 {
     return (this->operators);
+}
+
+bool Channel::getInvite()
+{
+    return (this->isInviteOnly);
+}
+
+bool Channel::getTopicRestricted()
+{
+    return (this->isTopicRestrictedToOperators);
+}
+
+bool Channel::getKeyNeeded()
+{
+    return(this->isKeyNeeded);
 }
 
 void Channel::setName(std::string name)
@@ -44,6 +76,22 @@ void Channel::setTopic(std::string topic)
     this->topic = topic;
 }
 
+void Channel::setPassword(std::string password, std::string user)
+{
+    if (this->getKeyNeeded() == true)
+    {
+        std::set<Client> tmp = getOperators();
+        for(std::set<Client>::iterator it = tmp.begin(); it != tmp.end(); ++it)
+        {
+            if ((*it).getUser() == user)
+            {
+                this->password = password;
+            }
+        }
+    }
+    return ;
+}
+
 void Channel::addUser(Client client)
 {
     users.insert(client);
@@ -52,6 +100,54 @@ void Channel::addUser(Client client)
 void Channel::addOperators(Client client)
 {
     operators.insert(client);
+}
+
+void Channel::setInvite(bool invite, std::string user)
+{
+    if (this->getKeyNeeded() == true)
+    {
+        std::set<Client> tmp = getOperators();
+        for(std::set<Client>::iterator it = tmp.begin(); it != tmp.end(); ++it)
+        {
+            if ((*it).getUser() == user)
+            {
+                this->isInviteOnly = invite;
+            }
+        }
+    }
+    return ;
+}
+
+void Channel::setTopicRestricted(bool restricted, std::string user)
+{
+    if (this->getKeyNeeded() == true)
+    {
+        std::set<Client> tmp = getOperators();
+        for(std::set<Client>::iterator it = tmp.begin(); it != tmp.end(); ++it)
+        {
+            if ((*it).getUser() == user)
+            {
+                this->isTopicRestrictedToOperators = restricted;
+            }
+        }
+    }
+    return ;
+}
+
+void Channel::setKeyNeeded(bool keyNeeded, std::string user)
+{
+    if (this->getKeyNeeded() == true)
+    {
+        std::set<Client> tmp = getOperators();
+        for(std::set<Client>::iterator it = tmp.begin(); it != tmp.end(); ++it)
+        {
+            if ((*it).getUser() == user)
+            {
+                this->isKeyNeeded = keyNeeded;
+            }
+        }
+    }
+    return ;
 }
 
 //METHODS
@@ -70,7 +166,8 @@ bool Channel::hasUser(Client client)
     return users.find(client) != users.end();
 }
 
-void Channel::broadcastMessage(const std::string& message, const Client& sender) {
+void Channel::broadcastMessage(const std::string& message, const Client& sender) 
+{
     (void)message;
     (void)sender;
     // int senderSocket = sender.getSocket();

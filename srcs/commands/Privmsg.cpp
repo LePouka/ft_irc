@@ -1,9 +1,21 @@
 #include "../../includes/Commands.hpp"
 
+// Numeric Replies:
+
+// ERR_NOSUCHNICK (401)
+// ERR_NOSUCHSERVER (402)
+// ERR_CANNOTSENDTOCHAN (404)
+// ERR_TOOMANYTARGETS (407)
+// ERR_NORECIPIENT (411)
+// ERR_NOTEXTTOSEND (412)
+// ERR_NOTOPLEVEL (413)
+// ERR_WILDTOPLEVEL (414)
+// RPL_AWAY (301)
+
 void privmsg(Client client, std::string params, Server &server)
 {
-    (void)client;
-    (void)server;
+    // (void)client;
+    // (void)server;
     std::istringstream iss(params);
     std::string recipient;
     std::string message;

@@ -13,3 +13,5 @@ void join(Client client, std::string channel, Server &server);
 //PRIVMSG
 void privmsg(Client client, std::string params, Server &server);
 
+//INVITE
+void invite(Client client, std::string arg, Server &server);

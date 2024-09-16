@@ -185,6 +185,9 @@ void Server::handleClientMessage(int client_socket, const std::string& message) 
 	}else if (command == "PRIVMSG"){
 		arg.erase(arg.find_last_not_of(" \n\r") + 1);
 		privmsg(client, arg, *this);
+	} else if(command == "INVITE"){
+		arg.erase(arg.find_last_not_of(" \n\r") + 1);
+		invite(client, arg, *this);
 	} else {
 		sendErrorMessage(client_socket, command);
 	}
