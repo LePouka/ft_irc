@@ -1,17 +1,24 @@
 #include "../includes/Server.hpp"
 #include "../includes/Util.hpp"
 
-Server::Server(int port)
-{
+Server::Server(int port, const std::string& password)
+	: serverPassword(password), server_config_password(password) {
+	serverPasswordRequired = !serverPassword.empty();
 	createSocket();
 	bindSocket(port);
 	startListening();
 	createEpollInstance();
 }
 
+
 Server::~Server() {
 	close(server_socket);
 	close(epoll_fd);
+}
+
+ChannelArray &Server::getChannelArray()
+{
+    return (this->channels);
 }
 
 void Server::run() {
@@ -148,21 +155,30 @@ void Server::eventLoop() {
 void Server::handleClientMessage(int client_socket, const std::string& message) {
 	std::cout << "Received from client " << client_socket << ": " << message << std::endl;
 
+	Client& client = clients[client_socket];
+
 	size_t pos = message.find(' ');
 	std::string command = (pos != std::string::npos) ? message.substr(0, pos) : message;
 	std::string arg = (pos != std::string::npos) ? message.substr(pos + 1) : "";
 
-	if (command == "CAP") {
+	if (command == "PASS") {
+		handlePassCommand(client_socket, arg);
+	} else if (command == "CAP") {
 	} else if (command == "WHOIS") {
 	} else if (command == "MODE") {
 	} else if (command == "NICK") {
 		handleNickCommand(client_socket, arg);
 	} else if (command == "USER") {
 		handleUserCommand(client_socket, arg);
+	} else if (command == "TOPIC") {
+        handleTopicCommand(client_socket, arg);
 	} else if (command == "PING") {
 		std::ostringstream response;
 		response << PONG_MSG("server", clients[client_socket].getNick());
 		send(client_socket, response.str().c_str(), response.str().length(), 0);
+	} else if (command == "JOIN"){
+		arg.erase(arg.find_last_not_of(" \n\r") + 1);
+    	join(client, arg, *this);
 	} else {
 		sendErrorMessage(client_socket, command);
 	}

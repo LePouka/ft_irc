@@ -15,23 +15,36 @@
 
 class Client {
 public:
-    Client(int socket);
-    Client();
+    //CONST/DEST
+	Client(int socket);
+	Client();
 
-    int getSocket() const;
-    void setNick(const std::string& nick);
-    void setUser(const std::string& user);
-    std::string getNick() const;
-    std::string getUser() const;
+    ~Client();
 
-    bool isRegistered() const;
-    bool isWelcomeSent() const;
-    void setWelcomeSent(bool sent);
+    //GETTER/SETTER
+	int getSocket() const;
+	void setNick(const std::string& nick);
+	void setUser(const std::string& user);
+	void setPassword(const std::string& password);
+	
+	std::string getNick() const;
+	std::string getUser() const;
+	std::string getPassword() const;
+
+	bool isRegistered() const;
+	bool isWelcomeSent() const;
+	bool hasPassword() const;
+
+	void setWelcomeSent(bool sent);
+    bool operator<(const Client& other) const;
+	bool operator==(const Client& other) const;
+    bool operator!=(const Client& other) const;
 
 private:
-    int socket;
-    std::string nick;
-    std::string user;
-    bool registered;
-    bool welcomeSent;
+	int socket;
+	std::string nick;
+	std::string user;
+	std::string password;
+	bool registered;
+	bool welcomeSent;
 };
