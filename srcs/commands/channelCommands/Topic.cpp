@@ -2,6 +2,7 @@
 #include "../../../includes/Util.hpp"
 
 void Server::handleTopicCommand(int client_socket, const std::string& args) {
+    std::cout << "Oulah c'est bien"<< std::endl;
     size_t pos = args.find(' ');
     std::string channel_name = args.substr(0, pos);
     std::string new_topic = (pos != std::string::npos) ? args.substr(pos + 1) : "";

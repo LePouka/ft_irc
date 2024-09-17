@@ -2,33 +2,37 @@
 
 void join(Client client, std::string channel, Server &server)
 {
-    if (server.getChannelArray().isChan(channel) == true)
+    ChannelArray &channelArray = server.getChannelArray();
+    
+    if (channelArray.isChan(channel))
     {
-        std::cout << "ahah\n";
-        Channel &chan = server.getChannelArray().getChannel(channel);
-        if (chan.getUsers().find(client.getSocket()) == chan.getUsers().end())
+        Channel &chan = channelArray.getChannel(channel);
+    
+        if (!chan.hasUser(client))
         {
-            return ;
+            chan.addUser(client);
+            channelArray.join(client, channel);
         }
-        chan.addUser(client.getSocket());
-        // std::cout << toString(chan.getUsers()) << "\n";
-        // std::cout << *chan.getUsers().begin() << "\n";
-        std::set<Client> tmp = chan.getUsers();
-        for (std::set<Client>::iterator it = tmp.begin(); it != tmp.end(); ++it)
+        
+        std::set<Client> users = chan.getUsers();
+        std::cout << "Users in channel " << channel << ": ";
+        for (std::set<Client>::iterator it = users.begin(); it != users.end(); ++it)
         {
-            std::cout << (*it).getSocket() << " ";
+            std::cout << it->getSocket() << " ";
         }
         std::cout << "\n";
     }
     else
     {
-        server.getChannelArray().createChannel(channel, client.getSocket());
-        Channel &chan = server.getChannelArray().getChannel(channel);
-        std::set<Client> tmp = chan.getUsers();
-        for (std::set<Client>::iterator it = tmp.begin(); it != tmp.end(); ++it)
+        channelArray.createChannel(channel, client);
+        Channel &chan = channelArray.getChannel(channel);
+        std::set<Client> users = chan.getUsers();
+        std::cout << "Users in newly created channel " << channel << ": ";
+        for (std::set<Client>::iterator it = users.begin(); it != users.end(); ++it)
         {
-            std::cout << (*it).getSocket() << " ";
+            std::cout << it->getSocket() << " ";
         }
         std::cout << "\n";
     }
 }
+
