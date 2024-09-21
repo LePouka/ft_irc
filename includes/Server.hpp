@@ -19,16 +19,16 @@
 
 class Server {
 public:
-    
-    //CONST/DEST
+
+	//CONST/DEST
 	Server(int port, const std::string& password = "");
 	~Server();
-    
-    //GETTER/SETTER
-    int getServerSocket();
-    ChannelArray& getChannelArray();
-    std::map<int, Client>& getClientMap();
-    //METHODS
+
+	//GETTER/SETTER
+	int getServerSocket();
+	ChannelArray& getChannelArray();
+	std::map<int, Client>& getClientMap();
+	//METHODS
 	void run();
 
 
@@ -36,12 +36,12 @@ private:
 	int server_socket;
 	int epoll_fd;
 	std::map<int, Client> clients;
-    ChannelArray channels;
+	ChannelArray channels;
 	epoll_event ev;
 	epoll_event events[10];
 
 	bool serverPasswordRequired;
-    std::string serverPassword;
+	std::string serverPassword;
 	std::string server_config_password;
 
 	void setNonBlocking(int sock);
