@@ -32,7 +32,7 @@ void Server::run() {
 }
 
 void Server::setNonBlocking(int sock) {
-	int opts = fcntl(sock, F_GETFL, O_NONBLOCK);
+	int opts = fcntl(sock, F_SETFL, O_NONBLOCK);
 	if (opts < 0) {
 		throw std::runtime_error("fcntl(F_GETFL) failed");
 	}
@@ -166,7 +166,6 @@ void Server::handleClientMessage(int client_socket, const std::string& message) 
 	std::string arg = (pos != std::string::npos) ? message.substr(pos + 1) : "";
 
 	if (command == "PASS") {
-		std::cout << "ohoh\n";
 		handlePassCommand(client_socket, arg);
 	} else if (command == "CAP") {
 	} else if (command == "WHOIS") {
@@ -181,13 +180,16 @@ void Server::handleClientMessage(int client_socket, const std::string& message) 
 		send(client_socket, response.str().c_str(), response.str().length(), 0);
 	} else if (command == "JOIN"){
 		arg.erase(arg.find_last_not_of(" \n\r") + 1);
-		join(client, arg, *this);
+		handleJoinCommand(client, arg, *this);
 	}else if (command == "PRIVMSG"){
 		arg.erase(arg.find_last_not_of(" \n\r") + 1);
-		privmsg(client, arg, *this);
+		handlePrivmsgCommand(client, arg, *this);
 	} else if(command == "INVITE"){
 		arg.erase(arg.find_last_not_of(" \n\r") + 1);
-		invite(client, arg, *this);
+		handleInviteCommand(client, arg, *this);
+	} else if (command == "MODE"){
+		arg.erase(arg.find_last_not_of(" \n\r") + 1);
+		handleModeCommand(client, arg, *this);		
 	} else {
 		sendErrorMessage(client_socket, command);
 	}

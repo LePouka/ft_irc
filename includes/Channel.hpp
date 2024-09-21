@@ -13,10 +13,12 @@ class Channel {
 		std::string			password;
         std::set<Client>	users;
         std::set<Client>	operators;
-		bool				isInviteOnly;
+        std::set<Client>    banned;
+        std::set<Client>    invited;
+        bool				isInviteOnly;
 		bool				isTopicRestrictedToOperators;
 		bool				isKeyNeeded;
-		//unsigned int		userLimit;
+		unsigned int		userLimit;
 
 
     public:
@@ -29,27 +31,40 @@ class Channel {
         //GETTER/SETTER 
 		std::string			getName();
         std::string			getTopic();
-		std::string			getPassword(std::string user);
+		std::string			getPassword();
         std::set<Client>	getUsers();
         std::set<Client>	getOperators();
+        std::set<Client>	getBanned();
+        std::set<Client>	getInvited();
 		bool				getInvite();
 		bool				getTopicRestricted();
 		bool				getKeyNeeded();
-        
-		void				setName(std::string name);
-        void				setTopic(std::string topic);
-		void				setPassword(std::string password, std::string user);
+		unsigned int		getUserLimit();        
+
+		void				setName(const std::string name);
+        void				setTopic(const std::string topic);
+		void				setPassword(const std::string password);
         void				addUser(Client client);
         void				addOperators(Client client);
-		void				setInvite(bool invite, std::string user);
-		void				setTopicRestricted(bool restricted, std::string user);
-		void				setKeyNeeded(bool keyNeeded, std::string user);
+        void				addBanned(Client client);
+        void				addInvited(Client client);
+		void				setInvite(bool invite);
+		void				setTopicRestricted(bool restricted);
+		void				setKeyNeeded(bool keyNeeded);
+        void				setUserLimit(const unsigned int userLimit);
 
         //METHODS
         void				removeUser(Client client);
         void				removeOperator(Client client);
+        void				removeBanned(Client client);
+        void				removeInvited(Client client);
         void				broadcastMessage(const std::string& message, const Client& sender);
-        bool				hasUser(Client client);
+        bool				isInUserList(Client client);
+        bool				isInOperatorList(Client client);
+        bool                isInBanList(Client client);
+        bool                isInInviteList(Client client);
+        //Besoin de faire MODE pour faire cette méthode
+        bool                canSendMessage(Client client);
 };
 
 class ChannelArray {

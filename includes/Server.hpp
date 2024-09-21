@@ -56,4 +56,9 @@ private:
 	void handleNickCommand(int client_socket, const std::string& nick);
 	void handleUserCommand(int client_socket, const std::string& user);
 	void handlePassCommand(int client_socket, const std::string& password);
+	void handleModeCommand(Client client, std::string params);
+
+	void handleJoinCommand(Client client, std::string channel, Server &server);
+	void handlePrivmsgCommand(Client client, std::string params, Server &server);
+	void handleInviteCommand(Client client, std::string arg, Server &server);
 };
