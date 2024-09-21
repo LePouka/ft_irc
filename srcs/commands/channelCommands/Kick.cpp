@@ -30,7 +30,12 @@ bool	kickTests( ChannelArray const & channel,
 		return false;
 	}
 
-	;
+	Client targetedClient = getClient( nickname );
+	if ( !targetedClient ) {
+
+		std::cout << "Kick error message" << std::endl;
+		return false;
+	}
 
 	return true;
 }
