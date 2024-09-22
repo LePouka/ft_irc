@@ -1,37 +1,37 @@
-#include "../../includes/Server.hpp"
-#include "../../includes/Util.hpp"
+#include "../../../includes/Commands.hpp"
 
-bool	kickTests( ChannelArray const & channel,
+bool	kickTests( Server const & server,
+		ChannelArray const & channelArray,
 		Client const & client,
 		std::string const & channelName,
 		std::string const & nickname ) {
 
-	if ( !client.isRegistered() ) {
+	if ( !server.isClientRegistered( nickname ) ) {
 
 		std::cout << "Kick error message" << std::endl;
 		return false;
 	}
 
-	if ( !channel.isChan( channelName ) ) {
+	if ( !channelArray.isChan( channelName ) ) {
 
 		std::cout << "Kick error message" << std::endl;
 		return false;
 	}
 
-	if ( !channel.userInChannel( client, channelName ) ) {
+	if ( !channelArray.userInChannel( client, channelName ) ) {
 
 		std::cout << "Kick error message" << std::endl;
 		return false;
 	}
 
-	if ( !channel.isOperator( client, channelName ) {
+	if ( !channelArray.isOperator( client, channelName ) {
 
 		std::cout << "Kick error message" << std::endl;
 		return false;
 	}
 
 	Client targetedClient = getClient( nickname );
-	if ( channel.isOperator( targetedClient, channelName ) {
+	if ( channelArray.isOperator( targetedClient, channelName ) {
 
 		std::cout << "Kick error message" << std::endl;
 		return false;
@@ -40,12 +40,17 @@ bool	kickTests( ChannelArray const & channel,
 	return true;
 }
 
-void	kickHandler( ChannelArray const & channel,
+void	kickHandler( Server const & server,
+		ChannelArray const & channelArray,
 		Client const & client,
-		std::string channelName,
-		std::string nickname ) {}
+		std::string const & channelName,
+		std::string const & nickname ) {
 
-void	kick( ChannelArray const & channel,
+		;
+}
+
+void	kick( Server const & server,
+		ChannelArray const & channelArray,
 		Client const & client,
 		std::string const & args ) {
 
@@ -58,7 +63,7 @@ void	kick( ChannelArray const & channel,
 		return ;
 	}
 
-	if ( !kickTests( channel, client, channelName, nickname )) { return ; }
+	if ( !kickTests( server, channelArray, client, channelName, nickname )) { return ; }
 
-	kickHandler( channel, client, channelName, nickname );
+	kickHandler( server, channelArray, client, channelName, nickname );
 }

@@ -33,6 +33,8 @@ public:
 	//METHODS
 	void run();
 
+	bool	isClientRegistered( std::string const & nickname );
+
 
 private:
 	int						server_socket;

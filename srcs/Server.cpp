@@ -47,6 +47,22 @@ void Server::run() {
 	eventLoop();
 }
 
+bool	Server::isClientRegistered( std::string const & nickname ) {
+
+	std::map< int, Client >::iterator	it = clients.begin();
+
+	while ( it != clients.end() ) {
+
+		if ( it->second.getNick() == nickname ) {
+
+			return true;
+		}
+		++it;
+	}
+	
+	return false;
+}
+
 void Server::setNonBlocking(int sock) {
 	int opts = fcntl(sock, F_GETFL, O_NONBLOCK);
 	if (opts < 0) {
