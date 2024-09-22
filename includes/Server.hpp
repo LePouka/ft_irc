@@ -28,7 +28,7 @@ public:
 	int						getServerSocket();
 	ChannelArray&			getChannelArray();
 	std::map<int, Client>&	getClientMap();
-	Client const &			getClient( std::string const & nickname );
+	Client&					getClient( std::string const & nickname );
 
 	//METHODS
 	void run();
