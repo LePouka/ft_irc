@@ -3,8 +3,8 @@
 
 bool	kickTests( ChannelArray const & channel,
 		Client const & client,
-		std::string channelName,
-		std::string nickname ) {
+		std::string const & channelName,
+		std::string const & nickname ) {
 
 	if ( !client.isRegistered() ) {
 
@@ -31,7 +31,7 @@ bool	kickTests( ChannelArray const & channel,
 	}
 
 	Client targetedClient = getClient( nickname );
-	if ( !targetedClient ) {
+	if ( channel.isOperator( targetedClient, channelName ) {
 
 		std::cout << "Kick error message" << std::endl;
 		return false;
