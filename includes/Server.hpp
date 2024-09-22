@@ -58,4 +58,5 @@ private:
 	void	handleNickCommand(int client_socket, const std::string& nick);
 	void	handleUserCommand(int client_socket, const std::string& user);
 	void	handlePassCommand(int client_socket, const std::string& password);
+	void	handleTopicCommand(int client_socket, const std::string& args);
 };

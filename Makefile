@@ -7,6 +7,7 @@ SRC = main.cpp \
 	Channel.cpp \
 	Message.cpp \
 	commands/channelCommands/Join.cpp \
+	commands/channelCommands/Topic.cpp \
 	commands/Privmsg.cpp \
 	commands/NICK.cpp \
 	commands/PASS.cpp \
