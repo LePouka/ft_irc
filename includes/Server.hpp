@@ -31,7 +31,7 @@ public:
 	Client&					getClient( std::string const & nickname );
 
 	//METHODS
-	void run();
+	void	run();
 
 	bool	isClientRegistered( std::string const & nickname );
 

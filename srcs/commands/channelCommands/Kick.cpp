@@ -30,7 +30,7 @@ bool	kickTests( Server const & server,
 		return false;
 	}
 
-	Client targetedClient = getClient( nickname );
+	Client	targetedClient = getClient( nickname );
 	if ( channelArray.isOperator( targetedClient, channelName ) {
 
 		std::cout << "Kick error message" << std::endl;
@@ -42,11 +42,9 @@ bool	kickTests( Server const & server,
 
 void	kickHandler( Server const & server,
 		ChannelArray const & channelArray,
-		Client const & client,
 		std::string const & channelName,
-		std::string const & nickname ) {
+		Client client ) {
 
-		;
 }
 
 void	kick( Server const & server,
@@ -65,5 +63,5 @@ void	kick( Server const & server,
 
 	if ( !kickTests( server, channelArray, client, channelName, nickname )) { return ; }
 
-	kickHandler( server, channelArray, client, channelName, nickname );
+	kickHandler( server, channelArray, channelName, getClient( nickname ));
 }
