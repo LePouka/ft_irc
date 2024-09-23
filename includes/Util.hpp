@@ -18,7 +18,6 @@
 # define	RPL_ENDOFINVITELIST(source, channel)				COLON + source + SPACE + "347" + SPACE + channel + SPACE + COLON + "End of invite list" + NEW_LINE
 # define	RPL_BANLIST(source, channel, banmask)				COLON + source + SPACE + "367" + SPACE + channel + SPACE + banmask + NEW_LINE
 # define	RPL_ENDOFBANLIST(source, channel)					COLON + source + SPACE + "368" + SPACE + channel + SPACE + COLON + "End of ban list" + NEW_LINE
-# define	RPL_TOPIC(source, channel, topic)					COLON + source + SPACE + channel + " :" + topic + NEW_LINE
 # define	RPL_TOPICWHOTIME(source, channel, nickname, setat)	COLON + source + SPACE + channel + SPACE + nickname + SPACE + setat + NEW_LINE
 # define	RPL_INVITING(source, nickname, channel)				COLON + source + SPACE + nickname + SPACE + channel + NEW_LINE
 # define	RPL_NAMREPLY(nickname, userList) 					COLON + nickname + SPACE + "353" + SPACE + userList + NEW_LINE
@@ -26,7 +25,6 @@
 
 //ERRORS
 # define	ERR_NOSUCHNICK(source, nickname)				COLON + source + SPACE + "401 " + "* " + nickname + " :No such nickname/channel" + NEW_LINE
-# define	ERR_NOSUCHCHANNEL(source, channel)				COLON + source + SPACE + "403 " + "* " + channel + " :no such channel" + NEW_LINE
 # define	ERR_CANNOTSENDTOCHAN(source, channel)			COLON + source + SPACE + "404 " + "* " + channel + " :Cannot send to channel" + NEW_LINE
 # define	ERR_TOOMANYTARGETS(source, target)				COLON + source + SPACE + "407 " + "* " + target + " :Duplicate recipients. No message delivered" + NEW_LINE
 # define	ERR_NORECIPIENT(source, command)				COLON + source + SPACE + "411 " + "* " + " :No recipient given " + command + NEW_LINE
@@ -44,8 +42,8 @@
 # define	ERR_PASSWDMISMATCH(source, nick)	            COLON + source + SPACE + "464 " + "* " + nick + ":Password incorrect" + NEW_LINE
 # define	RPL_WELCOME(username, nickname)					COLON + SERVER_NAME + " 001 " + nickname + " :Welcome to the " + SERVER_NAME + \
 															" Network " + nickname + "!" + username + IP_ADDRESS + NEW_LINE
-# define	ERR_NOSUCHCHANNEL(source, channel)   COLON + source + SPACE + "403 " + channel + "* " + ":No such channel" + NEW_LINE
-# define	ERR_NOTONCHANNEL(source, channel)    COLON + source + SPACE + "442 " + channel + "* " + ":You're not on that channel" + NEW_LINE
-# define	ERR_CHANOPRIVSNEEDED(source, channel) COLON + source + SPACE + "482 " + channel + "* " + ":You're not channel operator" + NEW_LINE
-# define	RPL_NOTOPIC(nick, channel)           COLON + SERVER_NAME + SPACE + "331 " + nick + SPACE + channel + "* " + " :No topic is set" + NEW_LINE
+# define	ERR_NOSUCHCHANNEL(source, channel)   COLON + source + SPACE + "403 " + "* " + channel + " :No such channel" + NEW_LINE
+# define	ERR_NOTONCHANNEL(source, channel)    COLON + source + SPACE + "442 " + "* " + channel + " :You're not on that channel" + NEW_LINE
+# define	ERR_CHANOPRIVSNEEDED(source, channel) COLON + source + SPACE + "482 " + "* " + channel + " :You're not channel operator" + NEW_LINE
+# define	RPL_NOTOPIC(nick, channel)           COLON + nick + SPACE + "331 " /* + "" */ + channel + " :No topic is set" + NEW_LINE
 # define	RPL_TOPIC(nick, channel, topic)      COLON + SERVER_NAME + SPACE + "332 " + nick + SPACE + channel + " :" + topic + NEW_LINE

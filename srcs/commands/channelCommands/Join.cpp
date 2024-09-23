@@ -13,16 +13,15 @@
 // RPL_ENDOFNAMES (366)
 
 
-void Server::handleJoinCommand(Client client, std::string params, Server &server)
+void join(Client client, std::string channel, Server &server)
 {
 	std::cout << client.getNick() << "\n";
 	if (server.getChannelArray().isChan(channel) == true)
 	{
 		std::cout << "ahah\n";
 		Channel &chan = server.getChannelArray().getChannel(channel);
-		if (chan.getUsers().find(client.getSocket()) == chan.getUsers().end())
-		{
-			return ;
+		if (chan.getUsers().find(client.getSocket()) == chan.getUsers().end()){
+			chan.addUser(client);
 		}
 		chan.addUser(client.getSocket());
 		// std::cout << toString(chan.getUsers()) << "\n";

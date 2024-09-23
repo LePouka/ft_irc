@@ -197,11 +197,13 @@ void Server::handleClientMessage(int client_socket, const std::string& message) 
 	} else if (command == "JOIN"){
 		arg.erase(arg.find_last_not_of(" \n\r") + 1);
 		join(client, arg, *this);
+	} else if (command == "PART") {
+		handlePartCommand(client_socket, arg);
 	} else if (command == "TOPIC") {
 		handleTopicCommand(client_socket, arg);
 	}else if (command == "PRIVMSG"){
 		arg.erase(arg.find_last_not_of(" \n\r") + 1);
-		handlePrivmsgCommand(client, arg, *this);
+		privmsg(client, arg, *this);
 	} else if(command == "INVITE"){
 		arg.erase(arg.find_last_not_of(" \n\r") + 1);
 		// invite(client, arg, *this);

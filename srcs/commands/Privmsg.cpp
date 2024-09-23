@@ -8,67 +8,57 @@
 // ERR_NORECIPIENT (411)
 // ERR_NOTEXTTOSEND (412)
 
-void Server::handlePrivmsgCommand(Client client, std::string params, Server &server)
+void privmsg(Client client, std::string params, Server &server)
 {
+    // (void)client;
+    // (void)server;
     std::istringstream iss(params);
     std::string recipient;
     std::string message;
 
+    // std::cout << "ahah\n";
     if (!(iss >> recipient)) {
-        std::string error_message = ERR_NORECIPIENT(client.getNick(), "PRIVMSG");
-        sendMessage(client.getSocket(), error_message);
+        sendMessage(client.getSocket(), "Error: No recipient specified.");
         return;
     }
-
     std::getline(iss, message);
     if (message.empty()) {
-        std::string error_message = ERR_NOTEXTTOSEND(client.getNick());
-        sendMessage(client.getSocket(), error_message);
+        std::cout << "empty msg\n";
+        sendMessage(client.getSocket(), "Error: No message specified.");
         return;
     }
-
     message.erase(0, message.find_first_not_of(' '));
-    message.append(NEW_LINE);
-
+    std::cout << "recipient :" << recipient << " message :" << message << "\n";
+    message.append("\r\n");
     if (recipient[0] == '#' || recipient[0] == '&') {
+        std::cout << "msg to channel\n";
         Channel *channel = NULL;
         try {
             channel = &server.getChannelArray().getChannel(recipient);
         } catch (const std::exception &e) {
-            std::string error_message = ERR_NOSUCHCHANNEL(client.getNick(), recipient);
-            sendMessage(client.getSocket(), error_message);
+            // Handle case where channel does not exist
+            sendMessage(client.getSocket(), "Error: Channel not found.");
             return;
         }
 
         if (channel == NULL) {
-            std::string error_message = ERR_NOSUCHCHANNEL(client.getNick(), recipient);
-            sendMessage(client.getSocket(), error_message);
+            sendMessage(client.getSocket(), "Error: Channel not found.");
             return;
         }
         
-        if (!channel->canSendMessage(client)) {
-            std::string error_message = ERR_CANNOTSENDTOCHAN(client.getNick(), recipient);
-            sendMessage(client.getSocket(), error_message);
-            return;
-        }
-
         server.getChannelArray().writeMsgChannel(client, recipient, message);
     } else {
+        std::cout << "msg to user\n";
         std::map<int, Client> clientMap = server.getClientMap();
-        bool userFound = false;
         for (std::map<int, Client>::iterator it = clientMap.begin(); it != clientMap.end(); ++it)
         {
             if ((*it).second.getNick() == recipient)
             {
-                std::string send = USER_MSG(client.getNick(), recipient, message);
-                sendMessage((*it).first, send);
-                userFound = true;
-                break;           
+                sendMessage((*it).first, "Message from " + client.getNick() + ": " + message);
+                return;
             }
         }
-        if (!userFound) {
-            std::string error_message = ERR_NOSUCHNICK(client.getNick(), recipient);
-            sendMessage(client.getSocket(), error_message);
-        }
+        sendMessage(client.getSocket(), "Error: User not found.");
     }
+    
 }

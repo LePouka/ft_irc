@@ -46,7 +46,7 @@ public:
 	void				setKeyNeeded(bool keyNeeded, std::string user);
 
 	//METHODS
-	void				removeUser(Client client);
+	void				removeUser(const Client& client);
 	void				removeOperator(Client client);
 	void				broadcastMessage(const std::string& message, const Client& sender);
 	bool				hasUser(Client client);
