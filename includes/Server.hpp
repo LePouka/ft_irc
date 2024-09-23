@@ -19,46 +19,44 @@
 
 class Server {
 public:
-    
-    //CONST/DEST
+
+	//CONST/DEST
 	Server(int port, const std::string& password = "");
 	~Server();
-    
-    //GETTER/SETTER
-    int getServerSocket();
-    ChannelArray& getChannelArray();
-    std::map<int, Client>& getClientMap();
-    //METHODS
+
+	//GETTER/SETTER
+	int						getServerSocket();
+	ChannelArray&			getChannelArray();
+	std::map<int, Client>&	getClientMap();
+	Client&					getClient( std::string const & nickname );
+
+	//METHODS
 	void run();
 
 
 private:
-	int server_socket;
-	int epoll_fd;
-	std::map<int, Client> clients;
-    ChannelArray channels;
-	epoll_event ev;
-	epoll_event events[10];
+	int						server_socket;
+	int						epoll_fd;
+	std::map<int, Client>	clients;
+	ChannelArray			channels;
+	epoll_event				ev;
+	epoll_event				events[10];
 
-	bool serverPasswordRequired;
-    std::string serverPassword;
-	std::string server_config_password;
+	bool		serverPasswordRequired;
+	std::string	serverPassword;
+	std::string	server_config_password;
 
-	void setNonBlocking(int sock);
-	void createSocket();
-	void bindSocket(int port);
-	void startListening();
-	void createEpollInstance();
-	void addSocketToEpoll(int sock);
-	void eventLoop();
-	void handleClientMessage(int client_socket, const std::string& message);
-	void sendErrorMessage(int client_socket, const std::string& command);
-	void handleNickCommand(int client_socket, const std::string& nick);
-	void handleUserCommand(int client_socket, const std::string& user);
-	void handlePassCommand(int client_socket, const std::string& password);
-	void handleModeCommand(Client client, std::string params);
-
-	void handleJoinCommand(Client client, std::string channel, Server &server);
-	void handlePrivmsgCommand(Client client, std::string params, Server &server);
-	void handleInviteCommand(Client client, std::string arg, Server &server);
+	void	setNonBlocking(int sock);
+	void	createSocket();
+	void	bindSocket(int port);
+	void	startListening();
+	void	createEpollInstance();
+	void	addSocketToEpoll(int sock);
+	void	eventLoop();
+	void	handleClientMessage(int client_socket, const std::string& message);
+	void	sendErrorMessage(int client_socket, const std::string& command);
+	void	handleNickCommand(int client_socket, const std::string& nick);
+	void	handleUserCommand(int client_socket, const std::string& user);
+	void	handlePassCommand(int client_socket, const std::string& password);
+	void	handleTopicCommand(int client_socket, const std::string& args);
 };

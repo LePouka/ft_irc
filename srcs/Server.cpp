@@ -27,6 +27,22 @@ std::map<int, Client>& Server::getClientMap()
     return this->clients;
 }
 
+Client&	Server::getClient( std::string const & nickname ) {
+
+	std::map< int, Client >::iterator	it = clients.begin();
+
+	while ( it != clients.end() ) {
+
+		if ( it->second.getNick() == nickname ) {
+
+			break ;
+		}
+		++it;
+	}
+
+	return it->second;
+}
+
 void Server::run() {
 	eventLoop();
 }
@@ -180,16 +196,15 @@ void Server::handleClientMessage(int client_socket, const std::string& message) 
 		send(client_socket, response.str().c_str(), response.str().length(), 0);
 	} else if (command == "JOIN"){
 		arg.erase(arg.find_last_not_of(" \n\r") + 1);
-		handleJoinCommand(client, arg, *this);
+		join(client, arg, *this);
+	} else if (command == "TOPIC") {
+		handleTopicCommand(client_socket, arg);
 	}else if (command == "PRIVMSG"){
 		arg.erase(arg.find_last_not_of(" \n\r") + 1);
 		handlePrivmsgCommand(client, arg, *this);
 	} else if(command == "INVITE"){
 		arg.erase(arg.find_last_not_of(" \n\r") + 1);
-		handleInviteCommand(client, arg, *this);
-	} else if (command == "MODE"){
-		arg.erase(arg.find_last_not_of(" \n\r") + 1);
-		handleModeCommand(client, arg, *this);		
+		// invite(client, arg, *this);
 	} else {
 		sendErrorMessage(client_socket, command);
 	}

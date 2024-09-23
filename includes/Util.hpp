@@ -40,13 +40,12 @@
 # define	ERR_USERONCHANNEL(source, nickname, channel)	COLON + source + SPACE + "443 " + "* " + nickname + SPACE + channel + " :is already on channel" + NEW_LINE
 # define	ERR_NOTREGISTERED(source)						COLON + source + SPACE + "451 " + "* " + " :You have not registered" + NEW_LINE
 # define	ERR_NEEDMOREPARAMS(source, command)				COLON + source + SPACE + "461 " + "* " + command + " :Not enough parameters" + NEW_LINE
-# define    ERR_ALREADYREGISTERED(source)                   COLON + source + SPACE + "462 " + "* " + " :You may not reregister" + NEW_LINE
-# define	ERR_PASSWDMISMATCH(source, nickname)			COLON + source + SPACE + "464 " + "* " + nickname + " :Password incorrect" + NEW_LINE
-# define	ERR_KEYSET(source, channel)						COLON + source + SPACE + "467 " + "* " + channel + " :Channel key already set" + NEW_LINE
-# define	ERR_CHANNELISFULL(source, channel)				COLON + source + SPACE + "471 " + "* " + channel + " :Cannot join channel (+l)" + NEW_LINE
-# define	ERR_INVITEONLYCHAN(source, channel)				COLON + source + SPACE + "473 " + "* " + channel + " :Cannot join channel (+i)" + NEW_LINE
-# define	ERR_BANNEDFROMCHAN(source, channel)				COLON + source + SPACE + "474 " + "* " + channel + " :Cannot join channel (+b)" + NEW_LINE
-# define	ERR_BADCHANNELKEY(source, channel)				COLON + source + SPACE + "475 " + "* " + channel + " :Cannot join channel (+k)" + NEW_LINE
-# define	ERR_CHANOPRIVISNEEDED(source, channel)			COLON + source + SPACE + "482 " + "* " + channel + " :You're not channel operator" + NEW_LINE
-# define	ERR_UMODEUNKNOWNFLAG(source)					COLON + source + SPACE + "501 " + "* " + ": Unknow MODE flag" + NEW_LINE
-# define	ERR_USERSDONTMATCH(source)						COLON + source + SPACE + "502 " + "* " + ": Cannot change mode for others users" + NEW_LINE
+# define    ERR_ALREADYREGISTERED(source)                   COLON + source + SPACE + "462 " + "* " + ":You may not reregister" + NEW_LINE
+# define	ERR_PASSWDMISMATCH(source, nick)	            COLON + source + SPACE + "464 " + "* " + nick + ":Password incorrect" + NEW_LINE
+# define	RPL_WELCOME(username, nickname)					COLON + SERVER_NAME + " 001 " + nickname + " :Welcome to the " + SERVER_NAME + \
+															" Network " + nickname + "!" + username + IP_ADDRESS + NEW_LINE
+# define	ERR_NOSUCHCHANNEL(source, channel)   COLON + source + SPACE + "403 " + channel + "* " + ":No such channel" + NEW_LINE
+# define	ERR_NOTONCHANNEL(source, channel)    COLON + source + SPACE + "442 " + channel + "* " + ":You're not on that channel" + NEW_LINE
+# define	ERR_CHANOPRIVSNEEDED(source, channel) COLON + source + SPACE + "482 " + channel + "* " + ":You're not channel operator" + NEW_LINE
+# define	RPL_NOTOPIC(nick, channel)           COLON + SERVER_NAME + SPACE + "331 " + nick + SPACE + channel + "* " + " :No topic is set" + NEW_LINE
+# define	RPL_TOPIC(nick, channel, topic)      COLON + SERVER_NAME + SPACE + "332 " + nick + SPACE + channel + " :" + topic + NEW_LINE
