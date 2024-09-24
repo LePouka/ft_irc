@@ -94,9 +94,8 @@ void Server::handleNickCommand(int client_socket, const std::string& new_nick) {
 	clients[client_socket].setNick(new_nick);
 	notifyClients(clients, client_socket, old_nick, new_nick);
 	sendNickChangeConfirmation(client_socket, old_nick, new_nick);
-	
 	if (clients[client_socket].isRegistered() && !clients[client_socket].isWelcomeSent()) {
-		std::string welcome_message = RPL_WELCOME(clients[client_socket].getUser(), clients[client_socket].getNick());
+		std::string welcome_message = RPL_WELCOME(clients[client_socket].getUser(), new_nick);
 		sendMessage(client_socket, welcome_message);
 		clients[client_socket].setWelcomeSent(true);
 	}

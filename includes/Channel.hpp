@@ -3,6 +3,7 @@
 #include <string>
 #include <set>
 #include <map>
+#include <vector>
 #include "Client.hpp"
 #include "Message.hpp"
 

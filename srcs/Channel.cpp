@@ -326,14 +326,10 @@ void ChannelArray::leaveAll(Client client)
     }
 }
 
-void ChannelArray::deleteChan(std::string const &channel)
-{
+void ChannelArray::deleteChan(const std::string& channel) {
     if (!isChan(channel)) {
-        // Handle the case where the channel does not exist
         return;
     }
-
-    channels[channel].~Channel();
     channels.erase(channel);
 }
 

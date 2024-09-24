@@ -10,6 +10,10 @@ int Client::getSocket() const {
 	return socket;
 }
 
+void Client::setRegistered(bool status) {
+    registered = status;
+}
+
 void Client::setNick(const std::string& nick) {
 	this->nick = nick;
 	registered = !this->nick.empty() && !this->user.empty();

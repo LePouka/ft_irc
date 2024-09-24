@@ -23,6 +23,7 @@ public:
 
     //GETTER/SETTER
 	int		getSocket() const;
+	void	setRegistered(bool status);
 	void	setNick(const std::string& nick);
 	void	setUser(const std::string& user);
 	void	setPassword(const std::string& password);
