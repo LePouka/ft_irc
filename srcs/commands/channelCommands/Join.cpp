@@ -13,7 +13,7 @@
 // RPL_ENDOFNAMES (366)
 
 
-void join(Client client, std::string channel, Server &server)
+void Server::handleJoinCommand(Client client, std::string params, Server &server)
 {
     if (params.empty())
     {

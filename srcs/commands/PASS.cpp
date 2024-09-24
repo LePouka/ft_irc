@@ -6,17 +6,17 @@ void Server::handlePassCommand(int client_socket, const std::string& password) {
 	
 	if (clients[client_socket].isRegistered()) {
 		std::string error_message = ERR_ALREADYREGISTERED("server");
-		send(client_socket, error_message.c_str(), error_message.length(), 0);
+		sendMessage(client_socket, error_message);
 		return;
 	}
 	if (password.empty()) {
 		std::string error_message = ERR_NEEDMOREPARAMS("server", "PASS");
-		send(client_socket, error_message.c_str(), error_message.length(), 0);
+		sendMessage(client_socket, error_message);
 		return;
 	}
 	if (password != server_config_password) {
 		std::string error_message = ERR_PASSWDMISMATCH("server", client_nick);
-		send(client_socket, error_message.c_str(), error_message.length(), 0);
+		sendMessage(client_socket, error_message);
 		return;
 	}
 	clients[client_socket].setPassword(password);

@@ -43,22 +43,6 @@ Client&	Server::getClient( std::string const & nickname ) {
 	return it->second;
 }
 
-Client&	Server::getClient( std::string const & nickname ) {
-
-	std::map< int, Client >::iterator	it = clients.begin();
-
-	while ( it != clients.end() ) {
-
-		if ( it->second.getNick() == nickname ) {
-
-			break ;
-		}
-		++it;
-	}
-
-	return it->second;
-}
-
 void Server::run() {
 	eventLoop();
 }
@@ -201,7 +185,6 @@ void Server::handleClientMessage(int client_socket, const std::string& message) 
 		handlePassCommand(client_socket, arg);
 	} else if (command == "CAP") {
 	} else if (command == "WHOIS") {
-	} else if (command == "MODE") {
 	} else if (command == "NICK") {
 		handleNickCommand(client_socket, arg);
 	} else if (command == "USER") {
@@ -209,17 +192,17 @@ void Server::handleClientMessage(int client_socket, const std::string& message) 
 	} else if (command == "PING") {
 		std::ostringstream response;
 		response << PONG_MSG("server", clients[client_socket].getNick());
-		send(client_socket, response.str().c_str(), response.str().length(), 0);
+		sendMessage(client_socket, response.str());
 	} else if (command == "JOIN"){
 		arg.erase(arg.find_last_not_of(" \n\r") + 1);
-		join(client, arg, *this);
+		handleJoinCommand(client, arg, *this);
 	} else if (command == "PART") {
 		handlePartCommand(client_socket, arg);
 	} else if (command == "TOPIC") {
 		handleTopicCommand(client_socket, arg);
 	}else if (command == "PRIVMSG"){
 		arg.erase(arg.find_last_not_of(" \n\r") + 1);
-		privmsg(client, arg, *this);
+		handlePrivmsgCommand(client, arg, *this);
 	} else if(command == "INVITE"){
 		arg.erase(arg.find_last_not_of(" \n\r") + 1);
 		handleInviteCommand(client, arg, *this);
@@ -227,12 +210,12 @@ void Server::handleClientMessage(int client_socket, const std::string& message) 
 		arg.erase(arg.find_last_not_of(" \n\r") + 1);
 		handleModeCommand(client, arg);		
 	} else {
-		sendErrorMessage(client_socket, command);
+		std::string error_message;
+		error_message = ERR_UNKNOWNCOMMAND("server", command);
+		sendErrorMessage(client_socket, error_message);
 	}
 }
 
-void Server::sendErrorMessage(int client_socket, const std::string& command) {
-	std::ostringstream error_message;
-	error_message << ERR_UNKNOWNCOMMAND("server", command);
-	send(client_socket, error_message.str().c_str(), error_message.str().length(), 0);
+void Server::sendErrorMessage(int client_socket, const std::string& error_message) {
+	sendMessage(client_socket, error_message);
 }

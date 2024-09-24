@@ -24,21 +24,13 @@ std::string Channel::getTopic()
     return (this->topic);
 }
 
-std::string Channel::getPassword(std::string user)
+std::string Channel::getPassword()
 {
     if (this->getKeyNeeded() == false)
     {
         return (NULL);
     }
-    std::set<Client> tmp = getOperators();
-    for(std::set<Client>::iterator it = tmp.begin(); it != tmp.end(); ++it)
-    {
-        if ((*it).getUser() == user)
-        {
-            return this->password;
-        }
-    }
-    return (NULL);
+    return this->password;
 }
 
 std::set<Client> Channel::getUsers()
@@ -49,6 +41,16 @@ std::set<Client> Channel::getUsers()
 std::set<Client> Channel::getOperators()
 {
     return (this->operators);
+}
+
+std::set<Client> Channel::getBanned()
+{
+    return (this->banned);
+}
+
+std::set<Client> Channel::getInvited()
+{
+    return (this->invited);
 }
 
 bool Channel::getInvite()
@@ -66,6 +68,11 @@ bool Channel::getKeyNeeded()
     return(this->isKeyNeeded);
 }
 
+unsigned int Channel::getUserLimit()
+{
+    return(this->userLimit);
+}
+
 void Channel::setName(std::string name)
 {
     this->name = name;
@@ -76,20 +83,9 @@ void Channel::setTopic(std::string topic)
     this->topic = topic;
 }
 
-void Channel::setPassword(std::string password, std::string user)
+void Channel::setPassword(std::string password)
 {
-    if (this->getKeyNeeded() == true)
-    {
-        std::set<Client> tmp = getOperators();
-        for(std::set<Client>::iterator it = tmp.begin(); it != tmp.end(); ++it)
-        {
-            if ((*it).getUser() == user)
-            {
-                this->password = password;
-            }
-        }
-    }
-    return ;
+    this->password = password;
 }
 
 void Channel::addUser(Client client)
@@ -102,52 +98,34 @@ void Channel::addOperators(Client client)
     operators.insert(client);
 }
 
-void Channel::setInvite(bool invite, std::string user)
+void Channel::addBanned(Client client)
 {
-    if (this->getKeyNeeded() == true)
-    {
-        std::set<Client> tmp = getOperators();
-        for(std::set<Client>::iterator it = tmp.begin(); it != tmp.end(); ++it)
-        {
-            if ((*it).getUser() == user)
-            {
-                this->isInviteOnly = invite;
-            }
-        }
-    }
-    return ;
+    banned.insert(client);
 }
 
-void Channel::setTopicRestricted(bool restricted, std::string user)
+void Channel::addInvited(Client client)
 {
-    if (this->getKeyNeeded() == true)
-    {
-        std::set<Client> tmp = getOperators();
-        for(std::set<Client>::iterator it = tmp.begin(); it != tmp.end(); ++it)
-        {
-            if ((*it).getUser() == user)
-            {
-                this->isTopicRestrictedToOperators = restricted;
-            }
-        }
-    }
-    return ;
+    invited.insert(client);
 }
 
-void Channel::setKeyNeeded(bool keyNeeded, std::string user)
+void Channel::setInvite(bool invite)
 {
-    if (this->getKeyNeeded() == true)
-    {
-        std::set<Client> tmp = getOperators();
-        for(std::set<Client>::iterator it = tmp.begin(); it != tmp.end(); ++it)
-        {
-            if ((*it).getUser() == user)
-            {
-                this->isKeyNeeded = keyNeeded;
-            }
-        }
-    }
-    return ;
+	this->isInviteOnly = invite;
+}
+
+void Channel::setTopicRestricted(bool restricted)
+{
+	this->isTopicRestrictedToOperators = restricted;
+}
+
+void Channel::setKeyNeeded(bool keyNeeded)
+{
+	this->isKeyNeeded = keyNeeded;
+}
+
+void Channel::setUserLimit(unsigned int userLimit)
+{
+    this->userLimit = userLimit;
 }
 
 //METHODS
@@ -160,7 +138,30 @@ void Channel::removeOperator(Client client)
     operators.erase(client);
 }
 
-bool Channel::hasUser(Client client)
+void Channel::removeBanned(Client client)
+{
+    banned.erase(client);
+}
+
+void Channel::removeInvited(Client client)
+{
+    invited.erase(client);
+}
+
+void Channel::writeMsgChannel(Client client, std::string const &msg)
+{
+    std::set<Client> users = this->getUsers();
+
+    // Broadcast message to all users except the sender
+    for (std::set<Client>::iterator it = users.begin(); it != users.end(); ++it) {
+        if (*it != client) {
+            // Include sender's nickname in the message
+            sendMessage((*it).getSocket(), ":" + client.getNick() + " PRIVMSG " + this->getName() + " :" + msg);
+        }
+    }
+}
+
+bool Channel::isInUserList(Client client)
 {
     return users.find(client) != users.end();
 }
@@ -263,8 +264,13 @@ void ChannelArray::createChannel(std::string const &channel, Client const &clien
 
         newChannel.setName(channel);
         newChannel.setTopic("");
+        newChannel.setPassword("");
         newChannel.addUser(client);
         newChannel.addOperators(client);
+        newChannel.setInvite(false);
+        newChannel.setTopicRestricted(false);
+        newChannel.setKeyNeeded(false);
+        newChannel.setUserLimit(0);
         channels.insert(std::make_pair(channel, newChannel));
     }
 }

@@ -10,29 +10,27 @@ void Server::handleTopicCommand(int client_socket, const std::string& args) {
 
 	if (!channels.isChan(channel_name)) {
 		std::string error_message = ERR_NOSUCHCHANNEL("server", channel_name);
-		send(client_socket, error_message.c_str(), error_message.length(), 0);
+		sendMessage(client_socket, error_message);
 		return;
 	}
-	if (!channel.hasUser(clients[client_socket])) {
+	if (!channel.isInUserList(clients[client_socket])) {
 		std::string error_message = ERR_NOTONCHANNEL("server", channel_name);
-		send(client_socket, error_message.c_str(), error_message.length(), 0);
+		sendMessage(client_socket, error_message);
 		return;
 	}
 	if (new_topic.empty()) {
 		std::string response = channel.getTopic().empty()
 			? RPL_NOTOPIC(clients[client_socket].getNick(), channel_name)
 			: RPL_TOPIC(clients[client_socket].getNick(), channel_name, channel.getTopic());
-		send(client_socket, response.c_str(), response.length(), 0);
+		sendMessage(client_socket, response);
 	} else {
 		if (!channels.isOperator(clients[client_socket], channel_name)) {
-			std::string error_message = ERR_CHANOPRIVSNEEDED(clients[client_socket].getNick(), channel_name);
-			send(client_socket, error_message.c_str(), error_message.length(), 0);
+			std::string error_message = ERR_CHANOPRIVISNEEDED(clients[client_socket].getNick(), channel_name);
+			sendMessage(client_socket, error_message);
 			return;
 		}
 		channel.setTopic(new_topic);
-		std::string broadcast_message = ":" + clients[client_socket].getNick() + " TOPIC " + channel_name + " :" + new_topic + "\r\n";
-		channel.broadcastMessage(broadcast_message, clients[client_socket]);
 		std::string confirmation_message = RPL_TOPIC(clients[client_socket].getNick(), channel_name, new_topic);
-		send(client_socket, confirmation_message.c_str(), confirmation_message.length(), 0);
+		sendMessage(client_socket, confirmation_message);
 	}
 }
