@@ -27,6 +27,22 @@ std::map<int, Client>& Server::getClientMap()
     return this->clients;
 }
 
+Client&	Server::getClient( std::string const & nickname ) {
+
+	std::map< int, Client >::iterator	it = clients.begin();
+
+	while ( it != clients.end() ) {
+
+		if ( it->second.getNick() == nickname ) {
+
+			break ;
+		}
+		++it;
+	}
+
+	return it->second;
+}
+
 void Server::run() {
 	eventLoop();
 }

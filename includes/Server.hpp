@@ -28,6 +28,7 @@ public:
     int getServerSocket();
     ChannelArray& getChannelArray();
     std::map<int, Client>& getClientMap();
+	Client&					getClient( std::string const & nickname );
     //METHODS
 	void run();
 
@@ -51,6 +52,7 @@ private:
 	void createEpollInstance();
 	void addSocketToEpoll(int sock);
 	void eventLoop();
+	void handleMode(Client &client, Channel &channel, char mode, bool adding, std::istringstream &iss);
 	void handleClientMessage(int client_socket, const std::string& message);
 	void sendErrorMessage(int client_socket, const std::string& command);
 	void handleNickCommand(int client_socket, const std::string& nick);

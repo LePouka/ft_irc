@@ -12,7 +12,7 @@
 # define	RPL_WELCOME(username, nickname)						COLON + SERVER_NAME + " 001 " + nickname + " :Welcome to the " + SERVER_NAME + \
 																" Network " + nickname + "!" + username + IP_ADDRESS + NEW_LINE                                        
 # define	RPL_MODES(source, umodes)							COLON + source + SPACE + "221" + SPACE + COLON + umodes + NEW_LINE
-# define	RPL_CHANNELMODEIS(source, channel, mstring, margs)	COLON + source + SPACE + "324" + SPACE + channel + SPACE + mstring + SPACE + margs + NEW_LINE
+# define	RPL_CHANNELMODEIS(source, channel, modes)			COLON + source + SPACE + "324" + SPACE + channel + SPACE + modes + NEW_LINE
 # define	RPL_CREATIONTIME(source, channel, creationtime)		COLON + source + SPACE + "329" + SPACE + channel + SPACE + creationtime + NEW_LINE
 # define	RPL_INVITELIST(source, channel, invitemask)			COLON + source + SPACE + "346" + SPACE + channel + SPACE + invitemask + NEW_LINE
 # define	RPL_ENDOFINVITELIST(source, channel)				COLON + source + SPACE + "347" + SPACE + channel + SPACE + COLON + "End of invite list" + NEW_LINE
