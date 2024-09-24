@@ -14,10 +14,12 @@ SRC = main.cpp \
 	commands/channelCommands/Join.cpp \
 	commands/channelCommands/Topic.cpp \
 	commands/channelCommands/Part.cpp \
+	commands/channelCommands/Invite.cpp \
 	commands/Privmsg.cpp \
 	commands/NICK.cpp \
 	commands/PASS.cpp \
 	commands/USER.cpp \
+	commands/MODE.cpp \
 
 SRCS = $(addprefix srcs/, $(SRC))
 OBJDIR = objs

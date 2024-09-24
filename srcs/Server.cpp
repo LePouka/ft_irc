@@ -43,6 +43,22 @@ Client&	Server::getClient( std::string const & nickname ) {
 	return it->second;
 }
 
+Client&	Server::getClient( std::string const & nickname ) {
+
+	std::map< int, Client >::iterator	it = clients.begin();
+
+	while ( it != clients.end() ) {
+
+		if ( it->second.getNick() == nickname ) {
+
+			break ;
+		}
+		++it;
+	}
+
+	return it->second;
+}
+
 void Server::run() {
 	eventLoop();
 }
@@ -206,7 +222,10 @@ void Server::handleClientMessage(int client_socket, const std::string& message) 
 		privmsg(client, arg, *this);
 	} else if(command == "INVITE"){
 		arg.erase(arg.find_last_not_of(" \n\r") + 1);
-		// invite(client, arg, *this);
+		handleInviteCommand(client, arg, *this);
+	} else if (command == "MODE"){
+		arg.erase(arg.find_last_not_of(" \n\r") + 1);
+		handleModeCommand(client, arg);		
 	} else {
 		sendErrorMessage(client_socket, command);
 	}
