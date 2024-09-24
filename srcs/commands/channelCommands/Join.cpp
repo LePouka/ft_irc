@@ -76,8 +76,8 @@ void Server::handleJoinCommand(Client client, std::string params, Server &server
                 std::string topicMessage = RPL_TOPIC("Server", channel, chan.getTopic());
                 sendMessage(client.getSocket(), topicMessage);
                 //jsp comment tu récuperes le Nick de l'User qui a set le topic Noé
-                std::string topicWhoTimeMessage = RPL_TOPICWHOTIME(chan.getTopicName(), channel, client.getNick(), chan.getTopicSetTime());
-                sendMessage(client.getSocket(), topicWhoTimeMessage);
+                // std::string topicWhoTimeMessage = RPL_TOPICWHOTIME(chan.getTopicName(), channel, client.getNick(), chan.getTopicSetTime());
+                // sendMessage(client.getSocket(), topicWhoTimeMessage);
             }
             std::set<Client> users = chan.getUsers();
             std::string userList = "=" + channel + " :";

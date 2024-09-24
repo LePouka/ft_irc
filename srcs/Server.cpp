@@ -205,7 +205,7 @@ void Server::handleClientMessage(int client_socket, const std::string& message) 
 		handleInviteCommand(client, arg, *this);
 	} else if (command == "MODE"){
 		arg.erase(arg.find_last_not_of(" \n\r") + 1);
-		handleModeCommand(client, arg, *this);		
+		handleModeCommand(client, arg);		
 	} else {
 		sendErrorMessage(client_socket, command);
 	}

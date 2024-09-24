@@ -167,6 +167,26 @@ bool    Channel::isInInviteList(Client client)
     return invited.find(client) != invited.end();
 }
 
+bool Channel::canSendMessage(const Client &client) {
+    // Check if the channel is invite-only
+    if (this->getInvite() && this->getOperators().find(client) != this->getOperators().end() && this->getUsers().find(client) != this->getUsers().end()) {
+        return false; // Cannot send messages if not invited
+    }
+    
+    // Check if the user is banned from the channel
+    if (this->getBanned().find(client) != this->getBanned().end()) {
+        return false; // Cannot send messages if banned
+    }
+
+    // Check if the channel is restricted to certain users (e.g., operators)
+    // (This part is optional, depending on your requirements)
+    if (this->getTopicRestricted() && this->getOperators().find(client) != this->getOperators().end()) {
+        return false; // If topic is restricted, only operators can send messages
+    }
+
+    return true; // Client is allowed to send messages to the channel
+}
+
 void Channel::broadcastMessage(const std::string& message, const Client& sender) 
 {
     (void)message;

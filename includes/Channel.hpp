@@ -64,7 +64,7 @@ class Channel {
         bool                isInBanList(Client client);
         bool                isInInviteList(Client client);
         //Besoin de faire MODE pour faire cette méthode
-        bool                canSendMessage(Client client);
+        bool                canSendMessage(const Client &client);
 };
 
 class ChannelArray {

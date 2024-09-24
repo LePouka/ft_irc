@@ -17,10 +17,13 @@
 
 void showBanList(Client &client, Channel &channel)
 {
-    for (const Client &bannedClient : channel.getBanned()) {
-        std::string banNick = bannedClient.getNick();
+    const std::set<Client>& bannedClients = channel.getBanned();  // Store the result in a local variable
+
+    for (std::set<Client>::const_iterator it = bannedClients.begin(); it != bannedClients.end(); ++it) {
+        std::string banNick = it->getNick();  // Get the nick of the banned client
         sendMessage(client.getSocket(), RPL_BANLIST(client.getNick(), channel.getName(), banNick));
     }
+    
     sendMessage(client.getSocket(), RPL_ENDOFBANLIST(client.getNick(), channel.getName()));
 }
 
