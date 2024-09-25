@@ -64,6 +64,26 @@ void Server::createSocket() {
 		throw std::runtime_error("socket creation failed");
 	}
 	setNonBlocking(server_socket);
+
+    // Set the socket buffer sizes (in bytes)
+    int sendBuffSize = 1048576;  // 1 MB for send buffer
+    int recvBuffSize = 1048576;  // 1 MB for receive buffer
+
+    if (setsockopt(server_socket, SOL_SOCKET, SO_SNDBUF, &sendBuffSize, sizeof(sendBuffSize)) == -1) {
+        close(server_socket);
+        throw std::runtime_error("setsockopt(SO_SNDBUF) failed");
+    }
+
+    if (setsockopt(server_socket, SOL_SOCKET, SO_RCVBUF, &recvBuffSize, sizeof(recvBuffSize)) == -1) {
+        close(server_socket);
+        throw std::runtime_error("setsockopt(SO_RCVBUF) failed");
+    }
+
+    int flag = 1;
+    if (setsockopt(server_socket, IPPROTO_TCP, TCP_NODELAY, (char *)&flag, sizeof(int)) == -1) {
+        close(server_socket);
+        throw std::runtime_error("setsockopt(TCP_NODELAY) failed");
+    }
 }
 
 void Server::bindSocket(int port) {
