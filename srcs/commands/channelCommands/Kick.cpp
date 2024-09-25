@@ -1,50 +1,51 @@
-#include "../../../includes/Commands.hpp"
+#include "../../../includes/Server.hpp"
+#include "../../../includes/Util.hpp"
 
-bool	kickTests( ChannelArray const & channelArray,
+bool	Server::kickTests( ChannelArray& channelArray,
 		Client const & client,
 		std::string const & channelName,
 		std::string const & nickname ) {
 
-	if ( !isClientRegistered( nickname ) ) {
+	if ( !isClientRegistered( nickname )) {
 
-		sendErrorMessage( client, ERR_NOSUCHNICK( "Server", nickname ));
+		sendErrorMessage( client.getSocket(), ERR_NOSUCHNICK( "Server", nickname ));
 		return false;
 	}
 
-	if ( !channelArray.isChan( channelName ) ) {
+	if ( channelArray.isChan( channelName ) == false ) {
 
-		sendErrorMessage( client, ERR_NOSUCHCHANNEL( "Server", channelName ));
+		sendErrorMessage( client.getSocket(), ERR_NOSUCHCHANNEL( "Server", channelName ));
 		return false;
 	}
 
-	if ( !channelArray.userInChannel( client, channelName ) ) {
+	if ( !channelArray.userInChannel( client, channelName )) {
 
-		sendErrorMessage( client, ERR_USERNOTINCHANNEL( "Server", nickname, channelName ));
+		sendErrorMessage( client.getSocket(), ERR_USERNOTINCHANNEL( "Server", nickname ));
 		return false;
 	}
 
-	if ( !channelArray.isOperator( client, channelName ) {
+	if ( !channelArray.isOperator( client, channelName )) {
 
-		sendErrorMessage( client, ERR_CHANOPRIVSNEEDED( "Server", channelName ));
+		sendErrorMessage( client.getSocket(), ERR_CHANOPRIVISNEEDED( "Server", channelName ));
 		return false;
 	}
 
 	Client	targetedClient = getClient( nickname );
-	if ( channelArray.isOperator( targetedClient, channelName ) {
+	if ( channelArray.isOperator( targetedClient, channelName )) {
 
-		sendErrorMessage( client, "Cannot kick channel operator" );
+		sendErrorMessage( client.getSocket(), "Cannot kick channel operator" );
 		return false;
 	}
 
 	return true;
 }
 
-void	kick( client& client, Channel& channel ) {
+void	Server::kick( Client& client, Channel& channel ) {
 
 	channel.removeUser( client );
 }
 
-void	handleKickCommand( ChannelArray const & channelArray,
+void	Server::handleKickCommand( ChannelArray& channelArray,
 		Client const & client,
 		std::string const & args ) {
 
@@ -53,11 +54,11 @@ void	handleKickCommand( ChannelArray const & channelArray,
 
 	if ( !( iss >> channelName >> nickname ) || channelName.empty() || nickname.empty() ) {
 
-		sendErrorMessage( client, "Invalid arguments");
+		sendErrorMessage( client.getSocket(), "Invalid arguments");
 		return ;
 	}
 
 	if ( !kickTests( channelArray, client, channelName, nickname )) { return ; }
 
-	kickHandler( getClient( nickname ), channelArray.getChannel( channelName ));
+	kick( getClient( nickname ), channelArray.getChannel( channelName ));
 }

@@ -76,10 +76,10 @@ private:
 	void	handleJoinCommand(Client client, std::string params, Server &server);
 	void 	handlePrivmsgCommand(Client client, std::string params, Server &server);
 	void	seeModeChannels(Client &client, const std::string &chanName);
-	void	handleKickCommand( ChannelArray const & channelArray, Client const & client, std::string const & args );
+	void	handleKickCommand( ChannelArray& channelArray, Client const & client, std::string const & args );
 
 	//utils
-	bool	kickTests( ChannelArray const & channelArray, Client const & client, std::string const & channelName, std::string const & nickname );
+	bool	kickTests( ChannelArray& channelArray, Client const & client, std::string const & channelName, std::string const & nickname );
 	void	kick( Client& client, Channel& channel );
 
 };
