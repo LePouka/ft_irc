@@ -74,7 +74,6 @@ void	Server::handleMode(Client &client, Channel &channel, char mode, bool adding
 			}
 			sendModeChangeMessage(client, channel, mode, adding);
 			break;
-
 		case 'b': {
 			std::string banNick;
 			if (!(iss >> banNick)) {
@@ -83,6 +82,7 @@ void	Server::handleMode(Client &client, Channel &channel, char mode, bool adding
 			}
 
 			if (adding) {
+				std::cout << "ahah\n";
 				channel.addBanned(getClient(banNick));
 			} else {
 				channel.removeBanned(getClient(banNick));
@@ -125,6 +125,7 @@ void	Server::handleMode(Client &client, Channel &channel, char mode, bool adding
 			sendModeChangeMessage(client, channel, mode, adding);
 			break;
 	}
+	return ;
 }
 
 void	Server::handleModeCommand(Client client, std::string params)
@@ -138,7 +139,6 @@ void	Server::handleModeCommand(Client client, std::string params)
         return ;
 	}
 	ChannelArray &channelArray = this->getChannelArray();
-
 	if (channelName[0] == '#' || channelName[0] == '&')
 	{
 		if (!(channelArray.isChan(channelName)))
@@ -150,7 +150,8 @@ void	Server::handleModeCommand(Client client, std::string params)
 		Channel *channel = &channelArray.getChannel(channelName);
 		if (!(iss >> modeFlags))
 		{
-			showCurrentModes(client, *channel);
+			seeModeChannels(client, channelName);
+			// showCurrentModes(client, *channel);
         	return;
 		}
 

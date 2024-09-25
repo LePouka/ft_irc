@@ -17,6 +17,14 @@
 
 #define SERVER_NAME "ircserv"
 
+
+template <typename T>
+std::string to_string(T value) {
+    std::ostringstream oss;
+    oss << value;
+    return oss.str();
+}
+
 class Server {
 public:
 
@@ -65,5 +73,6 @@ private:
 	void	handleMode(Client &client, Channel &channel, char mode, bool adding, std::istringstream &iss);
 	void	handleJoinCommand(Client client, std::string params, Server &server);
 	void 	handlePrivmsgCommand(Client client, std::string params, Server &server);
+	void	seeModeChannels(Client &client, const std::string &chanName);
 
 };
