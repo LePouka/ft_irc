@@ -86,17 +86,20 @@ void Server::handleJoinCommand(Client client, std::string params, Server &server
             sendMessage(client.getSocket(), RPL_NAMREPLY("Server", userList));
 
             sendMessage(client.getSocket(), RPL_ENDOFNAMES("Server", channel));
-        }
-        else {
+        } else {
             channelArray.createChannel(channel, client);
-            // Channel &chan = channelArray.getChannel(params);
-            // std::set<Client> users = chan.getUsers();
-            // std::cout << "Users in newly created channel " << params << ": ";
-            // for (std::set<Client>::iterator it = users.begin(); it != users.end(); ++it)
-            // {
-            //     std::cout << it->getSocket() << " ";
-            // }
-            // std::cout << "\n";
+            Channel &chan = channelArray.getChannel(channel);
+            std::string joinMessage = JOIN_CHAN(client.getNick(), channel);
+            sendMessage(client.getSocket(), joinMessage);
+            std::string topicMessage = RPL_TOPIC("Server", channel, chan.getTopic());
+            sendMessage(client.getSocket(), topicMessage);
+            std::set<Client> users = chan.getUsers();
+            std::string userList = "=" + channel + " :";
+            for (std::set<Client>::iterator it = users.begin(); it != users.end(); ++it) {
+                userList += (*it).getNick() + " ";
+            }
+            sendMessage(client.getSocket(), RPL_NAMREPLY("Server", userList));
+            sendMessage(client.getSocket(), RPL_ENDOFNAMES("Server", channel));
         }
     }
 }

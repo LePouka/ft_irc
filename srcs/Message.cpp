@@ -23,6 +23,7 @@ void sendMessage(int clientSocket, std::string msg)
     size_t msgLength = msg.size();  // Correct length without null terminator
 
     // Debugging: Print the message character by character
+    std::cout << "Message sent : \n";
     for (size_t i = 0; i < msgLength; ++i)
     {
         std::cout << msgC[i];
