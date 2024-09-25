@@ -8,25 +8,25 @@ bool	kickTests( Server const & server,
 
 	if ( !server.isClientRegistered( nickname ) ) {
 
-		server::sendErrorMessage( client, ERR_NOSUCHNICK( SERVER_NAME, nickname ));
+		server::sendErrorMessage( client, ERR_NOSUCHNICK( "Server", nickname ));
 		return false;
 	}
 
 	if ( !channelArray.isChan( channelName ) ) {
 
-		sendErrorMessage( server::client, ERR_NOSUCHCHANNEL( SERVER_NAME, channelName ));
+		sendErrorMessage( server::client, ERR_NOSUCHCHANNEL( "Server", channelName ));
 		return false;
 	}
 
 	if ( !channelArray.userInChannel( client, channelName ) ) {
 
-		server::sendErrorMessage( client, ERR_USERNOTINCHANNEL( SERVER_NAME, nickname, channel_name ));
+		server::sendErrorMessage( client, ERR_USERNOTINCHANNEL( "Server", nickname, channelName ));
 		return false;
 	}
 
 	if ( !channelArray.isOperator( client, channelName ) {
 
-		server::sendErrorMessage( client, ERR_CHANOPRIVSNEEDED( SERVER_NAME, channel_name ));
+		server::sendErrorMessage( client, ERR_CHANOPRIVSNEEDED( "Server", channelName ));
 		return false;
 	}
 
@@ -55,7 +55,7 @@ void	kick( Server const & server,
 
 	if ( !( iss >> channelName >> nickname ) || channelName.empty() || nickname.empty() ) {
 
-		server::sendErrorMessage( client, RPL_KICK( kicker.get_nickname(), kicker.get_username(), channel_name, nickname, "KICK" ));
+		server::sendErrorMessage( client, "Invalid arguments");
 		return ;
 	}
 
