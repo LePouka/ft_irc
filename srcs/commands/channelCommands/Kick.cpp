@@ -8,36 +8,32 @@ bool	kickTests( Server const & server,
 
 	if ( !server.isClientRegistered( nickname ) ) {
 
-		// client.write(ERR_NOSUCHNICK(SERVER_NAME, nickname));
-		std::cout << "Kick error message" << std::endl;
+		server::sendErrorMessage( client, ERR_NOSUCHNICK( SERVER_NAME, nickname ));
 		return false;
 	}
 
 	if ( !channelArray.isChan( channelName ) ) {
 
-		// client.write(ERR_NOSUCHCHANNEL(SERVER_NAME, channel_name));
-		std::cout << "Kick error message" << std::endl;
+		sendErrorMessage( server::client, ERR_NOSUCHCHANNEL( SERVER_NAME, channelName ));
 		return false;
 	}
 
 	if ( !channelArray.userInChannel( client, channelName ) ) {
 
-		// client.write(ERR_USERNOTINCHANNEL(SERVER_NAME, nickname, channel_name));
-		std::cout << "Kick error message" << std::endl;
+		server::sendErrorMessage( client, ERR_USERNOTINCHANNEL( SERVER_NAME, nickname, channel_name ));
 		return false;
 	}
 
 	if ( !channelArray.isOperator( client, channelName ) {
 
-		// client.write(ERR_CHANOPRIVSNEEDED(SERVER_NAME, channel_name));
-		std::cout << "Kick error message" << std::endl;
+		server::sendErrorMessage( client, ERR_CHANOPRIVSNEEDED( SERVER_NAME, channel_name ));
 		return false;
 	}
 
 	Client	targetedClient = getClient( nickname );
 	if ( channelArray.isOperator( targetedClient, channelName ) {
 
-		std::cout << "Cannot kick channel operator" << std::endl;
+		server::sendErrorMessage( client, "Cannot kick channel operator" );
 		return false;
 	}
 
@@ -59,8 +55,7 @@ void	kick( Server const & server,
 
 	if ( !( iss >> channelName >> nickname ) || channelName.empty() || nickname.empty() ) {
 
-		// curr_client.write(RPL_KICK(kicker.get_nickname(), kicker.get_username(), channel_name, nickname, "KICK"));
-		std::cout << "Kick error message" << std::endl;
+		server::sendErrorMessage( client, RPL_KICK( kicker.get_nickname(), kicker.get_username(), channel_name, nickname, "KICK" ));
 		return ;
 	}
 
