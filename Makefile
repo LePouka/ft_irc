@@ -20,6 +20,7 @@ SRC = main.cpp \
 	commands/PASS.cpp \
 	commands/USER.cpp \
 	commands/MODE.cpp \
+	commands/DEBUG.cpp \
 
 SRCS = $(addprefix srcs/, $(SRC))
 OBJDIR = objs

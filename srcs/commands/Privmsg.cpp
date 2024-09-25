@@ -46,7 +46,7 @@ void Server::handlePrivmsgCommand(Client client, std::string params, Server &ser
             return;
         }
         
-        if (!channel->canSendMessage(client)) {
+        if (channel->canSendMessage(client) == false) {
             std::string error_message = ERR_CANNOTSENDTOCHAN(client.getNick(), recipient);
             sendMessage(client.getSocket(), error_message);
             return;

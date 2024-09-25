@@ -26,7 +26,6 @@ void Server::handleJoinCommand(Client client, std::string params, Server &server
     
     std::istringstream iss(params);
     std::string channelPasswordPair;
-    
 
     while (iss >> channelPasswordPair) 
     {
