@@ -69,36 +69,34 @@ void sendNickChangeConfirmation(int client_socket, const std::string& old_nick, 
 
 void Server::handleNickCommand(int client_socket, const std::string& new_nick) {
 	if (new_nick.empty()) {
-		std::string error_message = ERR_NONICKNAMEGIVEN("server");
+		std::string error_message = ERR_NONICKNAMEGIVEN("Server");
 		sendErrorMessage(client_socket, error_message);
 		return;
 	}
 	if (serverPasswordRequired && clients[client_socket].getPassword() != serverPassword) {
-		std::string error_message = ERR_NOTREGISTERED("server");
-		send(client_socket, error_message.c_str(), error_message.length(), 0);
+		std::string error_message = ERR_NOTREGISTERED("Server");
+		sendMessage(client_socket, error_message);
 		return;
 	}
 	if (!isValidNick(new_nick)) {
 		std::ostringstream error_message;
 		error_message << ERR_ERRONEUSNICKNAME(SERVER_NAME, new_nick);
-		send(client_socket, error_message.str().c_str(), error_message.str().length(), 0);
+		sendMessage(client_socket, error_message.str());
 		return;
 	}
 	if (isNickInUse(new_nick, clients)) {
 		std::ostringstream error_message;
-		error_message << ERR_NICKNAMEINUSE("server", new_nick);
-		send(client_socket, error_message.str().c_str(), error_message.str().length(), 0);
+		error_message << ERR_NICKNAMEINUSE("Server", new_nick);
+		sendMessage(client_socket, error_message.str());
 		return;
 	}
 	std::string old_nick = clients[client_socket].getNick();
 	clients[client_socket].setNick(new_nick);
 	notifyClients(clients, client_socket, old_nick, new_nick);
 	sendNickChangeConfirmation(client_socket, old_nick, new_nick);
-	
 	if (clients[client_socket].isRegistered() && !clients[client_socket].isWelcomeSent()) {
-		std::cout << "ahah\n";
-		std::string welcome_message = RPL_WELCOME(clients[client_socket].getUser(), clients[client_socket].getNick());
-		send(client_socket, welcome_message.c_str(), welcome_message.length(), 0);
+		std::string welcome_message = RPL_WELCOME(clients[client_socket].getUser(), new_nick);
+		sendMessage(client_socket, welcome_message);
 		clients[client_socket].setWelcomeSent(true);
 	}
 }

@@ -61,4 +61,11 @@ private:
 	void	handleUserCommand(int client_socket, const std::string& user);
 	void	handlePassCommand(int client_socket, const std::string& password);
 	void	handleTopicCommand(int client_socket, const std::string& args);
+	void	handlePartCommand(int client_socket, const std::string& channelName);
+	void 	handleInviteCommand(Client client, std::string params, Server &server);
+	void	handleModeCommand(Client client, std::string params);
+	void	handleMode(Client &client, Channel &channel, char mode, bool adding, std::istringstream &iss);
+	void	handleJoinCommand(Client client, std::string params, Server &server);
+	void 	handlePrivmsgCommand(Client client, std::string params, Server &server);
+
 };

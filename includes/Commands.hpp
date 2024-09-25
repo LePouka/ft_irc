@@ -2,6 +2,7 @@
 
 #include "Client.hpp"
 #include "Server.hpp"
+#include "Util.hpp"
 
 class Server;
 
