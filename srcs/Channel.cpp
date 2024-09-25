@@ -5,10 +5,14 @@
 
 //CONST/DEST
 Channel::Channel()
-{}
+{
+    this->banned.clear();
+}
 
 Channel::Channel(const std::string& name) : name(name)
-{}
+{
+    this->banned.clear();
+}
 
 Channel::~Channel()
 {}
@@ -26,10 +30,6 @@ std::string Channel::getTopic()
 
 std::string Channel::getPassword()
 {
-    if (this->getKeyNeeded() == false)
-    {
-        return (NULL);
-    }
     return this->password;
 }
 
@@ -100,6 +100,7 @@ void Channel::addOperators(Client client)
 
 void Channel::addBanned(Client client)
 {
+    std::cout << "Adding client to ban list: " << client.getNick() << std::endl;
     banned.insert(client);
 }
 
@@ -182,23 +183,15 @@ bool    Channel::isInInviteList(Client client)
 }
 
 bool Channel::canSendMessage(const Client &client) {
-    // Check if the channel is invite-only
-    if (this->getInvite() && this->getOperators().find(client) != this->getOperators().end() && this->getUsers().find(client) != this->getUsers().end()) {
-        return false; // Cannot send messages if not invited
-    }
-    
-    // Check if the user is banned from the channel
-    if (this->getBanned().find(client) != this->getBanned().end()) {
-        return false; // Cannot send messages if banned
+    if (this->getInvite() && this->users.find(client) == this->users.end()) {
+        return false;
     }
 
-    // Check if the channel is restricted to certain users (e.g., operators)
-    // (This part is optional, depending on your requirements)
-    if (this->getTopicRestricted() && this->getOperators().find(client) != this->getOperators().end()) {
-        return false; // If topic is restricted, only operators can send messages
+    std::set<Client>::iterator it = this->banned.find(client);
+    if (it != this->banned.end()) {
+        return false;
     }
-
-    return true; // Client is allowed to send messages to the channel
+    return true;
 }
 
 void Channel::broadcastMessage(const std::string& message, const Client& sender) 
@@ -220,7 +213,9 @@ void Channel::broadcastMessage(const std::string& message, const Client& sender)
 //CONST/DEST
 
 ChannelArray::ChannelArray()
-{}
+{
+    
+}
 
 ChannelArray::~ChannelArray()
 {}
@@ -267,6 +262,7 @@ void ChannelArray::createChannel(std::string const &channel, Client const &clien
         newChannel.setPassword("");
         newChannel.addUser(client);
         newChannel.addOperators(client);
+        // newChannel.banned.empty();
         newChannel.setInvite(false);
         newChannel.setTopicRestricted(false);
         newChannel.setKeyNeeded(false);

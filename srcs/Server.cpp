@@ -225,6 +225,9 @@ void Server::handleClientMessage(int client_socket, const std::string& message) 
 	} else if (command == "MODE"){
 		arg.erase(arg.find_last_not_of(" \n\r") + 1);
 		handleModeCommand(client, arg);		
+	} else if (command == "SEE"){
+		arg.erase(arg.find_last_not_of(" \n\r") + 1);
+		seeModeChannels(client, arg);	
 	} else {
 		std::string error_message;
 		error_message = ERR_UNKNOWNCOMMAND("server", command);
