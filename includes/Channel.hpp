@@ -60,15 +60,17 @@ public:
 	void				removeOperator(Client client);
 	void				removeBanned(Client client);
 	void				removeInvited(Client client);
-	void				writeMsgChannel(Client client, std::string const &msg);
+	void				writeMsgChannel(Client client, std::string const &msg, std::string const &command);
 
-	void				broadcastMessage(const std::string& message, const Client& sender);
 	bool				isInUserList(Client client);
 	bool    			isInOperatorList(Client client);
 	bool    			isInBanList(Client client);
 	bool    			isInInviteList(Client client);
 	bool 				canSendMessage(const Client &client);
 
+
+	void				logUserList() const; 
+	void				broadcastMessage(Client client, std::string const &msg);
 
 };
 

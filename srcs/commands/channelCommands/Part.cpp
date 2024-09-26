@@ -1,8 +1,11 @@
 #include "../../../includes/Server.hpp"
 #include "../../../includes/Util.hpp"
 
-void Server::handlePartCommand(int client_socket, const std::string& args) {
-	if (args.empty()) {
+
+void Server::handlePartCommand(Client &client, const std::string& args) {
+	int client_socket = client.getSocket();
+    
+    if (args.empty()) {
 		std::string error_message = "Error: Invalid arguments for PART command\r\n";
 		sendMessage(client_socket, error_message);
 		return;
@@ -33,3 +36,29 @@ void Server::handlePartCommand(int client_socket, const std::string& args) {
 		channels.deleteChan(channel_name);
 	}
 }
+
+// void Server::handlePartCommand(Client &client, const std::string &channelName)
+// {
+//     Channel &channel = getChannelArray().getChannel(channelName);
+
+//     if (channel.isInUserList(client)) {
+//         // Construct the PART message
+//         std::string partMessage = ":" + client.getNick() + " PART " + channelName + "\r\n";
+
+//         // Send PART message to all users in the channel
+//         channel.broadcastMessage(client, partMessage);  // Send to everyone including the leaving user
+
+//         // Remove the user from the channel
+//         channel.removeUser(client);
+//         std::cout << "Removed user: " << client.getNick() << " from channel: " << channelName << std::endl;
+
+//         // Optionally delete the channel if no users remain
+//         if (channel.getUsers().empty()) {
+//             getChannelArray().deleteChan(channelName);
+//         }
+//     } else {
+//         // If the user is not in the channel, send an error message
+//         std::string error_message = ERR_NOTONCHANNEL("server", channelName);
+//         sendMessage(client.getSocket(), error_message);
+//     }
+// }

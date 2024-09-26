@@ -70,7 +70,7 @@ private:
 	void	handleUserCommand(int client_socket, const std::string& user);
 	void	handlePassCommand(int client_socket, const std::string& password);
 	void	handleTopicCommand(int client_socket, const std::string& args);
-	void	handlePartCommand(int client_socket, const std::string& channelName);
+	void	handlePartCommand(Client &client, const std::string& channelName);
 	void 	handleInviteCommand(Client client, std::string params, Server &server);
 	void	handleModeCommand(Client client, std::string params);
 	void	handleMode(Client &client, Channel &channel, char mode, bool adding, std::istringstream &iss);
@@ -82,5 +82,8 @@ private:
 	//utils
 	bool	kickTests( ChannelArray& channelArray, Client const & client, std::string const & channelName, std::string const & nickname );
 	void	kick( Client& client, Channel& channel );
+
+	void	sendRPL_NAMREPLY(Client &client, Channel &channel);
+
 
 };

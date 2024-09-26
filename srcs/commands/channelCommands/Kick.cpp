@@ -1,5 +1,7 @@
 #include "../../../includes/Server.hpp"
 #include "../../../includes/Util.hpp"
+#include "../../../includes/Server.hpp"
+#include "../../../includes/Util.hpp"
 
 bool	Server::kickTests( ChannelArray& channelArray,
 		Client const & client,
@@ -45,8 +47,8 @@ bool	Server::kickTests( ChannelArray& channelArray,
 		return false;
 	}
 
-	return true;
-}
+// 	return true;
+// }
 
 void	Server::kick( Client& client, Channel& channel ) {
 
@@ -57,10 +59,10 @@ void	Server::handleKickCommand( ChannelArray& channelArray,
 		Client const & client,
 		std::string const & args ) {
 
-	std::istringstream iss(args);
-	std::string channelName, nickname;
+// 	std::istringstream iss(args);
+// 	std::string channelName, nickname;
 
-	if ( !( iss >> channelName >> nickname ) || channelName.empty() || nickname.empty() ) {
+// 	if ( !( iss >> channelName >> nickname ) || channelName.empty() || nickname.empty() ) {
 
 		sendErrorMessage( client.getSocket(), "Invalid arguments");
 		return ;
