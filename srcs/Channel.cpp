@@ -90,7 +90,11 @@ void Channel::setPassword(std::string password)
 
 void Channel::addUser(Client client)
 {
+    // Add the user to the user list
     users.insert(client);
+
+    // If the user was invited, remove them from the invite list
+    invited.erase(client);
 }
 
 void Channel::addOperators(Client client)
@@ -136,7 +140,6 @@ void Channel::removeUser(const Client& client) {
 
     // Additionally, remove from operator set, ban list, etc.
     operators.erase(client);
-    banned.erase(client);
 
     // Log removal for debugging
     std::cout << "Removed user: " << client.getNick() << " from channel: " << this->name << std::endl;
@@ -223,8 +226,11 @@ ChannelArray::~ChannelArray()
 
 Channel& ChannelArray::getChannel(std::string const &channel)
 {
-    return channels[channel];
-    // return channels.find(channel)->second;
+    std::map<std::string, Channel>::iterator it = channels.find(channel);
+    if (it != channels.end()) {
+        return it->second;
+    }
+    throw std::runtime_error("Channel not found");  // Handle the error case properly
 }
 
 std::set<Client> ChannelArray::getOperators(std::string const &channel)
@@ -277,6 +283,10 @@ bool ChannelArray::userInChannel(Client client, std::string const &channel)
 
 void ChannelArray::join(Client client, std::string const &channel)
 {
+    if (!isChan(channel)) {
+        createChannel(channel, client);  // Automatically create the channel if it doesn't exist
+    }
+
     if (clientChannels[client].find(channel) == clientChannels[client].end())
     {
         clientChannels[client].insert(channel);
@@ -293,8 +303,7 @@ void ChannelArray::leave(Client client, std::string const &channel)
 
     if (clientChannels[client].find(channel) != clientChannels[client].end())
     {
-        if (getOperators(channel).find(client) != getOperators(channel).end())
-            getChannel(channel).removeOperator(client);
+        getChannel(channel).removeOperator(client);
         clientChannels[client].erase(channel);
         channels[channel].removeUser(client);
         if (getChannel(channel).getUsers().empty())
@@ -308,17 +317,19 @@ void ChannelArray::leaveAll(Client client)
 {
     std::set<std::string> clientChannelsSet = getChannelsClient(client);
 
+    // Iterate over the copy to avoid invalidation
     for (std::set<std::string>::iterator it = clientChannelsSet.begin(); it != clientChannelsSet.end(); ++it)
     {
         if (getOperators(*it).find(client) != getOperators(*it).end())
             getChannel(*it).removeOperator(client);
-        clientChannels[client].erase(*it);
         channels[*it].removeUser(client);
         if (getChannel(*it).getUsers().empty())
         {
             deleteChan(*it);
         }
     }
+    // Only modify the original map after the iteration
+    clientChannels[client].clear();
 }
 
 void ChannelArray::deleteChan(const std::string& channel) {
