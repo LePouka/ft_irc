@@ -156,7 +156,7 @@ void	Server::handleModeCommand(Client client, std::string params)
 		}
 
 		if (!(channel->isInOperatorList(client))) {
-			std::string error_message = ERR_CHANOPRIVISNEEDED("Server", channel->getName());
+			std::string error_message = ERR_CHANOPRIVSNEEDED("Server", channel->getName());
         	sendMessage(client.getSocket(), error_message);
         	return;
 	    }
