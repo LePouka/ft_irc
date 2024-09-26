@@ -143,8 +143,7 @@ void Server::handleJoinCommand(Client client, std::string params, Server &server
 
             // Send JOIN message to the client and other users
             std::string joinMessage = ":" + client.getNick() + " JOIN " + channelName + "\r\n";
-            channel.writeMsgChannel(client, joinMessage, "JOIN");
-
+            channel.broadcastMessage(client, joinMessage);
             // Send NAMES list to the joining client
             sendRPL_NAMREPLY(client, channel);
         }
@@ -160,7 +159,11 @@ void Server::handleJoinCommand(Client client, std::string params, Server &server
         std::string joinMessage = ":" + client.getNick() + " JOIN " + channelName + "\r\n";
         sendMessage(client.getSocket(), joinMessage);
 
+        std::string topicMessage = RPL_TOPIC("Server", channelName, channel.getTopic());
+        sendMessage(client.getSocket(), topicMessage);
+
         // Send NAMES list to the joining client
         sendRPL_NAMREPLY(client, channel);
     }
+    
 }

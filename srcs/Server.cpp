@@ -221,6 +221,7 @@ void Server::handleClientMessage(int client_socket, const std::string& message) 
 		handlePassCommand(client_socket, arg);
 	} else if (command == "CAP") {
 	} else if (command == "WHOIS") {
+	} else if (command == "WHO") {
 	} else if (command == "NICK") {
 		handleNickCommand(client_socket, arg);
 	} else if (command == "USER") {
