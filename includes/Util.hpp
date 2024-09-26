@@ -10,8 +10,13 @@
 # define	JOIN_CHAN(nickname, channel)					COLON + nickname + SPACE + "JOIN" + SPACE + channel + NEW_LINE
 # define	USER_MSG(source, nickname, message)				COLON + source + SPACE + "PRIVMSG" + SPACE + nickname + SPACE + COLON + message
 //REPLIES
-# define	RPL_WELCOME(username, nickname)						COLON + SERVER_NAME + " 001 " + nickname + " :Welcome to the " + SERVER_NAME + \
-																" Network " + nickname + "!" + username + IP_ADDRESS + NEW_LINE                                        
+# define	RPL_WELCOME(username, nickname)					COLON + SERVER_NAME + " 001 " + nickname + \
+																			" :Welcome to the " + SERVER_NAME + " IRC Network " + nickname + \
+																			TILD + username + IP_ADDRESS + NEW_LINE + \
+																			COLON + SERVER_NAME + " 002 " + nickname + \
+																			" :Your host is ircserv, running version 1.0" + NEW_LINE + \
+																			COLON + SERVER_NAME + " 003 " + nickname + \
+                                      
 # define	RPL_MODES(source, umodes)							COLON + source + SPACE + "221" + SPACE + COLON + umodes + NEW_LINE
 # define	RPL_CHANNELMODEIS(source, channel, modes)			COLON + SERVER_NAME + SPACE + "324" + SPACE + source + SPACE + channel + SPACE + modes + NEW_LINE
 # define	RPL_CREATIONTIME(source, channel, creationtime)		COLON + source + SPACE + "329" + SPACE + channel + SPACE + creationtime + NEW_LINE

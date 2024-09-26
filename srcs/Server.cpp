@@ -247,9 +247,6 @@ void Server::handleClientMessage(int client_socket, const std::string& message) 
 	} else if (command == "MODE"){
 		arg.erase(arg.find_last_not_of(" \n\r") + 1);
 		handleModeCommand(client, arg);		
-	} else if (command == "SEE"){
-		arg.erase(arg.find_last_not_of(" \n\r") + 1);
-		seeModeChannels(client, arg);	
 	} else if (command == "KICK") {
 		arg.erase(arg.find_last_not_of(" \n\r") + 1);
 		handleKickCommand(getChannelArray(), client, arg);
