@@ -4,6 +4,7 @@
 # define	COLON		std::string(":")
 # define	SPACE		std::string(" ")
 # define	NEW_LINE	std::string("\r\n")
+# define	SERVER_NAME	std::string("ircserv")
 
 # define	PONG_MSG(server_name, nickname)					COLON + server_name + SPACE + "PONG " + server_name + " :" + nickname + NEW_LINE
 # define	JOIN_CHAN(nickname, channel)					COLON + nickname + SPACE + "JOIN" + SPACE + channel + NEW_LINE
@@ -12,7 +13,7 @@
 # define	RPL_WELCOME(username, nickname)						COLON + SERVER_NAME + " 001 " + nickname + " :Welcome to the " + SERVER_NAME + \
 																" Network " + nickname + "!" + username + IP_ADDRESS + NEW_LINE                                        
 # define	RPL_MODES(source, umodes)							COLON + source + SPACE + "221" + SPACE + COLON + umodes + NEW_LINE
-# define	RPL_CHANNELMODEIS(source, channel, modes)			COLON + source + SPACE + "324" + SPACE + channel + SPACE + modes + NEW_LINE
+# define	RPL_CHANNELMODEIS(source, channel, modes)			COLON + SERVER_NAME + SPACE + "324" + SPACE + source + SPACE + channel + SPACE + modes + NEW_LINE
 # define	RPL_CREATIONTIME(source, channel, creationtime)		COLON + source + SPACE + "329" + SPACE + channel + SPACE + creationtime + NEW_LINE
 # define	RPL_INVITELIST(source, channel, invitemask)			COLON + source + SPACE + "346" + SPACE + channel + SPACE + invitemask + NEW_LINE
 # define	RPL_ENDOFINVITELIST(source, channel)				COLON + source + SPACE + "347" + SPACE + channel + SPACE + COLON + "End of invite list" + NEW_LINE
@@ -43,9 +44,9 @@
 # define    ERR_ALREADYREGISTERED(source)                   COLON + source + SPACE + "462 " + "* " + ":You may not reregister" + NEW_LINE
 # define	ERR_PASSWDMISMATCH(source, nick)	            COLON + source + SPACE + "464 " + "* " + nick + ":Password incorrect" + NEW_LINE
 # define	ERR_CHANNELISFULL(source, channel)				COLON + source + SPACE + "471 " + "* " + channel + " :Cannot join channel (+l)" + NEW_LINE
+#define		ERR_UNKNOWNMODE(clientNick, modeChar)			COLON + SERVER_NAME + " 472 " + clientNick + " " + modeChar + " :is unknown mode char to me" + NEW_LINE
 # define	ERR_INVITEONLYCHAN(source, channel)				COLON + source + SPACE + "473 " + "* " + channel + " :Cannot join channel (+i)" + NEW_LINE
 # define	ERR_BANNEDFROMCHAN(source, channel)				COLON + source + SPACE + "474 " + "* " + channel + " :Cannot join channel (+b)" + NEW_LINE
 # define	ERR_BADCHANNELKEY(source, channel)				COLON + source + SPACE + "475 " + "* " + channel + " :Cannot join channel (+k)" + NEW_LINE
 # define	ERR_NOSUCHCHANNEL(source, channel)				COLON + source + SPACE + "403 " + "* " + channel + " :No such channel" + NEW_LINE
-# define	ERR_NOTONCHANNEL(source, channel)				COLON + source + SPACE + "442 " + "* " + channel + " :You're not on that channel" + NEW_LINE
 # define	ERR_CHANOPRIVSNEEDED(source, channel)			COLON + source + SPACE + "482 " + "* " + channel + " :You're not channel operator" + NEW_LINE

@@ -15,8 +15,9 @@
 #include "Commands.hpp"
 #include "Channel.hpp"
 #include "Client.hpp"
+#include "Util.hpp"
 
-#define SERVER_NAME "ircserv"
+// #define SERVER_NAME "ircserv"
 
 
 template <typename T>

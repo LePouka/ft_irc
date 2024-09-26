@@ -47,115 +47,113 @@ void sendModeChangeMessage(Client &client, Channel &channel, char mode, bool add
     }
 
     std::string message = ":" + client.getNick() + " MODE " + channel.getName() + " " + change + NEW_LINE;
-    channel.writeMsgChannel(client, message, "MODE");
+    channel.broadcastMessage(client, message);
 }
 
 void	Server::handleMode(Client &client, Channel &channel, char mode, bool adding, std::istringstream &iss)
 {
-	switch (mode) {
-		case 'i':
-			channel.setInvite(adding);
-			sendModeChangeMessage(client, channel, mode, adding);
-			break;
-		case 't':
-			channel.setTopicRestricted(adding);
-			sendModeChangeMessage(client, channel, mode, adding);
-			break;
-		case 'k':
-			if (adding) {
-				std::string key;
-				if (!(iss >> key)) {
-					sendMessage(client.getSocket(), ERR_NEEDMOREPARAMS("Server", "MODE"));
-					return;
-				}
-				channel.setPassword(key);
-			} else {
-				channel.setPassword("");
-			}
-			sendModeChangeMessage(client, channel, mode, adding);
-			break;
-		case 'b': {
-			std::string banNick;
-			if (!(iss >> banNick)) {
-				showBanList(client, channel);
-				return;
-			}
-
-			if (adding) {
-				std::cout << "ahah\n";
-				channel.addBanned(getClient(banNick));
-			} else {
-				channel.removeBanned(getClient(banNick));
-			}
-			sendModeChangeMessage(client, channel, mode, adding, banNick);
-			break;
-		}
-		case 'o': {
-			std::string user;
-			if (!(iss >> user)) {
-				sendMessage(client.getSocket(), ERR_NEEDMOREPARAMS("Server", "MODE"));
-				return;
-			}
-
-			Client *target = &this->getClient(user);
-			if (!target) {
-				sendMessage(client.getSocket(), ERR_NOSUCHNICK("Server", user));
-				return;
-			}
-
-			if (adding) {
-				channel.addOperators(*target);
-			} else {
-				channel.removeOperator(*target);
-			}
-			sendModeChangeMessage(client, channel, mode, adding, user);
-			break;
-		}
-		case 'l':
-			if (adding) {
-				int limit;
-				if (!(iss >> limit)) {
-					sendMessage(client.getSocket(), ERR_NEEDMOREPARAMS("Server", "MODE"));
-					return;
-				}
-				channel.setUserLimit(limit);
-			} else {
-				channel.setUserLimit(0); // No limit
-			}
-			sendModeChangeMessage(client, channel, mode, adding);
-			break;
-	}
-	return ;
+    switch (mode) {
+        case 'i':
+            channel.setInvite(adding);
+            sendModeChangeMessage(client, channel, mode, adding);  // Broadcast the change
+            break;
+        case 't':
+            channel.setTopicRestricted(adding);
+            sendModeChangeMessage(client, channel, mode, adding);
+            break;
+        case 'k':
+            if (adding) {
+                std::string key;
+                if (!(iss >> key)) {
+                    sendMessage(client.getSocket(), ERR_NEEDMOREPARAMS("Server", "MODE"));
+                    return;
+                }
+                channel.setPassword(key);
+            } else {
+                channel.setPassword("");  // Remove the key
+            }
+            sendModeChangeMessage(client, channel, mode, adding);
+            break;
+        case 'b': {
+            std::string banNick;
+            if (!(iss >> banNick)) {
+                showBanList(client, channel);  // Show the ban list if no argument is given
+                return;
+            }
+            if (adding) {
+                channel.addBanned(getClient(banNick));
+            } else {
+                channel.removeBanned(getClient(banNick));
+            }
+            sendModeChangeMessage(client, channel, mode, adding, banNick);
+            break;
+        }
+        case 'o': {
+            std::string user;
+            if (!(iss >> user)) {
+                sendMessage(client.getSocket(), ERR_NEEDMOREPARAMS("Server", "MODE"));
+                return;
+            }
+            Client *target = &this->getClient(user);
+            if (!target) {
+                sendMessage(client.getSocket(), ERR_NOSUCHNICK("Server", user));
+                return;
+            }
+            if (adding) {
+                channel.addOperators(*target);
+            } else {
+                channel.removeOperator(*target);
+            }
+            sendModeChangeMessage(client, channel, mode, adding, user);
+            break;
+        }
+        case 'l':
+            if (adding) {
+                int limit;
+                if (!(iss >> limit)) {
+                    sendMessage(client.getSocket(), ERR_NEEDMOREPARAMS("Server", "MODE"));
+                    return;
+                }
+                channel.setUserLimit(limit);
+            } else {
+                channel.setUserLimit(0);  // No limit
+            }
+            sendModeChangeMessage(client, channel, mode, adding);
+            break;
+        default:
+            sendMessage(client.getSocket(), ERR_UNKNOWNMODE("Server", std::string(1, mode)));
+            break;
+    }
 }
 
 void	Server::handleModeCommand(Client client, std::string params)
 {	
 	std::istringstream iss(params);
-	std::string channelName, modeFlags, modeArg;
+	std::string channelName, modeFlags;
 	if (!(iss >> channelName))
 	{
         std::string error_message = ERR_NEEDMOREPARAMS("Server", "MODE");
         sendErrorMessage(client.getSocket(), error_message);
-        return ;
+        return;
 	}
 	ChannelArray &channelArray = this->getChannelArray();
 	if (channelName[0] == '#' || channelName[0] == '&')
 	{
-		if (!(channelArray.isChan(channelName)))
+		if (!channelArray.isChan(channelName))
 		{
 			std::string error_message = ERR_NOSUCHCHANNEL("Server", "MODE");
 			sendErrorMessage(client.getSocket(), error_message);
-			return ;
+			return;
 		}
 		Channel *channel = &channelArray.getChannel(channelName);
 		if (!(iss >> modeFlags))
 		{
-			seeModeChannels(client, channelName);
-			// showCurrentModes(client, *channel);
-        	return;
+			// Show the current channel modes
+			showCurrentModes(client, *channel);
+			return;
 		}
 
-		if (!(channel->isInOperatorList(client))) {
+		if (!channel->isInOperatorList(client)) {
 			std::string error_message = ERR_CHANOPRIVSNEEDED("Server", channel->getName());
         	sendMessage(client.getSocket(), error_message);
         	return;
@@ -173,5 +171,4 @@ void	Server::handleModeCommand(Client client, std::string params)
 			}
 		}
 	}
-	
 }
