@@ -6,7 +6,7 @@ bool	Server::kickTests( ChannelArray& channelArray,
 		std::string const & channelName,
 		std::string const & nickname ) {
 
-	if ( !isClientRegistered( nickname )) {
+	if ( isClientRegistered( nickname ) == false ) {
 
 		sendErrorMessage( client.getSocket(), ERR_NOSUCHNICK( "Server", nickname ));
 		return false;
@@ -39,7 +39,7 @@ bool	Server::kickTests( ChannelArray& channelArray,
 		return false;
 	}
 
-	if ( channel.isInOperatorList( targetedClient )) {
+	if ( channel.isInOperatorList( targetedClient ) == true ) {
 
 		sendErrorMessage( client.getSocket(), "Cannot kick channel operator" );
 		return false;
