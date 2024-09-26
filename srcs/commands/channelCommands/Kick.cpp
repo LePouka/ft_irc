@@ -1,7 +1,5 @@
 #include "../../../includes/Server.hpp"
 #include "../../../includes/Util.hpp"
-#include "../../../includes/Server.hpp"
-#include "../../../includes/Util.hpp"
 
 bool	Server::kickTests( ChannelArray& channelArray,
 		Client const & client,
