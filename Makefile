@@ -15,6 +15,7 @@ SRC = main.cpp \
 	commands/channelCommands/Topic.cpp \
 	commands/channelCommands/Part.cpp \
 	commands/channelCommands/Invite.cpp \
+	commands/channelCommands/Kick.cpp \
 	commands/Privmsg.cpp \
 	commands/NICK.cpp \
 	commands/PASS.cpp \

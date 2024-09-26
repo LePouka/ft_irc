@@ -41,7 +41,9 @@ public:
 	Client&					getClient( std::string const & nickname );
 
 	//METHODS
-	void run();
+	void	run();
+
+	bool	isClientRegistered( std::string const & nickname );
 
 
 private:
@@ -76,6 +78,11 @@ private:
 	void	handleJoinCommand(Client client, std::string params, Server &server);
 	void 	handlePrivmsgCommand(Client client, std::string params, Server &server);
 	void	seeModeChannels(Client &client, const std::string &chanName);
+	void	handleKickCommand( ChannelArray& channelArray, Client const & client, std::string const & args );
+
+	//utils
+	bool	kickTests( ChannelArray& channelArray, Client const & client, std::string const & channelName, std::string const & nickname );
+	void	kick( Client& client, Channel& channel );
 
 	void	sendRPL_NAMREPLY(Client &client, Channel &channel);
 

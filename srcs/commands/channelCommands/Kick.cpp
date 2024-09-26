@@ -1,64 +1,72 @@
 #include "../../../includes/Server.hpp"
 #include "../../../includes/Util.hpp"
 
-// bool	kickTests( ChannelArray const & channel,
-// 		Client const & client,
-// 		std::string const & channelName,
-// 		std::string const & nickname ) {
+bool	Server::kickTests( ChannelArray& channelArray,
+		Client const & client,
+		std::string const & channelName,
+		std::string const & nickname ) {
 
-// 	if ( !client.isRegistered() ) {
+	if ( isClientRegistered( nickname ) == false ) {
 
-// 		std::cout << "Kick error message" << std::endl;
-// 		return false;
-// 	}
+		sendErrorMessage( client.getSocket(), ERR_NOSUCHNICK( "Server", nickname ));
+		return false;
+	}
 
-// 	if ( !channel.isChan( channelName ) ) {
+	if ( channelArray.isChan( channelName ) == false ) {
 
-// 		std::cout << "Kick error message" << std::endl;
-// 		return false;
-// 	}
+		sendErrorMessage( client.getSocket(), ERR_NOSUCHCHANNEL( "Server", channelName ));
+		return false;
+	}
 
-// 	if ( !channel.userInChannel( client, channelName ) ) {
+	Client	targetedClient = getClient( nickname );
+	Channel	channel = channelArray.getChannel( channelName );
 
-// 		std::cout << "Kick error message" << std::endl;
-// 		return false;
-// 	}
+	if ( channel.isInUserList( client ) == false ) {
 
-// 	if ( !channel.isOperator( client, channelName ) {
+		sendErrorMessage( client.getSocket(), ERR_USERNOTINCHANNEL( "Server", client.getNick() ));
+		return false;
+	}
 
-// 		std::cout << "Kick error message" << std::endl;
-// 		return false;
-// 	}
+	if ( channel.isInUserList( targetedClient ) == false ) {
 
-// 	Client targetedClient = getClient( nickname );
-// 	if ( channel.isOperator( targetedClient, channelName ) {
+		sendErrorMessage( client.getSocket(), ERR_USERNOTINCHANNEL( "Server", nickname ));
+		return false;
+	}
 
-// 		std::cout << "Kick error message" << std::endl;
-// 		return false;
-// 	}
+	if ( channel.isInOperatorList( client ) == false ) {
 
-// 	return true;
-// }
+		sendErrorMessage( client.getSocket(), ERR_CHANOPRIVSNEEDED( "Server", channelName ));
+		return false;
+	}
 
-// void	kickHandler( ChannelArray const & channel,
-// 		Client const & client,
-// 		std::string channelName,
-// 		std::string nickname ) {}
+	if ( channel.isInOperatorList( targetedClient ) == true ) {
 
-// void	kick( ChannelArray const & channel,
-// 		Client const & client,
-// 		std::string const & args ) {
+		sendErrorMessage( client.getSocket(), "Cannot kick channel operator" );
+		return false;
+	}
 
-// 	std::istringstream iss(args);
-// 	std::string channelName, nickname;
+	return true;
+}
 
-// 	if ( !( iss >> channelName >> nickname ) || channelName.empty() || nickname.empty() ) {
+void	Server::kick( Client& client, Channel& channel ) {
 
-// 		std::cout << "Kick error message" << std::endl;
-// 		return ;
-// 	}
+	channel.removeUser( client );
+}
 
-// 	if ( !kickTests( channel, client, channelName, nickname )) { return ; }
+void	Server::handleKickCommand( ChannelArray& channelArray,
+		Client const & client,
+		std::string const & args ) {
 
-// 	kickHandler( channel, client, channelName, nickname );
-// }
+	std::istringstream iss(args);
+	std::string channelName, nickname;
+
+	if ( !( iss >> channelName >> nickname ) || channelName.empty() || nickname.empty() ) {
+
+		sendErrorMessage( client.getSocket(), "Invalid arguments");
+		return ;
+	}
+
+	if ( !kickTests( channelArray, client, channelName, nickname )) { return ; }
+
+	kick( getClient( nickname ), channelArray.getChannel( channelName ));
+}
