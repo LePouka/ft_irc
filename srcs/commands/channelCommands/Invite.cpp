@@ -66,7 +66,7 @@ void Server::handleInviteCommand(Client client, std::string params, Server &serv
     }
     if (!(chan.isInOperatorList(client)) && chan.getInvite())
     {
-        std::string error_message = ERR_CHANOPRIVISNEEDED(client.getNick(), channel);
+        std::string error_message = ERR_CHANOPRIVSNEEDED(client.getNick(), channel);
         sendErrorMessage(client.getSocket(), error_message);
         return ;
     }
