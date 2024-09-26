@@ -3,13 +3,16 @@
 
 void Server::handleTopicCommand(int client_socket, const std::string& args) {
 	if (args.empty()) {
-		std::string error_message = "Error: Invalid arguments for TOPIC command\r\n";
+		std::string error_message = ERR_NEEDMOREPARAMS("Server", "TOPIC");
 		sendMessage(client_socket, error_message);
 		return;
 	}
 	size_t pos = args.find(' ');
 	std::string channel_name = (pos != std::string::npos) ? args.substr(0, pos) : args;
 	std::string new_topic = (pos != std::string::npos) ? args.substr(pos + 1) : "";
+	if (!new_topic.empty() && new_topic[0] == ':') {
+		new_topic = new_topic.substr(1);
+	}
 	if (!channels.isChan(channel_name)) {
 		std::string error_message = ERR_NOSUCHCHANNEL("server", channel_name);
 		sendMessage(client_socket, error_message);
@@ -28,13 +31,16 @@ void Server::handleTopicCommand(int client_socket, const std::string& args) {
 		return;
 	}
 	if (new_topic.empty()) {
-		std::string response = channel.getTopic().empty()
-			? RPL_NOTOPIC(client.getNick(), channel_name)
-			: RPL_TOPIC(client.getNick(), channel_name, channel.getTopic());
-		sendMessage(client_socket, response);
+		if (channel.getTopic().empty()) {
+			std::string response = RPL_NOTOPIC(client.getNick(), channel_name);
+			sendMessage(client_socket, response);
+		} else {
+			std::string response = RPL_TOPIC(client.getNick(), channel_name, channel.getTopic());
+			sendMessage(client_socket, response);
+		}
 	} else {
 		if (!channels.isOperator(client, channel_name)) {
-			std::string error_message = ERR_CHANOPRIVISNEEDED(client.getNick(), channel_name);
+			std::string error_message = ERR_CHANOPRIVSNEEDED(client.getNick(), channel_name);
 			sendMessage(client_socket, error_message);
 			return;
 		}
