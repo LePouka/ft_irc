@@ -37,7 +37,7 @@ bool	Server::kickTests( ChannelArray& channelArray,
 
 	if ( channel.isInOperatorList( client ) == false ) {
 
-		sendErrorMessage( client.getSocket(), ERR_CHANOPRIVISNEEDED( "Server", channelName ));
+		sendErrorMessage( client.getSocket(), ERR_CHANOPRIVSNEEDED( "Server", channelName ));
 		return false;
 	}
 
@@ -47,8 +47,8 @@ bool	Server::kickTests( ChannelArray& channelArray,
 		return false;
 	}
 
-// 	return true;
-// }
+	return true;
+}
 
 void	Server::kick( Client& client, Channel& channel ) {
 
@@ -59,10 +59,10 @@ void	Server::handleKickCommand( ChannelArray& channelArray,
 		Client const & client,
 		std::string const & args ) {
 
-// 	std::istringstream iss(args);
-// 	std::string channelName, nickname;
+	std::istringstream iss(args);
+	std::string channelName, nickname;
 
-// 	if ( !( iss >> channelName >> nickname ) || channelName.empty() || nickname.empty() ) {
+	if ( !( iss >> channelName >> nickname ) || channelName.empty() || nickname.empty() ) {
 
 		sendErrorMessage( client.getSocket(), "Invalid arguments");
 		return ;
