@@ -217,7 +217,8 @@ void Server::handleClientMessage(int client_socket, const std::string& message) 
 		arg.erase(arg.find_last_not_of(" \n\r") + 1);
 		handleJoinCommand(client, arg, *this);
 	} else if (command == "PART") {
-		handlePartCommand(client_socket, arg);
+		arg.erase(arg.find_last_not_of(" \n\r") + 1);
+		handlePartCommand(client, arg);
 	} else if (command == "TOPIC") {
 		handleTopicCommand(client_socket, arg);
 	}else if (command == "PRIVMSG"){

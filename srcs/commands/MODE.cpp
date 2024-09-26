@@ -47,7 +47,7 @@ void sendModeChangeMessage(Client &client, Channel &channel, char mode, bool add
     }
 
     std::string message = ":" + client.getNick() + " MODE " + channel.getName() + " " + change + NEW_LINE;
-    channel.writeMsgChannel(client, message);
+    channel.writeMsgChannel(client, message, "MODE");
 }
 
 void	Server::handleMode(Client &client, Channel &channel, char mode, bool adding, std::istringstream &iss)

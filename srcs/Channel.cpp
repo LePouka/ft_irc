@@ -130,8 +130,16 @@ void Channel::setUserLimit(unsigned int userLimit)
 }
 
 //METHODS
-void Channel::removeUser(const Client& client){
+void Channel::removeUser(const Client& client) {
+    // Remove from the user set
     users.erase(client);
+
+    // Additionally, remove from operator set, ban list, etc.
+    operators.erase(client);
+    banned.erase(client);
+
+    // Log removal for debugging
+    std::cout << "Removed user: " << client.getNick() << " from channel: " << this->name << std::endl;
 }
 
 void Channel::removeOperator(Client client)
@@ -149,16 +157,26 @@ void Channel::removeInvited(Client client)
     invited.erase(client);
 }
 
-void Channel::writeMsgChannel(Client client, std::string const &msg)
+void Channel::writeMsgChannel(Client client, std::string const &msg, std::string const &command)
 {
-    std::set<Client> users = this->getUsers();
-
     // Broadcast message to all users except the sender
+    std::set<Client> users = this->getUsers();
     for (std::set<Client>::iterator it = users.begin(); it != users.end(); ++it) {
-        if (*it != client) {
-            // Include sender's nickname in the message
-            sendMessage((*it).getSocket(), ":" + client.getNick() + " PRIVMSG " + this->getName() + " :" + msg);
+        if (it->getSocket() != client.getSocket()) {  // Compare by socket
+            // Format the message according to the provided command
+            std::string fullMessage = ":" + client.getNick() + " " + command + " " + this->getName() + " :" + msg + "\r\n";
+            sendMessage(it->getSocket(), fullMessage);
         }
+    }
+}
+
+
+void Channel::broadcastMessage(Client client, std::string const &msg)
+{
+    (void)client;
+    std::set<Client> users = this->getUsers();
+    for (std::set<Client>::iterator it = users.begin(); it != users.end(); ++it) {
+        sendMessage(it->getSocket(), msg);
     }
 }
 
@@ -183,29 +201,10 @@ bool    Channel::isInInviteList(Client client)
 }
 
 bool Channel::canSendMessage(const Client &client) {
-    if (this->getInvite() && this->users.find(client) == this->users.end()) {
-        return false;
-    }
-
-    std::set<Client>::iterator it = this->banned.find(client);
-    if (it != this->banned.end()) {
+    if (!this->isInUserList(client) || this->isInBanList(client)) {
         return false;
     }
     return true;
-}
-
-void Channel::broadcastMessage(const std::string& message, const Client& sender) 
-{
-    (void)message;
-    (void)sender;
-    // int senderSocket = sender.getSocket();
-    // for (std::set<Client>::iterator it = users.begin(); it != users.end(); ++it) {
-    //     if (*it != sender) {
-    //         // Assuming you have a way to get a Client object from a socket
-    //         Client recipient = getClientFromSocket(*it);
-    //         recipient.sendMessage(message);
-    //     }
-    // }
 }
 
 //                          CHANNELARRAY
