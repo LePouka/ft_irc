@@ -18,19 +18,26 @@ bool	Server::kickTests( ChannelArray& channelArray,
 		return false;
 	}
 
-	if ( !channelArray.userInChannel( client, channelName )) {
+	if ( channelArray.userInChannel( client, channelName ) == false ) {
 
 		sendErrorMessage( client.getSocket(), ERR_USERNOTINCHANNEL( "Server", nickname ));
 		return false;
 	}
 
-	if ( !channelArray.isOperator( client, channelName )) {
+	if ( channelArray.isOperator( client, channelName ) == false ) {
 
 		sendErrorMessage( client.getSocket(), ERR_CHANOPRIVISNEEDED( "Server", channelName ));
 		return false;
 	}
 
 	Client	targetedClient = getClient( nickname );
+
+	if ( channelArray.userInChannel( targetedClient, channelName ) == false ) {
+
+		sendErrorMessage( client.getSocket(), ERR_USERNOTINCHANNEL( "Server", targetedClient ));
+		return false;
+	}
+
 	if ( channelArray.isOperator( targetedClient, channelName )) {
 
 		sendErrorMessage( client.getSocket(), "Cannot kick channel operator" );
