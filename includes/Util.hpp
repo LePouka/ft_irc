@@ -1,6 +1,7 @@
 #pragma once
 
 # define	IP_ADDRESS	std::string("@127.0.0.1")
+# define	TILD		std::string("!~")
 # define	COLON		std::string(":")
 # define	SPACE		std::string(" ")
 # define	NEW_LINE	std::string("\r\n")
@@ -16,7 +17,7 @@
 																			COLON + SERVER_NAME + " 002 " + nickname + \
 																			" :Your host is ircserv, running version 1.0" + NEW_LINE + \
 																			COLON + SERVER_NAME + " 003 " + nickname + \
-                                      
+																			" :This server was created Tue Apr 30 2024 at 16:38:57 UTC" + NEW_LINE                        
 # define	RPL_MODES(source, umodes)							COLON + source + SPACE + "221" + SPACE + COLON + umodes + NEW_LINE
 # define	RPL_CHANNELMODEIS(source, channel, modes)			COLON + SERVER_NAME + SPACE + "324" + SPACE + source + SPACE + channel + SPACE + modes + NEW_LINE
 # define	RPL_CREATIONTIME(source, channel, creationtime)		COLON + source + SPACE + "329" + SPACE + channel + SPACE + creationtime + NEW_LINE
