@@ -26,19 +26,18 @@ void Server::handleJoinCommand(Client &client, std::string params, Server &serve
     std::string channelName = params;
     ChannelArray &channelArray = server.getChannelArray();
     Channel *channel = NULL;
-
     if (channelArray.isChan(channelName)) {
         channel = &channelArray.getChannel(channelName);
     } else {
         channelArray.createChannel(channelName, client);
         channel = &channelArray.getChannel(channelName);
-        std::string topicMessage = RPL_TOPIC("Server", channelName, channel->getTopic());
-        sendMessage(client.getSocket(), topicMessage);
     }
-	std::string joinMessage = JOIN_CHAN(client.getNick(), client.getUser(), channelName, "JOIN");
-    channel->broadcastMessage(client, joinMessage);
     if (!channel->isInUserList(client)) {
         channel->addUser(client);
     }
+    std::string joinMessage = JOIN_CHAN(client.getNick(), client.getUser(), channelName, "JOIN");
+    channel->broadcastMessage(client, joinMessage);
+    std::string topicMessage = RPL_TOPIC("Server", channelName, channel->getTopic());
+    sendMessage(client.getSocket(), topicMessage);
     sendRPL_NAMREPLY(client, *channel);
 }
