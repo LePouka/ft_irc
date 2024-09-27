@@ -22,9 +22,9 @@
 
 template <typename T>
 std::string to_string(T value) {
-    std::ostringstream oss;
-    oss << value;
-    return oss.str();
+	std::ostringstream oss;
+	oss << value;
+	return oss.str();
 }
 
 class Server {
@@ -76,10 +76,11 @@ private:
 	void	handleModeCommand(Client client, std::string params);
 	void	handleMode(Client &client, Channel &channel, char mode, bool adding, std::istringstream &iss);
 	void 	handleJoinCommand(Client &client, std::string params, Server &server);
-	// void 	handleJoinCommand(Client client, std::string params, Server &server);
 	void 	handlePrivmsgCommand(Client client, std::string params, Server &server);
 	void	seeModeChannels(Client &client, const std::string &chanName);
 	void	handleKickCommand( ChannelArray& channelArray, Client const & client, std::string const & args );
+	void	handleQuitCommand(Client &client, const std::string& quitMessage);
+	void	handleWhoisCommand(int client_socket, const std::string& target_nickname);
 
 	//utils
 	bool	kickTests( ChannelArray& channelArray, Client const & client, std::string const & channelName, std::string const & nickname );

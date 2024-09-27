@@ -14,26 +14,29 @@
 # define	TOPIC_CHANGE(nickname, channel, new_topic)			COLON + nickname + SPACE + "TOPIC " + channel + SPACE + ":" + new_topic + NEW_LINE
 
 //REPLIES
-# define	RPL_WELCOME(username, nickname)						COLON + SERVER_NAME + " 001 " + nickname + \
-																			" :Welcome to the " + SERVER_NAME + " IRC Network " + nickname + \
-																			TILD + username + IP_ADDRESS + NEW_LINE + \
-																			COLON + SERVER_NAME + " 002 " + nickname + \
-																			" :Your host is ircserv, running version 1.0" + NEW_LINE + \
-																			COLON + SERVER_NAME + " 003 " + nickname + \
-																			" :This server was created Tue Apr 30 2024 at 16:38:57 UTC" + NEW_LINE                        
-# define	RPL_MODES(source, umodes)							COLON + source + SPACE + "221" + SPACE + COLON + umodes + NEW_LINE
-# define	RPL_CHANNELMODEIS(source, channel, modes)			COLON + SERVER_NAME + SPACE + "324" + SPACE + source + SPACE + channel + SPACE + modes + NEW_LINE
-# define	RPL_CREATIONTIME(source, channel, creationtime)		COLON + source + SPACE + "329" + SPACE + channel + SPACE + creationtime + NEW_LINE
-# define	RPL_INVITELIST(source, channel, invitemask)			COLON + source + SPACE + "346" + SPACE + channel + SPACE + invitemask + NEW_LINE
-# define	RPL_ENDOFINVITELIST(source, channel)				COLON + source + SPACE + "347" + SPACE + channel + SPACE + COLON + "End of invite list" + NEW_LINE
-# define	RPL_BANLIST(source, channel, banmask)				COLON + source + SPACE + "367" + SPACE + channel + SPACE + banmask + NEW_LINE
-# define	RPL_ENDOFBANLIST(source, channel)					COLON + source + SPACE + "368" + SPACE + channel + SPACE + COLON + "End of ban list" + NEW_LINE
-# define	RPL_TOPICWHOTIME(source, channel, nickname, setat)	COLON + source + SPACE + channel + SPACE + nickname + SPACE + setat + NEW_LINE
-# define	RPL_INVITING(source, nickname, channel)				COLON + source + SPACE + nickname + SPACE + channel + NEW_LINE
-# define	RPL_NAMREPLY(nickname, userList) 					COLON + nickname + SPACE + "353" + SPACE + userList + NEW_LINE
-# define	RPL_ENDOFNAMES(nickname, channel)					COLON + nickname + SPACE + "366" + SPACE + nickname + SPACE + channel + " :End of /NAMES list" + NEW_LINE
-# define	RPL_NOTOPIC(nick, channel)							COLON + nick + SPACE + "331 " /* + "" */ + channel + " :No topic is set" + NEW_LINE
-# define	RPL_TOPIC(nick, channel, topic)						COLON + SERVER_NAME + SPACE + "332 " + nick + SPACE + channel + " :" + topic + NEW_LINE
+# define	RPL_WELCOME(username, nickname)										COLON + SERVER_NAME + " 001 " + nickname + \
+																					" :Welcome to the " + SERVER_NAME + " IRC Network " + nickname + \
+																					TILD + username + IP_ADDRESS + NEW_LINE + \
+																					COLON + SERVER_NAME + " 002 " + nickname + \
+																					" :Your host is ircserv, running version 1.0" + NEW_LINE + \
+																					COLON + SERVER_NAME + " 003 " + nickname + \
+																					" :This server was created Tue Apr 30 2024 at 16:38:57 UTC" + NEW_LINE                        
+# define	RPL_MODES(source, umodes)											COLON + source + SPACE + "221" + SPACE + COLON + umodes + NEW_LINE
+# define	RPL_WHOISUSER(source, nick, user, host, real_name)					COLON + source + SPACE + "311 " + "" + nick + SPACE + user + SPACE + user + IP_ADDRESS + " * :" + real_name + "" + NEW_LINE
+# define	RPL_WHOISSERVER(source, nick, server, server_info)					COLON + source + SPACE + "312 " + "" + nick + SPACE + server + " :" + server_info + "" + NEW_LINE
+# define	RPL_ENDOFWHOIS(source, nick)										COLON + source + SPACE + "318 " + "" + nick + " :End of /WHOIS list" + NEW_LINE
+# define	RPL_CHANNELMODEIS(source, channel, modes)							COLON + SERVER_NAME + SPACE + "324" + SPACE + source + SPACE + channel + SPACE + modes + NEW_LINE
+# define	RPL_CREATIONTIME(source, channel, creationtime)						COLON + source + SPACE + "329" + SPACE + channel + SPACE + creationtime + NEW_LINE
+# define	RPL_INVITELIST(source, channel, invitemask)							COLON + source + SPACE + "346" + SPACE + channel + SPACE + invitemask + NEW_LINE
+# define	RPL_ENDOFINVITELIST(source, channel)								COLON + source + SPACE + "347" + SPACE + channel + SPACE + COLON + "End of invite list" + NEW_LINE
+# define	RPL_BANLIST(source, channel, banmask)								COLON + source + SPACE + "367" + SPACE + channel + SPACE + banmask + NEW_LINE
+# define	RPL_ENDOFBANLIST(source, channel)									COLON + source + SPACE + "368" + SPACE + channel + SPACE + COLON + "End of ban list" + NEW_LINE
+# define	RPL_TOPICWHOTIME(source, channel, nickname, setat)					COLON + source + SPACE + channel + SPACE + nickname + SPACE + setat + NEW_LINE
+# define	RPL_INVITING(source, nickname, channel)								COLON + source + SPACE + nickname + SPACE + channel + NEW_LINE
+# define	RPL_NAMREPLY(nickname, userList) 									COLON + nickname + SPACE + "353" + SPACE + userList + NEW_LINE
+# define	RPL_ENDOFNAMES(nickname, channel)									COLON + nickname + SPACE + "366" + SPACE + nickname + SPACE + channel + " :End of /NAMES list" + NEW_LINE
+# define	RPL_NOTOPIC(nick, channel)											COLON + nick + SPACE + "331 " /* + "" */ + channel + " :No topic is set" + NEW_LINE
+# define	RPL_TOPIC(nick, channel, topic)										COLON + SERVER_NAME + SPACE + "332 " + nick + SPACE + channel + " :" + topic + NEW_LINE
 
 //ERRORS
 # define	ERR_NOSUCHNICK(source, nickname)				COLON + source + SPACE + "401 " + "* " + nickname + " :No such nickname/channel" + NEW_LINE

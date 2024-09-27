@@ -11,7 +11,7 @@ int Client::getSocket() const {
 }
 
 void Client::setRegistered(bool status) {
-    registered = status;
+	registered = status;
 }
 
 void Client::setNick(const std::string& nick) {
@@ -24,12 +24,28 @@ void Client::setUser(const std::string& user) {
 	registered = !this->nick.empty() && !this->user.empty();
 }
 
+void Client::setHost(const std::string& host) {
+	this->host = host;
+}
+
+void Client::setRealName(const std::string& real) {
+	this->realName = real;
+}
+
 std::string Client::getNick() const {
 	return nick;
 }
 
 std::string Client::getUser() const {
 	return user;
+}
+
+std::string Client::getHost() const {
+	return host;
+}
+
+std::string Client::getRealName() const {
+	return realName;
 }
 
 bool Client::isRegistered() const {
