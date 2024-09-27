@@ -223,8 +223,8 @@ void Server::handleClientMessage(int client_socket, const std::string& message) 
 	}else if (command == "WHOIS") {
 		handleWhoisCommand(client_socket, arg);
 	} else if (command == "WHO") {
-	} else if (command == "QUIT") {
-		handleQuitCommand(client, arg);
+	// } else if (command == "QUIT") {
+	// 	handleQuitCommand(client, arg);
 	} else if (command == "NICK") {
 		handleNickCommand(client_socket, arg);
 	} else if (command == "USER") {
