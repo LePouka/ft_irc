@@ -8,7 +8,8 @@
 # define	SERVER_NAME	std::string("ircserv")
 
 # define	PONG_MSG(server_name, nickname)					COLON + server_name + SPACE + "PONG " + server_name + " :" + nickname + NEW_LINE
-# define	JOIN_CHAN(nickname, channel)					COLON + nickname + SPACE + "JOIN" + SPACE + channel + NEW_LINE
+# define	JOIN_CHAN(nickname, username, chan_name, command)	COLON + nickname + TILD + username + IP_ADDRESS + SPACE + command + " :" + chan_name + NEW_LINE
+# define	PART_CHAN(nickname, username, chan_name, part_msg) COLON + nickname + TILD + username + IP_ADDRESS + SPACE + "PART " + chan_name + ((part_msg.empty()) ? "" : " :" + part_msg) + NEW_LINE	
 # define	USER_MSG(source, nickname, message)				COLON + source + SPACE + "PRIVMSG" + SPACE + nickname + SPACE + COLON + message
 //REPLIES
 # define	RPL_WELCOME(username, nickname)					COLON + SERVER_NAME + " 001 " + nickname + \
