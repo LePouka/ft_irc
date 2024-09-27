@@ -34,8 +34,6 @@
 # define	RPL_ENDOFNAMES(nickname, channel)					COLON + nickname + SPACE + "366" + SPACE + nickname + SPACE + channel + " :End of /NAMES list" + NEW_LINE
 # define	RPL_NOTOPIC(nick, channel)							COLON + nick + SPACE + "331 " /* + "" */ + channel + " :No topic is set" + NEW_LINE
 # define	RPL_TOPIC(nick, channel, topic)						COLON + SERVER_NAME + SPACE + "332 " + nick + SPACE + channel + " :" + topic + NEW_LINE
-//# define	RPL_KICK(source, nickname, channel)					COLON + source + SPACE + "KICK " + channel + SPACE + nickname + SPACE + COLON + NEW_LINE
-//# define	RPL_KICK(nickname, username, chanName, command)		COLON + nickname + TILD + username + IP_ADDRESS + SPACE + command + " :" + chanName + NEW_LINE
 # define	RPL_KICK(nickname, username, chan_name, kicked_nick, command)	COLON + nickname + TILD + username + IP_ADDRESS + SPACE + command + SPACE + chan_name + SPACE + kicked_nick + " :" + nickname + NEW_LINE
 
 //ERRORS

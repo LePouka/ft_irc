@@ -48,10 +48,12 @@ bool	Server::kickTests( ChannelArray& channelArray,
 	return true;
 }
 
-void	Server::kick( Channel& channel, Client const & client, Client& kickedClient ) {
+void	Server::kick( ChannelArray& channelArray, Channel& channel, Client const & client, Client& kickedClient ) {
 
-	channel.broadcastMessage( client, RPL_KICK( client.getNick(), client.getUser(), channel.getName(), kickedClient.getNick(), "KICK" ));
+	( void )channelArray;
+	//channelArray.clientChannels[ clients ].erase( channel.getName() );
 	channel.removeUser( client );
+	channel.broadcastMessage( client, RPL_KICK( client.getNick(), client.getUser(), channel.getName(), kickedClient.getNick(), "KICK" ));
 }
 
 void	Server::handleKickCommand( ChannelArray& channelArray,
@@ -69,5 +71,5 @@ void	Server::handleKickCommand( ChannelArray& channelArray,
 
 	if ( !kickTests( channelArray, client, channelName, nickname )) { return ; }
 
-	kick( channelArray.getChannel( channelName ), client, getClient( nickname ));
+	kick( channelArray, channelArray.getChannel( channelName ), client, getClient( nickname ));
 }
