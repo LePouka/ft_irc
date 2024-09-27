@@ -8,7 +8,8 @@
 # define	SERVER_NAME	std::string("ircserv")
 
 # define	PONG_MSG(server_name, nickname)					COLON + server_name + SPACE + "PONG " + server_name + " :" + nickname + NEW_LINE
-# define	JOIN_CHAN(nickname, channel)					COLON + nickname + SPACE + "JOIN" + SPACE + channel + NEW_LINE
+# define	JOIN_CHAN(nickname, username, chan_name, command)	COLON + nickname + TILD + username + IP_ADDRESS + SPACE + command + " :" + chan_name + NEW_LINE
+# define	PART_CHAN(nickname, username, chan_name, part_msg) COLON + nickname + TILD + username + IP_ADDRESS + SPACE + "PART " + chan_name + ((part_msg.empty()) ? "" : " :" + part_msg) + NEW_LINE
 # define	USER_MSG(source, nickname, message)				COLON + source + SPACE + "PRIVMSG" + SPACE + nickname + SPACE + COLON + message
 //REPLIES
 # define	RPL_WELCOME(username, nickname)					COLON + SERVER_NAME + " 001 " + nickname + \
@@ -17,7 +18,7 @@
 																			COLON + SERVER_NAME + " 002 " + nickname + \
 																			" :Your host is ircserv, running version 1.0" + NEW_LINE + \
 																			COLON + SERVER_NAME + " 003 " + nickname + \
-																			" :This server was created Tue Apr 30 2024 at 16:38:57 UTC" + NEW_LINE                        
+																			" :This server was created Tue Apr 30 2024 at 16:38:57 UTC" + NEW_LINE
 # define	RPL_MODES(source, umodes)							COLON + source + SPACE + "221" + SPACE + COLON + umodes + NEW_LINE
 # define	RPL_CHANNELMODEIS(source, channel, modes)			COLON + SERVER_NAME + SPACE + "324" + SPACE + source + SPACE + channel + SPACE + modes + NEW_LINE
 # define	RPL_CREATIONTIME(source, channel, creationtime)		COLON + source + SPACE + "329" + SPACE + channel + SPACE + creationtime + NEW_LINE
@@ -57,3 +58,5 @@
 # define	ERR_BADCHANNELKEY(source, channel)				COLON + source + SPACE + "475 " + "* " + channel + " :Cannot join channel (+k)" + NEW_LINE
 # define	ERR_NOSUCHCHANNEL(source, channel)				COLON + source + SPACE + "403 " + "* " + channel + " :No such channel" + NEW_LINE
 # define	ERR_CHANOPRIVSNEEDED(source, channel)			COLON + source + SPACE + "482 " + "* " + channel + " :You're not channel operator" + NEW_LINE
+
+# define	RPL_PARTMESSAGE(server_name, nickname, channel, part_msg) COLON + server_name + " PART " + channel + " :" + nickname + ((part_msg.empty()) ? "" : " (" + part_msg + ")") + NEW_LINE
