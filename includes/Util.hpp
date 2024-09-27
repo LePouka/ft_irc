@@ -7,12 +7,14 @@
 # define	NEW_LINE	std::string("\r\n")
 # define	SERVER_NAME	std::string("ircserv")
 
-# define	PONG_MSG(server_name, nickname)					COLON + server_name + SPACE + "PONG " + server_name + " :" + nickname + NEW_LINE
+# define	PONG_MSG(server_name, nickname)						COLON + server_name + SPACE + "PONG " + server_name + " :" + nickname + NEW_LINE
 # define	JOIN_CHAN(nickname, username, chan_name, command)	COLON + nickname + TILD + username + IP_ADDRESS + SPACE + command + " :" + chan_name + NEW_LINE
-# define	PART_CHAN(nickname, username, chan_name, part_msg) COLON + nickname + TILD + username + IP_ADDRESS + SPACE + "PART " + chan_name + ((part_msg.empty()) ? "" : " :" + part_msg) + NEW_LINE
-# define	USER_MSG(source, nickname, message)				COLON + source + SPACE + "PRIVMSG" + SPACE + nickname + SPACE + COLON + message
+# define	PART_CHAN(nickname, username, chan_name, part_msg) 	COLON + nickname + TILD + username + IP_ADDRESS + SPACE + "PART " + chan_name + ((part_msg.empty()) ? "" : " :" + part_msg) + NEW_LINE
+# define	USER_MSG(source, nickname, message)					COLON + source + SPACE + "PRIVMSG" + SPACE + nickname + SPACE + COLON + message
+# define	TOPIC_CHANGE(nickname, channel, new_topic)			COLON + nickname + SPACE + "TOPIC " + channel + SPACE + ":" + new_topic + NEW_LINE
+
 //REPLIES
-# define	RPL_WELCOME(username, nickname)					COLON + SERVER_NAME + " 001 " + nickname + \
+# define	RPL_WELCOME(username, nickname)						COLON + SERVER_NAME + " 001 " + nickname + \
 																			" :Welcome to the " + SERVER_NAME + " IRC Network " + nickname + \
 																			TILD + username + IP_ADDRESS + NEW_LINE + \
 																			COLON + SERVER_NAME + " 002 " + nickname + \

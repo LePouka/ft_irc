@@ -1,6 +1,9 @@
 #include "../../../includes/Server.hpp"
 #include "../../../includes/Util.hpp"
 
+#include "../../../includes/Server.hpp"
+#include "../../../includes/Util.hpp"
+
 void Server::handleTopicCommand(int client_socket, const std::string& args) {
 	if (args.empty()) {
 		std::string error_message = ERR_NEEDMOREPARAMS("Server", "TOPIC");
@@ -45,7 +48,8 @@ void Server::handleTopicCommand(int client_socket, const std::string& args) {
 			return;
 		}
 		channel.setTopic(new_topic);
-		std::string confirmation_message = RPL_TOPIC(client.getNick(), channel_name, new_topic);
-		sendMessage(client_socket, confirmation_message);
+		std::string topic_change_message = TOPIC_CHANGE(client.getNick(), channel_name, new_topic);
+		channel.broadcastMessage(client, topic_change_message);
+		
 	}
 }
