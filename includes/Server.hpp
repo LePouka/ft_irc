@@ -75,7 +75,8 @@ private:
 	void 	handleInviteCommand(Client client, std::string params, Server &server);
 	void	handleModeCommand(Client client, std::string params);
 	void	handleMode(Client &client, Channel &channel, char mode, bool adding, std::istringstream &iss);
-	void	handleJoinCommand(Client client, std::string params, Server &server);
+	void 	handleJoinCommand(Client &client, std::string params, Server &server);
+	// void 	handleJoinCommand(Client client, std::string params, Server &server);
 	void 	handlePrivmsgCommand(Client client, std::string params, Server &server);
 	void	seeModeChannels(Client &client, const std::string &chanName);
 	void	handleKickCommand( ChannelArray& channelArray, Client const & client, std::string const & args );

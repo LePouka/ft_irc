@@ -23,7 +23,7 @@
 //     }
 
 //     ChannelArray &channelArray = server.getChannelArray();
-    
+	
 //     std::istringstream iss(params);
 //     std::string channelPasswordPair;
 
@@ -106,64 +106,85 @@
 
 void Server::sendRPL_NAMREPLY(Client &client, Channel &channel)
 {
-    std::string userList;
-    std::set<Client> users = channel.getUsers();
+	std::string userList;
+	std::set<Client> users = channel.getUsers();
 
-    for (std::set<Client>::iterator it = users.begin(); it != users.end(); ++it) {
-        if (!userList.empty()) {
-            userList += " ";  // Add space before the next nickname, not after the last one
-        }
-        
-        if (channel.isInOperatorList(*it)) {
-            userList += "@" + (*it).getNick();  // '@' for operators
-        } else {
-            userList += (*it).getNick();  // No prefix for regular users
-        }
-    }
+	for (std::set<Client>::iterator it = users.begin(); it != users.end(); ++it) {
+		if (!userList.empty()) {
+			userList += " ";  // Add space before the next nickname, not after the last one
+		}
+		
+		if (channel.isInOperatorList(*it)) {
+			userList += "@" + (*it).getNick();  // '@' for operators
+		} else {
+			userList += (*it).getNick();  // No prefix for regular users
+		}
+	}
 
-    // Send RPL_NAMREPLY to the client
-    std::string RPL_NAMREPLY = ":Server 353 " + client.getNick() + " = " + channel.getName() + " :" + userList + "\r\n";
-    sendMessage(client.getSocket(), RPL_NAMREPLY);
+	// Send RPL_NAMREPLY to the client
+	std::string RPL_NAMREPLY = ":Server 353 " + client.getNick() + " = " + channel.getName() + " :" + userList + "\r\n";
+	sendMessage(client.getSocket(), RPL_NAMREPLY);
 
-    // Send RPL_ENDOFNAMES to the client
-    std::string RPL_ENDOFNAMES = ":Server 366 " + client.getNick() + " " + channel.getName() + " :End of /NAMES list\r\n";
-    sendMessage(client.getSocket(), RPL_ENDOFNAMES);
+	// Send RPL_ENDOFNAMES to the client
+	std::string RPL_ENDOFNAMES = ":Server 366 " + client.getNick() + " " + channel.getName() + " :End of /NAMES list\r\n";
+	sendMessage(client.getSocket(), RPL_ENDOFNAMES);
 }
 
-void Server::handleJoinCommand(Client client, std::string params, Server &server)
-{
-    std::string channelName = params;
-    ChannelArray &channelArray = server.getChannelArray();
+// void Server::handleJoinCommand(Client client, std::string params, Server &server)
+// {
+//     std::string channelName = params;
+//     ChannelArray &channelArray = server.getChannelArray();
 
-    if (channelArray.isChan(channelName)) {
-        Channel &channel = channelArray.getChannel(channelName);
+//     if (channelArray.isChan(channelName)) {
+//         Channel &channel = channelArray.getChannel(channelName);
 
-        if (!channel.isInUserList(client)) {
-            channel.addUser(client);
+//         if (!channel.isInUserList(client)) {
+//             channel.addUser(client);
 
-            // Send JOIN message to the client and other users
-            std::string joinMessage = ":" + client.getNick() + " JOIN " + channelName + "\r\n";
-            channel.broadcastMessage(client, joinMessage);
-            // Send NAMES list to the joining client
-            sendRPL_NAMREPLY(client, channel);
-        }
-    } else {
-        // Create the channel if it doesn't exist
-        channelArray.createChannel(channelName, client);
-        Channel &channel = channelArray.getChannel(channelName);
+//             // Send JOIN message to the client and other users
+//             std::string joinMessage = ":" + client.getNick() + " JOIN " + channelName + "\r\n";
+//             channel.broadcastMessage(client, joinMessage);
+//             // Send NAMES list to the joining client
+//             sendRPL_NAMREPLY(client, channel);
+//         }
+//     } else {
+//         // Create the channel if it doesn't exist
+//         channelArray.createChannel(channelName, client);
+//         Channel &channel = channelArray.getChannel(channelName);
 
-        // The user who creates the channel should also JOIN it
-        channel.addUser(client);
+//         // The user who creates the channel should also JOIN it
+//         channel.addUser(client);
 
-        // Send JOIN message
-        std::string joinMessage = ":" + client.getNick() + " JOIN " + channelName + "\r\n";
-        sendMessage(client.getSocket(), joinMessage);
+//         // Send JOIN message
+//         std::string joinMessage = ":" + client.getNick() + " JOIN " + channelName + "\r\n";
+//         sendMessage(client.getSocket(), joinMessage);
 
-        std::string topicMessage = RPL_TOPIC("Server", channelName, channel.getTopic());
-        sendMessage(client.getSocket(), topicMessage);
+//         std::string topicMessage = RPL_TOPIC("Server", channelName, channel.getTopic());
+//         sendMessage(client.getSocket(), topicMessage);
 
-        // Send NAMES list to the joining client
-        sendRPL_NAMREPLY(client, channel);
-    }
-    
+//         // Send NAMES list to the joining client
+//         sendRPL_NAMREPLY(client, channel);
+//     }
+	
+// }
+
+void Server::handleJoinCommand(Client &client, std::string params, Server &server) {
+	std::string channelName = params;
+	ChannelArray &channelArray = server.getChannelArray();
+	Channel *channel = NULL;
+
+	if (channelArray.isChan(channelName)) {
+		channel = &channelArray.getChannel(channelName);
+	} else {
+		channelArray.createChannel(channelName, client);
+		channel = &channelArray.getChannel(channelName);
+		std::string topicMessage = RPL_TOPIC("Server", channelName, channel->getTopic());
+		sendMessage(client.getSocket(), topicMessage);
+	}
+	if (!channel->isInUserList(client)) {
+		channel->addUser(client);
+		std::string joinMessage = ":" + client.getNick() + "!" + client.getUser() + " JOIN :" + channelName + "\r\n";
+		channel->broadcastMessage(client, joinMessage);
+	}
+	sendRPL_NAMREPLY(client, *channel);
 }
