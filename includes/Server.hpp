@@ -83,7 +83,7 @@ private:
 
 	//utils
 	bool	kickTests( ChannelArray& channelArray, Client const & client, std::string const & channelName, std::string const & nickname );
-	void	kick( Client& client, Channel& channel );
+	void	kick( Channel& channel, Client const & client, Client& kickedClient );
 
 	void	sendRPL_NAMREPLY(Client &client, Channel &channel);
 

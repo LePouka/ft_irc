@@ -48,9 +48,9 @@ bool	Server::kickTests( ChannelArray& channelArray,
 	return true;
 }
 
-void	Server::kick( Channel& channel, Client& client, std::string const & chanOp ) {
+void	Server::kick( Channel& channel, Client const & client, Client& kickedClient ) {
 
-	channel.broadcastMessage( client, RPL_KICK( chanOp, client.getNick(), channel.getName() ));
+	channel.broadcastMessage( client, RPL_KICK( client.getNick(), client.getUser(), channel.getName(), kickedClient.getNick(), "KICK" ));
 	channel.removeUser( client );
 }
 
@@ -69,5 +69,5 @@ void	Server::handleKickCommand( ChannelArray& channelArray,
 
 	if ( !kickTests( channelArray, client, channelName, nickname )) { return ; }
 
-	kick( channelArray.getChannel( channelName ), getClient( nickname ), client.getNick() );
+	kick( channelArray.getChannel( channelName ), client, getClient( nickname ));
 }
