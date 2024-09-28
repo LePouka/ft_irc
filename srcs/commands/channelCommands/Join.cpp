@@ -33,17 +33,16 @@ void Server::handleJoinCommand(Client &client, std::string params, Server &serve
 	if (channelArray.isChan(channelName)) {
 		channel = &channelArray.getChannel(channelName);
 	} else {
+		channelArray.createChannel(channelName, client);
 		sendMessage(client.getSocket(), ERR_NOSUCHCHANNEL("Server", channelName));
-		return;
-	}
-	if (channel->isInUserList(client)) {
-		return;
 	}
 	if (channel->getInvite() && !channel->isInInviteList(client)) {
 		sendMessage(client.getSocket(), ERR_INVITEONLYCHAN("Server", channelName));
 		return;
 	}
-	channel->addUser(client);
+	if (!channel->isInUserList(client)) {
+		channel->addUser(client);
+	}
 	std::string joinMessage = JOIN_CHAN(client.getNick(), client.getUser(), channelName, "JOIN");
 	channel->broadcastMessage(client, joinMessage);
 	std::string topicMessage = RPL_TOPIC("Server", channelName, channel->getTopic());
