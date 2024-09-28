@@ -22,6 +22,8 @@ SRC = main.cpp \
 	commands/USER.cpp \
 	commands/MODE.cpp \
 	commands/DEBUG.cpp \
+	commands/QUIT.cpp \
+	commands/WHOIS.cpp \
 
 SRCS = $(addprefix srcs/, $(SRC))
 OBJDIR = objs
