@@ -100,4 +100,5 @@ public:
 	bool					isChan(std::string const &channel);
 	bool					isOperator(Client client, std::string const &channel);
 	void					writeMsgChannel(Client client, std::string const &channel, std::string const &msg);
+	void					eraseChanFromClientChannels( Client const & client, std::string const & chanName );
 };

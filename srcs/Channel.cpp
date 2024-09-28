@@ -373,3 +373,22 @@ void ChannelArray::writeMsgChannel(Client client, std::string const &channel, st
 	}
 }
 
+void	ChannelArray::eraseChanFromClientChannels( Client const & client, std::string const & chanName ) {
+
+	std::map< Client, std::set< std::string > >::iterator	it = clientChannels.find( client );
+
+	if ( it != clientChannels.end() ) {
+
+		std::set< std::string >::iterator	channelIt = it->second.find( chanName );
+
+		if ( channelIt != it->second.end() ) {
+
+			it->second.erase( channelIt );
+		}
+
+		if ( it->second.empty() ) {
+
+			clientChannels.erase( it );
+		}
+	}
+}
