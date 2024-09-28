@@ -34,7 +34,7 @@ void Server::handleJoinCommand(Client &client, std::string params, Server &serve
 		channel = &channelArray.getChannel(channelName);
 	} else {
 		channelArray.createChannel(channelName, client);
-		sendMessage(client.getSocket(), ERR_NOSUCHCHANNEL("Server", channelName));
+		channel = &channelArray.getChannel(channelName);
 	}
 	if (channel->getInvite() && !channel->isInInviteList(client)) {
 		sendMessage(client.getSocket(), ERR_INVITEONLYCHAN("Server", channelName));
