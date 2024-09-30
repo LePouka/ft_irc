@@ -14,7 +14,6 @@ private:
 	std::string			password;
 	std::set<Client>	users;
 	std::set<Client>	operators;
-	std::set<Client>	banned;
 	std::set<Client>	invited;
 
 	bool				isInviteOnly;
@@ -36,7 +35,6 @@ public:
 	std::string			getPassword();
 	std::set<Client>	getUsers();
 	std::set<Client>	getOperators();
-	std::set<Client> 	getBanned();
 	std::set<Client>	getInvited();
 	bool				getInvite();
 	bool				getTopicRestricted();
@@ -48,7 +46,6 @@ public:
 	void				setPassword(std::string password);
 	void				addUser(Client client);
 	void				addOperators(Client client);
-	void				addBanned(Client client);
 	void				addInvited(Client client);
 
 	void				setInvite(bool invite);
@@ -58,13 +55,11 @@ public:
 	//METHODS
 	void				removeUser(const Client& client);
 	void				removeOperator(Client client);
-	void				removeBanned(Client client);
 	void				removeInvited(Client client);
 	void				writeMsgChannel(Client client, std::string const &msg, std::string const &command);
 
 	bool				isInUserList(Client client);
 	bool    			isInOperatorList(Client client);
-	bool    			isInBanList(Client client);
 	bool    			isInInviteList(Client client);
 	bool 				canSendMessage(const Client &client);
 

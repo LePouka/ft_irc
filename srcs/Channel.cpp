@@ -5,14 +5,10 @@
 
 //CONST/DEST
 Channel::Channel()
-{
-	this->banned.clear();
-}
+{}
 
 Channel::Channel(const std::string& name) : name(name)
-{
-	this->banned.clear();
-}
+{}
 
 Channel::~Channel()
 {}
@@ -41,11 +37,6 @@ std::set<Client> Channel::getUsers()
 std::set<Client> Channel::getOperators()
 {
 	return (this->operators);
-}
-
-std::set<Client> Channel::getBanned()
-{
-	return (this->banned);
 }
 
 std::set<Client> Channel::getInvited()
@@ -102,12 +93,6 @@ void Channel::addOperators(Client client)
 	operators.insert(client);
 }
 
-void Channel::addBanned(Client client)
-{
-	std::cout << "Adding client to ban list: " << client.getNick() << std::endl;
-	banned.insert(client);
-}
-
 void Channel::addInvited(Client client)
 {
 	invited.insert(client);
@@ -138,7 +123,7 @@ void Channel::removeUser(const Client& client) {
 	// Remove from the user set
 	users.erase(client);
 
-	// Additionally, remove from operator set, ban list, etc.
+	// Additionally, remove from operator set list, etc.
 	operators.erase(client);
 
 	// Log removal for debugging
@@ -148,11 +133,6 @@ void Channel::removeUser(const Client& client) {
 void Channel::removeOperator(Client client)
 {
 	operators.erase(client);
-}
-
-void Channel::removeBanned(Client client)
-{
-	banned.erase(client);
 }
 
 void Channel::removeInvited(Client client)
@@ -193,20 +173,13 @@ bool    Channel::isInOperatorList(Client client)
 	return operators.find(client) != operators.end();
 }
 
-bool    Channel::isInBanList(Client client)
-{
-	return banned.find(client) != banned.end();
-}
-
 bool    Channel::isInInviteList(Client client)
 {
 	return invited.find(client) != invited.end();
 }
 
 bool Channel::canSendMessage(const Client &client) {
-	if (!this->isInUserList(client) || this->isInBanList(client)) {
-		return false;
-	}
+	if (!this->isInUserList(client)) return false;
 	return true;
 }
 
@@ -267,7 +240,6 @@ void ChannelArray::createChannel(std::string const &channel, Client const &clien
 		newChannel.setPassword("");
 		newChannel.addUser(client);
 		newChannel.addOperators(client);
-		// newChannel.banned.empty();
 		newChannel.setInvite(false);
 		newChannel.setTopicRestricted(false);
 		newChannel.setKeyNeeded(false);

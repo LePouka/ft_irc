@@ -33,7 +33,7 @@ void sendMessage(int clientSocket, std::string msg)
     ssize_t bytesSent = 0;
     size_t totalSent = 0;
     while (totalSent < msgLength) {
-        bytesSent = send(clientSocket, msgC + totalSent, msgLength - totalSent, 0);
+        bytesSent = send(clientSocket, msgC + totalSent, msgLength - totalSent, MSG_NOSIGNAL);
         if (bytesSent == -1) {
             perror("send failed");
             break;

@@ -29,8 +29,6 @@
 # define	RPL_CREATIONTIME(source, channel, creationtime)						COLON + source + SPACE + "329" + SPACE + channel + SPACE + creationtime + NEW_LINE
 # define	RPL_INVITELIST(source, channel, invitemask)							COLON + source + SPACE + "346" + SPACE + channel + SPACE + invitemask + NEW_LINE
 # define	RPL_ENDOFINVITELIST(source, channel)								COLON + source + SPACE + "347" + SPACE + channel + SPACE + COLON + "End of invite list" + NEW_LINE
-# define	RPL_BANLIST(source, channel, banmask)								COLON + source + SPACE + "367" + SPACE + channel + SPACE + banmask + NEW_LINE
-# define	RPL_ENDOFBANLIST(source, channel)									COLON + source + SPACE + "368" + SPACE + channel + SPACE + COLON + "End of ban list" + NEW_LINE
 # define	RPL_TOPICWHOTIME(source, channel, nickname, setat)					COLON + source + SPACE + channel + SPACE + nickname + SPACE + setat + NEW_LINE
 # define	RPL_INVITING(source, nickname, channel)								COLON + source + SPACE + nickname + SPACE + channel + NEW_LINE
 # define	RPL_NAMREPLY(nickname, userList) 									COLON + nickname + SPACE + "353" + SPACE + userList + NEW_LINE
@@ -66,7 +64,6 @@
 # define	ERR_CHANNELISFULL(source, channel)				COLON + source + SPACE + "471 " + "* " + channel + " :Cannot join channel (+l)" + NEW_LINE
 #define		ERR_UNKNOWNMODE(clientNick, modeChar)			COLON + SERVER_NAME + " 472 " + clientNick + " " + modeChar + " :is unknown mode char to me" + NEW_LINE
 # define	ERR_INVITEONLYCHAN(source, channel)				COLON + source + SPACE + "473 " + "* " + channel + " :Cannot join channel (+i)" + NEW_LINE
-# define	ERR_BANNEDFROMCHAN(source, channel)				COLON + source + SPACE + "474 " + "* " + channel + " :Cannot join channel (+b)" + NEW_LINE
 # define	ERR_BADCHANNELKEY(source, channel)				COLON + source + SPACE + "475 " + "* " + channel + " :Cannot join channel (+k)" + NEW_LINE
 # define	ERR_NOSUCHCHANNEL(source, channel)				COLON + source + SPACE + "403 " + "* " + channel + " :No such channel" + NEW_LINE
 # define	ERR_CHANOPRIVSNEEDED(source, channel)			COLON + source + SPACE + "482 " + "* " + channel + " :You're not channel operator" + NEW_LINE

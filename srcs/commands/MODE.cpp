@@ -13,19 +13,7 @@
 // ERR_KEYSET (467)
 // ERR_NOCHANMODES (477)
 // ERR_CHANOPRIVSNEEDED (482)
-// 
-
-void showBanList(Client &client, Channel &channel)
-{
-    const std::set<Client>& bannedClients = channel.getBanned();  // Store the result in a local variable
-
-    for (std::set<Client>::const_iterator it = bannedClients.begin(); it != bannedClients.end(); ++it) {
-        std::string banNick = it->getNick();  // Get the nick of the banned client
-        sendMessage(client.getSocket(), RPL_BANLIST(client.getNick(), channel.getName(), banNick));
-    }
-    
-    sendMessage(client.getSocket(), RPL_ENDOFBANLIST(client.getNick(), channel.getName()));
-}
+//
 
 void showCurrentModes(Client &client, Channel &channel)
 {
@@ -61,7 +49,7 @@ void	Server::handleMode(Client &client, Channel &channel, char mode, bool adding
             channel.setTopicRestricted(adding);
             sendModeChangeMessage(client, channel, mode, adding);
             break;
-        case 'k':
+        case 'k': {
             if (adding) {
                 std::string key;
                 if (!(iss >> key)) {
@@ -69,23 +57,12 @@ void	Server::handleMode(Client &client, Channel &channel, char mode, bool adding
                     return;
                 }
                 channel.setPassword(key);
+                channel.setKeyNeeded(true);
             } else {
                 channel.setPassword("");  // Remove the key
+				channel.setKeyNeeded(false);
             }
             sendModeChangeMessage(client, channel, mode, adding);
-            break;
-        case 'b': {
-            std::string banNick;
-            if (!(iss >> banNick)) {
-                showBanList(client, channel);  // Show the ban list if no argument is given
-                return;
-            }
-            if (adding) {
-                channel.addBanned(getClient(banNick));
-            } else {
-                channel.removeBanned(getClient(banNick));
-            }
-            sendModeChangeMessage(client, channel, mode, adding, banNick);
             break;
         }
         case 'o': {

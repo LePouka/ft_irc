@@ -235,7 +235,7 @@ void Server::handleClientMessage(int client_socket, const std::string& message) 
 		sendMessage(client_socket, response.str());
 	} else if (command == "JOIN"){
 		arg.erase(arg.find_last_not_of(" \n\r") + 1);
-		handleJoinCommand(client, arg, *this);
+		handleJoinCommand(client, arg);
 	} else if (command == "PART") {
 		arg.erase(arg.find_last_not_of(" \n\r") + 1);
 		handlePartCommand(client, arg);

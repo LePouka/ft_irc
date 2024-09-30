@@ -21,7 +21,6 @@ SRC = main.cpp \
 	commands/PASS.cpp \
 	commands/USER.cpp \
 	commands/MODE.cpp \
-	commands/DEBUG.cpp \
 	commands/QUIT.cpp \
 	commands/WHOIS.cpp \
 
