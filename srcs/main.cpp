@@ -15,7 +15,10 @@ int main(int argc, char* argv[]) {
 		Server server(port, password);
 		std::cout << "IRC server started on port " << port << "\n";
 
-		setSignals();
+		if ( setSignals() == false ) {
+
+			return EXIT_FAILURE;
+		}
 		server.run();
 	} catch (const std::exception& e) {
 		std::cerr << "Error: " << e.what() << '\n';

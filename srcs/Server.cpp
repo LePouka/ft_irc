@@ -149,6 +149,8 @@ void Server::eventLoop() {
 	while (g_status == true) {
 		int nfds = epoll_wait(epoll_fd, events, MAX_EVENTS, -1);
 		if (nfds == -1) {
+			if (errno == EINTR)
+				return ;
 			throw std::runtime_error("epoll_wait failed");
 		}
 		for (int i = 0; i < nfds; ++i) {

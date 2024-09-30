@@ -21,10 +21,11 @@ bool	setSignals( void ) {
 	act.sa_handler = &mySignalHandler;
 
 	if ( sigaction( SIGINT, &act, NULL ) == -1 ||
+		sigaction( SIGTSTP, &act, NULL ) == -1 ||
 		sigaction( SIGQUIT, &act, NULL ) == -1 ) {
 
-		return ( false );
+		return false;
 	}
 
-	return ( true );
+	return true;
 }
