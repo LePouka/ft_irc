@@ -1,5 +1,7 @@
 #pragma once
 
+extern bool	g_status;
+
 #include <map>
 #include <string>
 #include <sys/epoll.h>
@@ -16,6 +18,7 @@
 #include "Channel.hpp"
 #include "Client.hpp"
 #include "Util.hpp"
+#include "Signals.hpp"
 
 // #define SERVER_NAME "ircserv"
 

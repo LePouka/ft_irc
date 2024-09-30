@@ -146,7 +146,7 @@ void Server::addSocketToEpoll(int sock) {
 }
 
 void Server::eventLoop() {
-	while (true) {
+	while (g_status == true) {
 		int nfds = epoll_wait(epoll_fd, events, MAX_EVENTS, -1);
 		if (nfds == -1) {
 			throw std::runtime_error("epoll_wait failed");

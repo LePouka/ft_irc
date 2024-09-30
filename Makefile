@@ -11,6 +11,7 @@ SRC = main.cpp \
 	Client.cpp \
 	Channel.cpp \
 	Message.cpp \
+	Signals.cpp \
 	commands/channelCommands/Join.cpp \
 	commands/channelCommands/Topic.cpp \
 	commands/channelCommands/Part.cpp \
