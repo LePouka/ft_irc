@@ -34,7 +34,7 @@ void sendModeChangeMessage(Client &client, Channel &channel, char mode, bool add
         change += " " + arg;
     }
 
-    std::string message = MODE_CHANGE(client.getNick(), channel.getName(), change);
+    std::string message = MODE_CHANGE(client.getNick(), client.getUser(), channel.getName(), change);
     channel.broadcastMessage(client, message);
 }
 

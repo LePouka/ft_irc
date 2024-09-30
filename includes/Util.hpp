@@ -11,8 +11,8 @@
 # define	JOIN_CHAN(nickname, username, chan_name, command)	COLON + nickname + TILD + username + IP_ADDRESS + SPACE + command + " :" + chan_name + NEW_LINE
 # define	PART_CHAN(nickname, username, chan_name, part_msg) 	COLON + nickname + TILD + username + IP_ADDRESS + SPACE + "PART " + chan_name + ((part_msg.empty()) ? "" : " :" + part_msg) + NEW_LINE
 # define	USER_MSG(source, nickname, message)					COLON + source + SPACE + "PRIVMSG" + SPACE + nickname + SPACE + COLON + message
-# define	TOPIC_CHANGE(nickname, username, channel, new_topic)			COLON + nickname + TILD + username + IP_ADDRESS + SPACE + "TOPIC " + channel + SPACE + ((new_topic.empty()) ? "" : ":" + new_topic) + NEW_LINE
-# define	MODE_CHANGE(nickname, channel, changes)				COLON + nickname + SPACE + "MODE" + SPACE + COLON + changes + NEW_LINE
+# define	TOPIC_CHANGE(nickname, username, channel, new_topic)COLON + nickname + TILD + username + IP_ADDRESS + SPACE + "TOPIC " + channel + SPACE + ((new_topic.empty()) ? "" : ":" + new_topic) + NEW_LINE
+# define	MODE_CHANGE(nickname, username, channel, modes)		COLON + nickname + TILD + username + IP_ADDRESS + SPACE + "MODE " + channel + SPACE + modes + NEW_LINE
 
 //REPLIES
 # define	RPL_WELCOME(username, nickname)										COLON + SERVER_NAME + " 001 " + nickname + \
