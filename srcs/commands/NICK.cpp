@@ -33,20 +33,18 @@ bool isValidNick(const std::string& nickname) {
 		   nickname.find_first_of(invalid_chars) == std::string::npos;
 }
 
-
 void notifyClients(const std::map<int, Client>& clients, int sender_socket, const std::string& old_nick, const std::string& new_nick) {
-	std::ostringstream notification_message;
-	notification_message << ":" << old_nick << " NICK " << new_nick << "\r\n";
-	std::string notification = notification_message.str();
-	std::map<int, Client>::const_iterator it;
-	for (it = clients.begin(); it != clients.end(); ++it) {
-		if (it->first != sender_socket) {
-			if (send(it->first, notification.c_str(), notification.length(), 0) == -1) {
-				std::cerr << "Error notifying client " << it->first << std::endl;
-			}
-		}
-	}
+    std::ostringstream notification_message;
+    notification_message << ":" << old_nick << " NICK " << new_nick << "\r\n";
+    std::string notification = notification_message.str();
+    std::map<int, Client>::const_iterator it;
+    for (it = clients.begin(); it != clients.end(); ++it) {
+        if (it->first != sender_socket) {
+            sendMessage(it->first, notification);
+        }
+    }
 }
+
 
 bool isNickInUse(const std::string& new_nick, const std::map<int, Client>& clients) {
 	std::map<int, Client>::const_iterator it;
@@ -59,12 +57,9 @@ bool isNickInUse(const std::string& new_nick, const std::map<int, Client>& clien
 }
 
 void sendNickChangeConfirmation(int client_socket, const std::string& old_nick, const std::string& new_nick) {
-	std::ostringstream response;
-	response << ":" << old_nick << " NICK " << new_nick << "\r\n";
-	std::string response_str = response.str();
-	if (send(client_socket, response_str.c_str(), response_str.length(), 0) == -1) {
-		std::cerr << "Error sending nickname change confirmation to client " << client_socket << std::endl;
-	}
+    std::ostringstream response;
+    response << ":" << old_nick << " NICK " << new_nick << "\r\n";
+    sendMessage(client_socket, response.str());
 }
 
 void Server::handleNickCommand(int client_socket, const std::string& new_nick) {

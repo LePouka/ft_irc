@@ -35,14 +35,7 @@
 # define	RPL_ENDOFNAMES(nickname, channel)									COLON + nickname + SPACE + "366" + SPACE + nickname + SPACE + channel + " :End of /NAMES list" + NEW_LINE
 # define	RPL_NOTOPIC(nick, channel)											COLON + nick + SPACE + "331 " /* + "" */ + channel + " :No topic is set" + NEW_LINE
 # define	RPL_TOPIC(nick, channel, topic)										COLON + SERVER_NAME + SPACE + "332 " + nick + SPACE + channel + " :" + topic + NEW_LINE
-# define	RPL_WELCOME(username, nickname)						COLON + SERVER_NAME + " 001 " + nickname + \
-																			" :Welcome to the " + SERVER_NAME + " IRC Network " + nickname + \
-																			TILD + username + IP_ADDRESS + NEW_LINE + \
-																			COLON + SERVER_NAME + " 002 " + nickname + \
-																			" :Your host is ircserv, running version 1.0" + NEW_LINE + \
-																			COLON + SERVER_NAME + " 003 " + nickname + \
-																			" :This server was created Tue Apr 30 2024 at 16:38:57 UTC" + NEW_LINE
-# define	RPL_KICK(nickname, username, chan_name, kicked_nick, command)	COLON + nickname + TILD + username + IP_ADDRESS + SPACE + command + SPACE + chan_name + SPACE + kicked_nick + " :" + nickname + NEW_LINE
+# define	RPL_KICK(nickname, username, chan_name, kicked_nick, command)		COLON + nickname + TILD + username + IP_ADDRESS + SPACE + command + SPACE + chan_name + SPACE + kicked_nick + " :" + nickname + NEW_LINE
 
 //ERRORS
 # define	ERR_NOSUCHNICK(source, nickname)				COLON + source + SPACE + "401 " + "* " + nickname + " :No such nickname/channel" + NEW_LINE
@@ -60,7 +53,7 @@
 # define	ERR_NOTREGISTERED(source)						COLON + source + SPACE + "451 " + "* " + " :You have not registered" + NEW_LINE
 # define	ERR_NEEDMOREPARAMS(source, command)				COLON + source + SPACE + "461 " + "* " + command + " :Not enough parameters" + NEW_LINE
 # define    ERR_ALREADYREGISTERED(source)                   COLON + source + SPACE + "462 " + "* " + ":You may not reregister" + NEW_LINE
-# define	ERR_PASSWDMISMATCH(source, nick)	            COLON + source + SPACE + "464 " + "* " + nick + ":Password incorrect" + NEW_LINE
+# define	ERR_PASSWDMISMATCH(source, nickname)			COLON + source + SPACE + "464 " + "* " + ":Password incorrect" + NEW_LINE
 # define	ERR_CHANNELISFULL(source, channel)				COLON + source + SPACE + "471 " + "* " + channel + " :Cannot join channel (+l)" + NEW_LINE
 #define		ERR_UNKNOWNMODE(clientNick, modeChar)			COLON + SERVER_NAME + " 472 " + clientNick + " " + modeChar + " :is unknown mode char to me" + NEW_LINE
 # define	ERR_INVITEONLYCHAN(source, channel)				COLON + source + SPACE + "473 " + "* " + channel + " :Cannot join channel (+i)" + NEW_LINE
