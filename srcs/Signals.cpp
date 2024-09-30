@@ -1,23 +1,30 @@
 #include "../includes/Signals.hpp"
 
-bool	g_signals;
+bool g_status;
 
-int	set_signals( void ) {
+void	mySignalHandler( int signo ) {
 
-	g_signals = true;
-	struct sigaction	signal;
+	( void )signo;
 
-	memset( &signal, 0, sizeof( signal ));
-	signal.sa_flags = SA_SIGINFO | SA_RESTART;
-	if ( sigaction( SIGINT, &signal, NULL ) == -1 \
-		|| sigaction( SIGQUIT, &signal, NULL ) == -1 \
-		|| sigaction( SIGTSTP, &signal, NULL ) == -1 )
-		return EXIT_FAILURE;
-	return EXIT_SUCCESS;
+	std::cout << std::endl << "Closing ircserv..." << std::endl;
+
+	g_status = false;
 }
 
-void	signals_handler( int signal ) {
+bool	setSignals( void ) {
 
-	( void )signal;
-	g_signals = false;
+	g_status = true;
+
+	struct	sigaction act;
+
+	act.sa_flags = SA_SIGINFO | SA_RESTART;
+	act.sa_handler = &mySignalHandler;
+
+	if ( sigaction( SIGINT, &act, NULL ) == -1 ||
+		sigaction( SIGQUIT, &act, NULL ) == -1 ) {
+
+		return ( false );
+	}
+
+	return ( true );
 }
