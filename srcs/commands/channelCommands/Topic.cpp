@@ -48,7 +48,7 @@ void Server::handleTopicCommand(int client_socket, const std::string& args) {
 			return;
 		}
 		channel.setTopic(new_topic);
-		std::string topic_change_message = TOPIC_CHANGE(client.getNick(), channel_name, new_topic);
+		std::string topic_change_message = TOPIC_CHANGE(client.getNick(), client.getUser(), channel_name, new_topic);
 		channel.broadcastMessage(client, topic_change_message);
 		
 	}
