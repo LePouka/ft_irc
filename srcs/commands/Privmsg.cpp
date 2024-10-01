@@ -55,7 +55,7 @@ void Server::handlePrivmsgCommand(Client client, std::string params, Server &ser
 				std::string send = USER_MSG(client.getNick(), recipient, message);
 				sendMessage((*it).first, send);
 				userFound = true;
-				break;           
+				break;
 			}
 		}
 		if (!userFound) {
