@@ -219,6 +219,8 @@ void Server::handleClientMessage(int client_socket, const std::string& message) 
 		return ;
 	} else if (command == "WHO") {
 		return ;
+	} else if (command == "WHOIS") {
+		return ;
 	} else if (command == "PASS") {
 		handlePassCommand(client_socket, arg);
 		return ;
