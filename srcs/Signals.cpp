@@ -15,7 +15,7 @@ bool	setSignals( void ) {
 
 	g_status = true;
 
-	struct	sigaction act;
+	struct	sigaction act = {};
 
 	act.sa_flags = SA_SIGINFO | SA_RESTART;
 	act.sa_handler = &mySignalHandler;
