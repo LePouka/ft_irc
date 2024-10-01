@@ -46,7 +46,6 @@ public:
 	bool	isClientSet( void ) const;
 	void	deleteBuffer();
 
-	void	setWelcomeSent(bool sent);
 	bool	operator<(const Client& other) const;
 	bool	operator==(const Client &other) const;
 	bool	operator!=(const Client &other) const;
