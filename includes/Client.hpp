@@ -44,6 +44,7 @@ public:
 	bool	isUserSet( void ) const;
 	bool	isNickSet( void ) const;
 	bool	isClientSet( void ) const;
+	void	deleteBuffer();
 
 	void	setWelcomeSent(bool sent);
 	bool	operator<(const Client& other) const;
