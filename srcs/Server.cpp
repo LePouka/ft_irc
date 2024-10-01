@@ -221,9 +221,11 @@ void Server::handleClientMessage(int client_socket, const std::string& message) 
 		handleUserCommand(client_socket, arg);
 	} else if (command == "NICK") {
 		handleNickCommand(client_socket, arg);
-	} else if (client.isClientSet() == false) {
+	} if (client.isClientSet() == false) {
+		std::string error_message = ERR_NOTREGISTERED("server");
+        sendErrorMessage(client_socket, error_message);
 		return ;
-	} else if (command == "CAP") {
+	} if (command == "CAP") {
 		return ;
 	} else if (command == "WHO") {
 		return ;

@@ -20,7 +20,6 @@ void Server::handlePartCommand(Client &client, const std::string& args) {
 		return;
 	}
 	std::string partMessage = PART_CHAN(client.getNick(), client.getUser(), channel_name, part_message);
-	std::cout << "Part Message: " << partMessage << std::endl;
 	channel.broadcastMessage(client, partMessage);
 	channel.removeUser(client);
 	

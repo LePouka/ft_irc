@@ -23,5 +23,9 @@ void Server::handlePassCommand(int client_socket, const std::string& password) {
 		return;
 	}
 	client.setPassword(password);
-	client.setRegistered(true);
+	if (clients[client_socket].isClientSet() && !clients[client_socket].isWelcomeSent()) {
+		std::string welcome_message = RPL_WELCOME(clients[client_socket].getUser(), clients[client_socket].getNick());
+		sendMessage(client_socket, welcome_message);
+		clients[client_socket].setWelcomeSent(true);
+	}
 }
