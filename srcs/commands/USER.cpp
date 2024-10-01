@@ -20,7 +20,12 @@ void Server::handleUserCommand(int client_socket, const std::string& user) {
         sendMessage(client_socket, error_message);
         return;
     }
-    if (clients[client_socket].isRegistered()) {
+    if (serverPasswordRequired && clients[client_socket].getPassword() != serverPassword) {
+		std::string error_message = ERR_NOTREGISTERED("Server");
+		sendMessage(client_socket, error_message);
+		return;
+	}
+    if (clients[client_socket].isClientSet()) {
         std::string error_message = ERR_ALREADYREGISTERED("server");
         sendMessage(client_socket, error_message);
         return;
