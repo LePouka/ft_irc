@@ -1,9 +1,6 @@
 #include "../../../includes/Server.hpp"
 #include "../../../includes/Util.hpp"
 
-#include "../../../includes/Server.hpp"
-#include "../../../includes/Util.hpp"
-
 void Server::handleTopicCommand(int client_socket, const std::string& args) {
 	if (args.empty()) {
 		std::string error_message = ERR_NEEDMOREPARAMS("Server", "TOPIC");
@@ -33,6 +30,13 @@ void Server::handleTopicCommand(int client_socket, const std::string& args) {
 		sendMessage(client_socket, error_message);
 		return;
 	}
+	if (channel.getTopicRestricted()) {
+		if (!channel.isInOperatorList(client)) {
+			std::string error_message = ERR_CHANOPRIVSNEEDED(client.getNick(), channel_name);
+			sendMessage(client_socket, error_message);
+			return;
+		}
+	}
 	if (new_topic.empty()) {
 		if (channel.getTopic().empty()) {
 			std::string response = RPL_NOTOPIC(client.getNick(), channel_name);
@@ -42,14 +46,8 @@ void Server::handleTopicCommand(int client_socket, const std::string& args) {
 			sendMessage(client_socket, response);
 		}
 	} else {
-		if (!channels.isOperator(client, channel_name)) {
-			std::string error_message = ERR_CHANOPRIVSNEEDED(client.getNick(), channel_name);
-			sendMessage(client_socket, error_message);
-			return;
-		}
 		channel.setTopic(new_topic);
 		std::string topic_change_message = TOPIC_CHANGE(client.getNick(), client.getUser(), channel_name, new_topic);
 		channel.broadcastMessage(client, topic_change_message);
-		
 	}
 }

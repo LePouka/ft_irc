@@ -1,20 +1,6 @@
 #include "../../includes/Server.hpp"
 #include "../../includes/Util.hpp"
 
-// REPLIES :
-// RPL_CHANNELMODEIS(324)
-// RPL_CREATIONTIME(329)
-// RPL_INVITELIST(346)
-// RPL_ENDOFINVITELIST(347)
-// RPL_BANLIST(367)
-// RPL_ENDOFBANLIST(368)
-// ERRORS :
-// ERR_NEEDMOREPARAMS (461)
-// ERR_KEYSET (467)
-// ERR_NOCHANMODES (477)
-// ERR_CHANOPRIVSNEEDED (482)
-//
-
 void showCurrentModes(Client &client, Channel &channel)
 {
     std::string modes = "+";
