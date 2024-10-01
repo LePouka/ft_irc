@@ -32,6 +32,10 @@ void Client::setRealName(const std::string& real) {
 	this->realName = real;
 }
 
+void Client::addBuffer(const std::string& buffer) {
+	this->buffer.append(buffer);
+}
+
 std::string Client::getNick() const {
 	return nick;
 }
@@ -46,6 +50,10 @@ std::string Client::getHost() const {
 
 std::string Client::getRealName() const {
 	return realName;
+}
+
+std::string& Client::getBuffer() {
+	return buffer;
 }
 
 bool Client::isRegistered() const {
@@ -77,6 +85,10 @@ bool	Client::isUserSet( void ) const { return !user.empty(); }
 bool	Client::isNickSet( void ) const { return !nick.empty(); }
 
 bool	Client::isClientSet( void ) const { return hasPassword() && isUserSet() && isNickSet(); }
+
+void Client::deleteBuffer() {
+	buffer.clear();
+}
 
 bool Client::operator<(const Client& other) const {
 	return this->socket < other.socket;
