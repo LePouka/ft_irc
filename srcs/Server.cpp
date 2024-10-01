@@ -179,12 +179,12 @@ void Server::eventLoop() {
 				int client_socket = fd;
 				char buffer[1024];
 				ssize_t bytes_read;
-				std::string message_buffer;
 
 				while ((bytes_read = read(client_socket, buffer, sizeof(buffer) - 1)) > 0) {
 					buffer[bytes_read] = '\0';
-					message_buffer += buffer;
+					clients[client_socket].addBuffer(buffer);
 
+					std::string& message_buffer = clients[client_socket].getBuffer();
 					size_t pos;
 					while ((pos = message_buffer.find("\r\n")) != std::string::npos) {
 						std::string message = message_buffer.substr(0, pos);
