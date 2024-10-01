@@ -72,6 +72,12 @@ bool Client::hasPassword() const {
 	return !password.empty();
 }
 
+bool	Client::isUserSet( void ) const { return !user.empty(); }
+
+bool	Client::isNickSet( void ) const { return !nick.empty(); }
+
+bool	Client::isClientSet( void ) const { return hasPassword() && isUserSet() && isNickSet(); }
+
 bool Client::operator<(const Client& other) const {
 	return this->socket < other.socket;
 }

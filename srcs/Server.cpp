@@ -217,12 +217,16 @@ void Server::handleClientMessage(int client_socket, const std::string& message) 
 
 	if (command == "PASS") {
 		handlePassCommand(client_socket, arg);
-	} else if (command == "CAP") {
-	} else if (command == "WHO") {
-	} else if (command == "NICK") {
-		handleNickCommand(client_socket, arg);
 	} else if (command == "USER") {
 		handleUserCommand(client_socket, arg);
+	} else if (command == "NICK") {
+		handleNickCommand(client_socket, arg);
+	} else if (client.isClientSet() == false) {
+		return ;
+	} else if (command == "CAP") {
+		return ;
+	} else if (command == "WHO") {
+		return ;
 	} else if (command == "PING") {
 		std::ostringstream response;
 		response << PONG_MSG("server", clients[client_socket].getNick());
