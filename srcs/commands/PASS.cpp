@@ -7,7 +7,7 @@ void Server::handlePassCommand(int client_socket, const std::string& password) {
 		return;
 	}
 	Client& client = clients[client_socket];
-	if (client.isRegistered()) {
+	if (client.isClientSet()) {
 		std::string error_message = ERR_ALREADYREGISTERED("server");
 		sendMessage(client_socket, error_message);
 		return;
@@ -18,7 +18,7 @@ void Server::handlePassCommand(int client_socket, const std::string& password) {
 		return;
 	}
 	if (password != server_config_password) {
-		std::string error_message = ERR_PASSWDMISMATCH("server", client_nick);
+		std::string error_message = ERR_PASSWDMISMATCH("server", client.getNick());
 		sendMessage(client_socket, error_message);
 		return;
 	}

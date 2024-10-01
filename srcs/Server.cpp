@@ -215,48 +215,54 @@ void Server::handleClientMessage(int client_socket, const std::string& message) 
 	std::string command = (pos != std::string::npos) ? message.substr(0, pos) : message;
 	std::string arg = (pos != std::string::npos) ? message.substr(pos + 1) : "";
 
-	if (command == "PASS") {
-		handlePassCommand(client_socket, arg);
-	} else if (command == "USER") {
-		handleUserCommand(client_socket, arg);
-	} else if (command == "NICK") {
-		handleNickCommand(client_socket, arg);
-	} else if (client.isClientSet() == false) {
-		std::string error_message = ERR_NOTREGISTERED("server");
-	    sendErrorMessage(client_socket, error_message);
-		return ;
-	} else if (command == "CAP") {
+	if (command == "CAP") {
 		return ;
 	} else if (command == "WHO") {
+		return ;
+	} else if (command == "PASS") {
+		handlePassCommand(client_socket, arg);
+		return ;
+	} else if (command == "USER") {
+		handleUserCommand(client_socket, arg);
+		return ;
+	} else if (command == "NICK") {
+		handleNickCommand(client_socket, arg);
+		return ;
+	} if (client.isClientSet() == false) {
+		std::string error_message = ERR_NOTREGISTERED("server");
+	    sendErrorMessage(client_socket, error_message);
 		return ;
 	} else if (command == "PING") {
 		std::ostringstream response;
 		response << PONG_MSG("server", clients[client_socket].getNick());
 		sendMessage(client_socket, response.str());
+		return ;
 	} else if (command == "JOIN"){
-		arg.erase(arg.find_last_not_of(" \n\r") + 1);
 		handleJoinCommand(client, arg);
+		return ;
 	} else if (command == "PART") {
-		arg.erase(arg.find_last_not_of(" \n\r") + 1);
 		handlePartCommand(client, arg);
+		return ;
 	} else if (command == "TOPIC") {
 		handleTopicCommand(client_socket, arg);
-	}else if (command == "PRIVMSG"){
-		arg.erase(arg.find_last_not_of(" \n\r") + 1);
+		return ;
+	} else if (command == "PRIVMSG"){
 		handlePrivmsgCommand(client, arg, *this);
+		return ;
 	} else if(command == "INVITE"){
-		arg.erase(arg.find_last_not_of(" \n\r") + 1);
 		handleInviteCommand(client, arg, *this);
+		return ;
 	} else if (command == "MODE"){
-		arg.erase(arg.find_last_not_of(" \n\r") + 1);
-		handleModeCommand(client, arg);		
+		handleModeCommand(client, arg);
+		return ;
 	} else if (command == "KICK") {
-		arg.erase(arg.find_last_not_of(" \n\r") + 1);
 		handleKickCommand(getChannelArray(), client, arg);
+		return ;
 	} else {
 		std::string error_message;
 		error_message = ERR_UNKNOWNCOMMAND("server", command);
 		sendErrorMessage(client_socket, error_message);
+		return ;
 	}
 }
 

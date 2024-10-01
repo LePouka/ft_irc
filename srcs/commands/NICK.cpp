@@ -84,6 +84,12 @@ void Server::handleNickCommand(int client_socket, const std::string& new_nick) {
 		return;
 	}
 	std::string old_nick = clients[client_socket].getNick();
+	if (old_nick != new_nick && isNickInUse(new_nick, clients)) {
+		std::ostringstream error_message;
+		error_message << ERR_NICKCOLLISION("Server", new_nick);
+		sendMessage(client_socket, error_message.str());
+		return;
+	}
 	clients[client_socket].setNick(new_nick);
 	notifyClients(clients, client_socket, old_nick, new_nick);
 	sendNickChangeConfirmation(client_socket, old_nick, new_nick);
@@ -93,4 +99,3 @@ void Server::handleNickCommand(int client_socket, const std::string& new_nick) {
 		clients[client_socket].setWelcomeSent(true);
 	}
 }
-

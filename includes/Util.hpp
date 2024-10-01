@@ -48,6 +48,7 @@
 # define	ERR_NONICKNAMEGIVEN(source)						COLON + source + SPACE + "431 " + "* " + " :No nickname given" + NEW_LINE
 # define	ERR_ERRONEUSNICKNAME(source, nickname)			COLON + source + SPACE + "432 " + "* " + nickname + " :Erroneus nickname" + NEW_LINE
 # define	ERR_NICKNAMEINUSE(source, nickname)				COLON + source + SPACE + "433 " + "* " + nickname + " :Nickname is already in use" + NEW_LINE
+# define	ERR_NICKCOLLISION(source, nickname)				COLON + source + SPACE + "436 " + "* " + nickname + " :Nickname collision KILL" + NEW_LINE
 # define	ERR_USERNOTINCHANNEL(source, nickname)			COLON + source + SPACE + "441 " + "* " + nickname + " :They aren't on that channel" + NEW_LINE
 # define	ERR_NOTONCHANNEL(source, channel)				COLON + source + SPACE + "442 " + "* " + channel + " :You're not on that channel" + NEW_LINE
 # define	ERR_USERONCHANNEL(source, nickname, channel)	COLON + source + SPACE + "443 " + "* " + nickname + SPACE + channel + " :is already on channel" + NEW_LINE
