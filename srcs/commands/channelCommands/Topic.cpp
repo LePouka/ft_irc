@@ -1,5 +1,4 @@
 #include "../../../includes/Server.hpp"
-#include "../../../includes/Util.hpp"
 
 void Server::handleTopicCommand(int client_socket, const std::string& args) {
 	if (args.empty()) {

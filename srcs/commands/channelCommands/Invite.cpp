@@ -1,4 +1,4 @@
-#include "../../../includes/Commands.hpp"
+#include "../../../includes/Server.hpp"
 
 void Server::handleInviteCommand(Client client, std::string params, Server &server)
 {

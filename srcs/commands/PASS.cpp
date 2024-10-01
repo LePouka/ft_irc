@@ -1,5 +1,4 @@
 #include "../../includes/Server.hpp"
-#include "../../includes/Util.hpp"
 
 void Server::handlePassCommand(int client_socket, const std::string& password) {
 	if (clients.find(client_socket) == clients.end()) {
@@ -8,7 +7,6 @@ void Server::handlePassCommand(int client_socket, const std::string& password) {
 		return;
 	}
 	Client& client = clients[client_socket];
-	const std::string &client_nick = client.getNick();
 	if (client.isRegistered()) {
 		std::string error_message = ERR_ALREADYREGISTERED("server");
 		sendMessage(client_socket, error_message);
@@ -26,5 +24,4 @@ void Server::handlePassCommand(int client_socket, const std::string& password) {
 	}
 	client.setPassword(password);
 	client.setRegistered(true);
-	std::cout << "Password set for client " << client_nick << " (" << client_socket << ")" << std::endl;
 }

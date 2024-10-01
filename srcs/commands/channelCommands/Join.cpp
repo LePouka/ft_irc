@@ -1,4 +1,4 @@
-#include "../../../includes/Commands.hpp"
+#include "../../../includes/Server.hpp"
 
 void Server::sendRPL_NAMREPLY(Client &client, Channel &channel)
 {

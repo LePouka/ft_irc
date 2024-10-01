@@ -1,6 +1,4 @@
 #include "../../../includes/Server.hpp"
-#include "../../../includes/Util.hpp"
-
 
 void Server::handlePartCommand(Client &client, const std::string& args) {
 	int client_socket = client.getSocket();

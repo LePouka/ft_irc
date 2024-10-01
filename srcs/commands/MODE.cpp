@@ -1,5 +1,4 @@
 #include "../../includes/Server.hpp"
-#include "../../includes/Util.hpp"
 
 void showCurrentModes(Client &client, Channel &channel)
 {

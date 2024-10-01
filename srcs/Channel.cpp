@@ -120,14 +120,8 @@ void Channel::setUserLimit(unsigned int userLimit)
 
 //METHODS
 void Channel::removeUser(const Client& client) {
-	// Remove from the user set
 	users.erase(client);
-
-	// Additionally, remove from operator set list, etc.
 	operators.erase(client);
-
-	// Log removal for debugging
-	std::cout << "Removed user: " << client.getNick() << " from channel: " << this->name << std::endl;
 }
 
 void Channel::removeOperator(Client client)
@@ -142,11 +136,9 @@ void Channel::removeInvited(Client client)
 
 void Channel::writeMsgChannel(Client client, std::string const &msg, std::string const &command)
 {
-	// Broadcast message to all users except the sender
 	std::set<Client> users = this->getUsers();
 	for (std::set<Client>::iterator it = users.begin(); it != users.end(); ++it) {
-		if (it->getSocket() != client.getSocket()) {  // Compare by socket
-			// Format the message according to the provided command
+		if (it->getSocket() != client.getSocket()) {
 			std::string fullMessage = ":" + client.getNick() + " " + command + " " + this->getName() + " :" + msg + "\r\n";
 			sendMessage(it->getSocket(), fullMessage);
 		}
@@ -230,7 +222,6 @@ void ChannelArray::setChannelTopic(std::string const &channel, std::string const
 
 void ChannelArray::createChannel(std::string const &channel, Client const &client)
 {
-	std::cout << channel << " was created\n";
 	if (!isChan(channel))
 	{
 		Channel newChannel;

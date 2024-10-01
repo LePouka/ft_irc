@@ -1,6 +1,4 @@
 #include "../../includes/Server.hpp"
-#include "../../includes/Util.hpp"
-
 
 bool have_channel_prefix(const std::string& nickname) {
 	if (!nickname.empty() && 

@@ -1,5 +1,4 @@
 #include "../includes/Server.hpp"
-#include "../includes/Util.hpp"
 
 Server::Server(int port, const std::string& password)
 	: serverPassword(password), server_config_password(password) {
@@ -80,10 +79,8 @@ void Server::createSocket() {
 		throw std::runtime_error("socket creation failed");
 	}
 	setNonBlocking(server_socket);
-
-	// Set the socket buffer sizes (in bytes)
-	int sendBuffSize = 1048576;  // 1 MB for send buffer
-	int recvBuffSize = 1048576;  // 1 MB for receive buffer
+	int sendBuffSize = 1048576;
+	int recvBuffSize = 1048576;
 
 	if (setsockopt(server_socket, SOL_SOCKET, SO_SNDBUF, &sendBuffSize, sizeof(sendBuffSize)) == -1) {
 		close(server_socket);
@@ -213,7 +210,6 @@ void Server::eventLoop() {
 }
 
 void Server::handleClientMessage(int client_socket, const std::string& message) {
-	std::cout << "Received from client " << client_socket << ": " << message << std::endl;
 	Client& client = clients[client_socket];
 	size_t pos = message.find(' ');
 	std::string command = (pos != std::string::npos) ? message.substr(0, pos) : message;
@@ -222,11 +218,7 @@ void Server::handleClientMessage(int client_socket, const std::string& message) 
 	if (command == "PASS") {
 		handlePassCommand(client_socket, arg);
 	} else if (command == "CAP") {
-	}else if (command == "WHOIS") {
-		handleWhoisCommand(client_socket, arg);
 	} else if (command == "WHO") {
-	// } else if (command == "QUIT") {
-	// 	handleQuitCommand(client, arg);
 	} else if (command == "NICK") {
 		handleNickCommand(client_socket, arg);
 	} else if (command == "USER") {

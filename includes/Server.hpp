@@ -14,14 +14,10 @@ extern bool	g_status;
 #include <arpa/inet.h>
 #include <sstream>
 #include <stdexcept>
-#include "Commands.hpp"
 #include "Channel.hpp"
 #include "Client.hpp"
 #include "Util.hpp"
 #include "Signals.hpp"
-
-// #define SERVER_NAME "ircserv"
-
 
 template <typename T>
 std::string to_string(T value) {
