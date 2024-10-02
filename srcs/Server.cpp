@@ -200,9 +200,7 @@ void Server::eventLoop() {
 						std::cerr << "read failed: " << strerror(errno) << "\n";
 					}
 				} else if (bytes_read == 0) {
-					std::cout << "Client disconnected.\n";
-					close(client_socket);
-					clients.erase(client_socket);
+					handleClientDisconnection(client_socket);
 				}
 			}
 		}
@@ -225,6 +223,7 @@ void Server::handleClientMessage(int client_socket, const std::string& message) 
 		handlePassCommand(client_socket, arg);
 		return ;
 	} else if (command == "USER") {
+		std::cout << "USER : " << arg << "\n";
 		handleUserCommand(client_socket, arg);
 		return ;
 	} else if (command == "NICK") {

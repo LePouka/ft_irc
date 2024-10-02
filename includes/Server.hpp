@@ -84,7 +84,7 @@ private:
 	//utils
 	bool	kickTests( ChannelArray& channelArray, Client const & client, std::string const & channelName, std::string const & nickname );
 	void	kick( ChannelArray& channelArray, Channel& channel, Client const & client, Client& kickedClient );
-
+	void	handleClientDisconnection(int client_socket);
 	void	sendRPL_NAMREPLY(Client &client, Channel &channel);
 
 

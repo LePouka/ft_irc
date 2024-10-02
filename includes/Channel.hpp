@@ -56,7 +56,6 @@ public:
 	void				removeUser(const Client& client);
 	void				removeOperator(Client client);
 	void				removeInvited(Client client);
-	void				writeMsgChannel(Client client, std::string const &msg, std::string const &command);
 
 	bool				isInUserList(Client client);
 	bool    			isInOperatorList(Client client);
@@ -72,28 +71,18 @@ public:
 class ChannelArray {
 private:
 	std::map<std::string, Channel>				channels;
-	std::map<Client, std::set<std::string> >	clientChannels;
 public:
 	//CONST/DEST
 	ChannelArray();
 	~ChannelArray();
 
 	//GETTER/SETTER
-	Channel&				getChannel(std::string const &channel);
-	std::set<Client>		getOperators(std::string const &channel);
-	std::set<std::string>	getChannelsClient(Client client);
-	void					setChannelName(std::string const  &channel);
-	void					setChannelTopic(std::string const &channel, std::string const &topic);
+	Channel&						getChannel(std::string const &channel);
+	std::map<std::string, Channel>&	getChannelMap();
 
 	//METHODS
-	void					createChannel(std::string const &channel, Client const &client);
-	bool					userInChannel(Client client, std::string const &channel);
-	void					join(Client client, std::string const &channel);
-	void					leave(Client client, std::string const &channel);
-	void					leaveAll(Client client);
-	void					deleteChan(std::string const &channel);
-	bool					isChan(std::string const &channel);
-	bool					isOperator(Client client, std::string const &channel);
-	void					writeMsgChannel(Client client, std::string const &channel, std::string const &msg);
-	void					eraseChanFromClientChannels( Client const & client, std::string const & chanName );
+	void							createChannel(std::string const &channel, Client const &client);
+	void							deleteChan(std::string const &channel);
+	bool							isChan(std::string const &channel);
+	void							writeMsgChannel(Client client, std::string const &channel, std::string const &msg);
 };

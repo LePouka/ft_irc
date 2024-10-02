@@ -23,6 +23,7 @@ void Server::sendRPL_NAMREPLY(Client &client, Channel &channel)
 }
 
 void Server::handleJoinCommand(Client &client, std::string params) {
+	std::cout << client.getUser() << "\n";
 	std::istringstream iss(params);
 	std::string channelName;
 	if (!(iss >> channelName)) {

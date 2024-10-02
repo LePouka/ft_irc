@@ -134,18 +134,6 @@ void Channel::removeInvited(Client client)
 	invited.erase(client);
 }
 
-void Channel::writeMsgChannel(Client client, std::string const &msg, std::string const &command)
-{
-	std::set<Client> users = this->getUsers();
-	for (std::set<Client>::iterator it = users.begin(); it != users.end(); ++it) {
-		if (it->getSocket() != client.getSocket()) {
-			std::string fullMessage = ":" + client.getNick() + " " + command + " " + this->getName() + " :" + msg + "\r\n";
-			sendMessage(it->getSocket(), fullMessage);
-		}
-	}
-}
-
-
 void Channel::broadcastMessage(Client client, std::string const &msg)
 {
 	(void)client;
@@ -198,24 +186,8 @@ Channel& ChannelArray::getChannel(std::string const &channel)
 	throw std::runtime_error("Channel not found");  // Handle the error case properly
 }
 
-std::set<Client> ChannelArray::getOperators(std::string const &channel)
-{
-	return channels.find(channel)->second.getOperators();
-}
-
-std::set<std::string> ChannelArray::getChannelsClient(Client client)
-{
-	return clientChannels.find(client)->second;
-}
-
-void ChannelArray::setChannelName(std::string const &channel)
-{
-	channels.find(channel)->second.setName(channel);
-}
-
-void ChannelArray::setChannelTopic(std::string const &channel, std::string const &topic)
-{
-	channels.find(channel)->second.setTopic(topic);
+std::map<std::string, Channel>&	ChannelArray::getChannelMap() {
+	return this->channels;
 }
 
 //METHODS
@@ -239,62 +211,6 @@ void ChannelArray::createChannel(std::string const &channel, Client const &clien
 	}
 }
 
-bool ChannelArray::userInChannel(Client client, std::string const &channel)
-{
-	return clientChannels[client].find(channel) != clientChannels[client].end();
-}
-
-void ChannelArray::join(Client client, std::string const &channel)
-{
-	if (!isChan(channel)) {
-		createChannel(channel, client);  // Automatically create the channel if it doesn't exist
-	}
-
-	if (clientChannels[client].find(channel) == clientChannels[client].end())
-	{
-		clientChannels[client].insert(channel);
-		channels[channel].addUser(client);
-	}
-}
-
-void ChannelArray::leave(Client client, std::string const &channel)
-{
-	if (!isChan(channel)) {
-		// Handle the case where the channel does not exist
-		return;
-	}
-
-	if (clientChannels[client].find(channel) != clientChannels[client].end())
-	{
-		getChannel(channel).removeOperator(client);
-		clientChannels[client].erase(channel);
-		channels[channel].removeUser(client);
-		if (getChannel(channel).getUsers().empty())
-		{
-			deleteChan(channel);
-		}
-	}
-}
-
-void ChannelArray::leaveAll(Client client)
-{
-	std::set<std::string> clientChannelsSet = getChannelsClient(client);
-
-	// Iterate over the copy to avoid invalidation
-	for (std::set<std::string>::iterator it = clientChannelsSet.begin(); it != clientChannelsSet.end(); ++it)
-	{
-		if (getOperators(*it).find(client) != getOperators(*it).end())
-			getChannel(*it).removeOperator(client);
-		channels[*it].removeUser(client);
-		if (getChannel(*it).getUsers().empty())
-		{
-			deleteChan(*it);
-		}
-	}
-	// Only modify the original map after the iteration
-	clientChannels[client].clear();
-}
-
 void ChannelArray::deleteChan(const std::string& channel) {
 	if (!isChan(channel)) {
 		return;
@@ -305,16 +221,6 @@ void ChannelArray::deleteChan(const std::string& channel) {
 bool ChannelArray::isChan(std::string const &channel)
 {
 	return channels.find(channel) != channels.end();
-}
-
-bool ChannelArray::isOperator(Client client, std::string const &channel)
-{
-	if (!isChan(channel)) {
-		// Handle the case where the channel does not exist
-		return(false);
-	}
-
-	return getChannel(channel).getOperators().find(client) != getChannel(channel).getOperators().end();
 }
 
 void ChannelArray::writeMsgChannel(Client client, std::string const &channel, std::string const &msg)
@@ -332,26 +238,6 @@ void ChannelArray::writeMsgChannel(Client client, std::string const &channel, st
 		if (*it != client) {
 			// Include sender's nickname in the message
 			sendMessage((*it).getSocket(), ":" + client.getNick() + " PRIVMSG " + channel + " :" + msg);
-		}
-	}
-}
-
-void	ChannelArray::eraseChanFromClientChannels( Client const & client, std::string const & chanName ) {
-
-	std::map< Client, std::set< std::string > >::iterator	it = clientChannels.find( client );
-
-	if ( it != clientChannels.end() ) {
-
-		std::set< std::string >::iterator	channelIt = it->second.find( chanName );
-
-		if ( channelIt != it->second.end() ) {
-
-			it->second.erase( channelIt );
-		}
-
-		if ( it->second.empty() ) {
-
-			clientChannels.erase( it );
 		}
 	}
 }

@@ -12,6 +12,7 @@ SRC = main.cpp \
 	Channel.cpp \
 	Message.cpp \
 	Signals.cpp \
+	Leave.cpp \
 	commands/channelCommands/Join.cpp \
 	commands/channelCommands/Topic.cpp \
 	commands/channelCommands/Part.cpp \
