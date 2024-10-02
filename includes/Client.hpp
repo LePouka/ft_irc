@@ -16,8 +16,8 @@
 class Client {
 public:
 
-	Client(int socket);
 	Client();
+	Client(int socket);
 	~Client();
 
 	void 			setWelcomeSent(bool sent);
@@ -44,6 +44,8 @@ public:
 	bool			isNickSet( void ) const;
 	bool			isClientSet( void ) const;
 	void			deleteBuffer();
+
+	void			cleanClient();
 
 	bool			operator<(const Client& other) const;
 	bool			operator==(const Client &other) const;

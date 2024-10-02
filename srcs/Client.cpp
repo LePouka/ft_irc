@@ -90,6 +90,10 @@ void Client::deleteBuffer() {
 	buffer.clear();
 }
 
+void	Client::cleanClient() {
+	close(socket);
+}
+
 bool Client::operator<(const Client& other) const {
 	return this->socket < other.socket;
 }

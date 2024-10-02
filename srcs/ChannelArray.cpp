@@ -60,3 +60,7 @@ void ChannelArray::writeMsgChannel(Client client, std::string const &channel, st
 		}
 	}
 }
+
+void	ChannelArray::cleanChannels() {
+	channels.clear();
+}

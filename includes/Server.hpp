@@ -39,6 +39,7 @@ public:
 	Client&					getClient( std::string const & nickname );
 	void					run();
 	bool					isClientRegistered( std::string const & nickname );
+	void					serverEnd();
 
 private:
 	int						server_socket;

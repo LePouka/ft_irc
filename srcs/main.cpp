@@ -20,6 +20,7 @@ int main(int argc, char* argv[]) {
 			return EXIT_FAILURE;
 		}
 		server.run();
+		server.serverEnd();
 	} catch (const std::exception& e) {
 		std::cerr << "Error: " << e.what() << '\n';
 		return EXIT_FAILURE;

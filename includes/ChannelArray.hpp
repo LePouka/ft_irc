@@ -22,4 +22,5 @@ public:
 	void							deleteChan(std::string const &channel);
 	bool							isChan(std::string const &channel);
 	void							writeMsgChannel(Client client, std::string const &channel, std::string const &msg);
+	void							cleanChannels();
 };

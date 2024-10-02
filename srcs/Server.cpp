@@ -270,3 +270,12 @@ void Server::handleClientMessage(int client_socket, const std::string& message) 
 void Server::sendErrorMessage(int client_socket, const std::string& error_message) {
 	sendMessage(client_socket, error_message);
 }
+
+void	Server::serverEnd() {
+	std::map<int, Client>::iterator	it;
+	for (it = clients.begin(); it != clients.end(); ++it) {
+		it->second.cleanClient();
+	}
+	clients.clear();
+	channels.cleanChannels();
+}
