@@ -14,8 +14,6 @@ void Server::handleInviteCommand(Client client, std::string params, Server &serv
 	}
 
 	ChannelArray &channelArray = server.getChannelArray();
-	// std::istringstream iss(params);
-
 	if (!(iss >> recipient))
 	{
 		std::string error_message = ERR_NEEDMOREPARAMS("server", "INVITE");

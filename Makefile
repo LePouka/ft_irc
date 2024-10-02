@@ -13,16 +13,17 @@ SRC = main.cpp \
 	Message.cpp \
 	Signals.cpp \
 	Leave.cpp \
-	commands/channelCommands/Join.cpp \
-	commands/channelCommands/Topic.cpp \
-	commands/channelCommands/Part.cpp \
-	commands/channelCommands/Invite.cpp \
-	commands/channelCommands/Kick.cpp \
-	commands/Privmsg.cpp \
+	ChannelArray.cpp \
+	commands/channelCommands/JOIN.cpp \
+	commands/channelCommands/TOPIC.cpp \
+	commands/channelCommands/PART.cpp \
+	commands/channelCommands/INVITE.cpp \
+	commands/channelCommands/KICK.cpp \
+	commands/channelCommands/MODE.cpp \
+	commands/channelCommands/PRIVMSG.cpp \
 	commands/NICK.cpp \
 	commands/PASS.cpp \
 	commands/USER.cpp \
-	commands/MODE.cpp \
 
 SRCS = $(addprefix srcs/, $(SRC))
 OBJDIR = objs

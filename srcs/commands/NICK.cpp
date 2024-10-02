@@ -32,15 +32,15 @@ bool isValidNick(const std::string& nickname) {
 }
 
 void notifyClients(const std::map<int, Client>& clients, int sender_socket, const std::string& old_nick, const std::string& new_nick) {
-    std::ostringstream notification_message;
-    notification_message << ":" << old_nick << " NICK " << new_nick << "\r\n";
-    std::string notification = notification_message.str();
-    std::map<int, Client>::const_iterator it;
-    for (it = clients.begin(); it != clients.end(); ++it) {
-        if (it->first != sender_socket) {
-            sendMessage(it->first, notification);
-        }
-    }
+	std::ostringstream notification_message;
+	notification_message << ":" << old_nick << " NICK " << new_nick << "\r\n";
+	std::string notification = notification_message.str();
+	std::map<int, Client>::const_iterator it;
+	for (it = clients.begin(); it != clients.end(); ++it) {
+		if (it->first != sender_socket) {
+			sendMessage(it->first, notification);
+		}
+	}
 }
 
 
@@ -55,9 +55,9 @@ bool isNickInUse(const std::string& new_nick, const std::map<int, Client>& clien
 }
 
 void sendNickChangeConfirmation(int client_socket, const std::string& old_nick, const std::string& new_nick) {
-    std::ostringstream response;
-    response << ":" << old_nick << " NICK " << new_nick << "\r\n";
-    sendMessage(client_socket, response.str());
+	std::ostringstream response;
+	response << ":" << old_nick << " NICK " << new_nick << "\r\n";
+	sendMessage(client_socket, response.str());
 }
 
 void Server::handleNickCommand(int client_socket, const std::string& new_nick) {

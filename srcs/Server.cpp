@@ -174,7 +174,7 @@ void Server::eventLoop() {
 				}
 
 				clients[client_socket] = Client(client_socket);
-				std::cout << "New client connected.\n";
+				std::cout << "New client " << client_socket << " connected.\n";
 			} else {
 				int client_socket = fd;
 				char buffer[1024];
@@ -200,6 +200,7 @@ void Server::eventLoop() {
 						std::cerr << "read failed: " << strerror(errno) << "\n";
 					}
 				} else if (bytes_read == 0) {
+					std::cout << "Client " << client_socket << " disconnected.\n";
 					handleClientDisconnection(client_socket);
 				}
 			}
@@ -223,7 +224,6 @@ void Server::handleClientMessage(int client_socket, const std::string& message) 
 		handlePassCommand(client_socket, arg);
 		return ;
 	} else if (command == "USER") {
-		std::cout << "USER : " << arg << "\n";
 		handleUserCommand(client_socket, arg);
 		return ;
 	} else if (command == "NICK") {
@@ -231,7 +231,7 @@ void Server::handleClientMessage(int client_socket, const std::string& message) 
 		return ;
 	} if (client.isClientSet() == false) {
 		std::string error_message = ERR_NOTREGISTERED("server");
-	    sendErrorMessage(client_socket, error_message);
+		sendErrorMessage(client_socket, error_message);
 		return ;
 	} else if (command == "PING") {
 		std::ostringstream response;

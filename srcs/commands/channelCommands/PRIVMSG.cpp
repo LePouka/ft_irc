@@ -1,4 +1,4 @@
-#include "../../includes/Server.hpp"
+#include "../../../includes/Server.hpp"
 
 void Server::handlePrivmsgCommand(Client client, std::string params, Server &server)
 {

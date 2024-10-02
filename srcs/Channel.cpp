@@ -1,19 +1,11 @@
 #include "../includes/Channel.hpp"
 
-//                          CHANNEL
+Channel::Channel() {}
 
+Channel::Channel(const std::string& name) : name(name) {}
 
-//CONST/DEST
-Channel::Channel()
-{}
+Channel::~Channel() {}
 
-Channel::Channel(const std::string& name) : name(name)
-{}
-
-Channel::~Channel()
-{}
-
-//GETTER/SETTER
 std::string Channel::getName()
 {
 	return (this->name);
@@ -81,10 +73,7 @@ void Channel::setPassword(std::string password)
 
 void Channel::addUser(Client client)
 {
-	// Add the user to the user list
 	users.insert(client);
-
-	// If the user was invited, remove them from the invite list
 	invited.erase(client);
 }
 
@@ -118,7 +107,6 @@ void Channel::setUserLimit(unsigned int userLimit)
 	this->userLimit = userLimit;
 }
 
-//METHODS
 void Channel::removeUser(const Client& client) {
 	users.erase(client);
 	operators.erase(client);
@@ -161,83 +149,4 @@ bool    Channel::isInInviteList(Client client)
 bool Channel::canSendMessage(const Client &client) {
 	if (!this->isInUserList(client)) return false;
 	return true;
-}
-
-//                          CHANNELARRAY
-
-//CONST/DEST
-
-ChannelArray::ChannelArray()
-{
-	
-}
-
-ChannelArray::~ChannelArray()
-{}
-
-//GETTER/SETTER
-
-Channel& ChannelArray::getChannel(std::string const &channel)
-{
-	std::map<std::string, Channel>::iterator it = channels.find(channel);
-	if (it != channels.end()) {
-		return it->second;
-	}
-	throw std::runtime_error("Channel not found");  // Handle the error case properly
-}
-
-std::map<std::string, Channel>&	ChannelArray::getChannelMap() {
-	return this->channels;
-}
-
-//METHODS
-
-void ChannelArray::createChannel(std::string const &channel, Client const &client)
-{
-	if (!isChan(channel))
-	{
-		Channel newChannel;
-
-		newChannel.setName(channel);
-		newChannel.setTopic("");
-		newChannel.setPassword("");
-		newChannel.addUser(client);
-		newChannel.addOperators(client);
-		newChannel.setInvite(false);
-		newChannel.setTopicRestricted(false);
-		newChannel.setKeyNeeded(false);
-		newChannel.setUserLimit(0);
-		channels.insert(std::make_pair(channel, newChannel));
-	}
-}
-
-void ChannelArray::deleteChan(const std::string& channel) {
-	if (!isChan(channel)) {
-		return;
-	}
-	channels.erase(channel);
-}
-
-bool ChannelArray::isChan(std::string const &channel)
-{
-	return channels.find(channel) != channels.end();
-}
-
-void ChannelArray::writeMsgChannel(Client client, std::string const &channel, std::string const &msg)
-{
-	if (!isChan(channel)) {
-		// Handle the case where the channel does not exist
-		return;
-	}
-
-	// Get all users in the channel
-	std::set<Client> users = getChannel(channel).getUsers();
-	
-	// Broadcast message to all users except the sender
-	for (std::set<Client>::iterator it = users.begin(); it != users.end(); ++it) {
-		if (*it != client) {
-			// Include sender's nickname in the message
-			sendMessage((*it).getSocket(), ":" + client.getNick() + " PRIVMSG " + channel + " :" + msg);
-		}
-	}
 }
