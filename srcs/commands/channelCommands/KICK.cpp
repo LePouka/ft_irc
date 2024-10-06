@@ -50,7 +50,7 @@ bool	Server::kickTests( ChannelArray& channelArray,
 void	Server::kick( ChannelArray& channelArray, Channel& channel, Client const & client, Client& kickedClient ) {
 	(void)channelArray;
 	channel.broadcastMessage( client, RPL_KICK( client.getNick(), client.getUser(), channel.getName(), kickedClient.getNick(), "KICK" ));
-	channel.removeUser( client );
+	channel.removeUser( kickedClient );
 }
 
 void	Server::handleKickCommand( ChannelArray& channelArray,
